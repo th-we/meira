@@ -13,6 +13,8 @@
   <includeDefinition href="event.def"/>
   <includeDefinition href="clef.def"/>
   <includeDefinition href="rest.def"/>
+  <includeDefinition href="group.def"/>
+  <includeDefinition href="staffBracket.def"/>
   
   <draw/>
 

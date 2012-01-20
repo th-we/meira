@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<elementDefinition
+  xmlns="NS:DEF"
+  xmlns:svg="http://www.w3.org/2000/svg"
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+  xmlns:g="NS:GET">
+  
+<!-- TODO: The brace doesn't work. It has to be adapted for Lilypond symbols -->
+<element name="staffBracket">
+  <!-- TODO: Much of this is duplicate code with barlines.  Can it be shared somehow? -->
+  <properties>
+    <!-- QUESITON: Can the expression
+          (ancestor::musx:staff|ancestor::musx:staffGroup|ancestor::musx:system)[last()]/descendant-or-self::musx:staff 
+        be put in some sort of variable so that it doesn't have to be put twice in each variableReference? -->
+    <elementReference name="topStaff" lacuna="
+      (
+        for $staff in (ancestor::musx:staff|ancestor::musx:staffGroup|ancestor::musx:system)[last()]/descendant-or-self::musx:staff
+        return if (g:y($staff) &gt; g:y((ancestor::musx:staff|ancestor::musx:staffGroup|ancestor::musx:system)[last()]/descendant-or-self::musx:staff))
+          then ()
+          else $staff
+      )[1]"/>
+    <elementReference name="bottomStaff" lacuna="
+      (
+        for $staff in (ancestor::musx:staff|ancestor::musx:staffGroup|ancestor::musx:system)[last()]/descendant-or-self::musx:staff
+        return if (g:y($staff) &lt; g:y((ancestor::musx:staff|ancestor::musx:staffGroup|ancestor::musx:system)[last()]/descendant-or-self::musx:staff))
+          then ()
+          else $staff
+      )[1]"/>
+
+    <coordinate name="x" anchor="g:x(..)" lacuna="0"/>
+    <coordinate name="y1" anchor="g:y1(g:bottomStaff(.))" lacuna="0"/>
+    <coordinate name="y2" anchor="g:y2(g:topStaff(.))" lacuna="0"/>
+    
+    <!--<color name="color" lacuna="'black'"/>-->
+    <!--<bracketType name="bracketType" lacuna="'straight'"/>-->
+    
+    <scaleFactor name="size" anchor="g:size(..)" lacuna="1"/>
+    
+    <!-- "passive" properties; do not set them! -->
+    <coordinate name="x1" anchor="g:x(.)" lacuna="0"/>
+    <coordinate name="x2" anchor="g:x(.)" lacuna="0"/>
+    <coordinate name="y" anchor="g:y1(.)" lacuna="0"/>
+    
+    <symbol name="brackettip" lacuna="brackettip"/>
+  </properties>
+
+  <!-- TODO: Also scale vertically -->
+  <!-- TODO: Currently there isn't a brace symbol in the library -->
+<!--  <xsl:template priority="1" match="bracket[@type='brace']">
+    <svg:g class="bracket">
+      <svg:use xlink:href="symbol-library/lib.svg#" transform="translate({?x},{?y1}) scale({?size},{(?y1 - ?y2)*0.0392465})"/>
+    </svg:g>
+  </xsl:template>-->
+
+
+  <draw stroke="currentColor">
+    <svg:line x1="{g:x(.) - 1.5 * g:size(.)}" x2="{g:x(.) - 1.5 * g:size(.)}" y1="{g:y1(.) + 1.4 * g:size(.)}" y2="{g:y2(.) - 1.4 * g:size(.)}" stroke-width="{1.3 * g:size(.)}" fill="none" stroke="currentColor"/>
+    <svg:use xlink:href="{g:brackettip(.)}" transform="translate({g:x(.) - g:size(.)},{g:y1(.) + g:size(.)}) scale({g:size(.)},{- g:size(.)})"/>
+    <svg:use xlink:href="{g:brackettip(.)}" transform="translate({g:x(.) - g:size(.)},{g:y2(.) - g:size(.)}) scale({g:size(.)})" />
+  </draw>
+</element>
+
+</elementDefinition>
