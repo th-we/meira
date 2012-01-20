@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<elementDefinition
+  xmlns="NS:DEF"
+  xmlns:svg="http://www.w3.org/2000/svg"
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+  xmlns:g="NS:GET">
+  
+<element name="staff">
+  <properties>
+    <elementReference name="start" lacuna="g:start(..)"/>
+    <elementReference name="end" lacuna="g:end(..)"/>
+    
+    <coordinate name="x1" anchor="g:x(g:start(.))" lacuna="0"/>
+    <coordinate name="x2" anchor="g:x(g:end(.))" lacuna="0"/>
+    <coordinate name="y" anchor="g:y(..)" lacuna="0"/>
+    
+    <coordinate name="x" anchor="g:x1(.)" lacuna="0"/>
+    <coordinate name="y1" anchor="g:y(.)" lacuna="0"/>
+    <coordinate name="y2" anchor="g:y1(.)" lacuna="-2 * g:size(.) * (g:lines(.) - 1)"/>
+    
+    <scaleFactor name="size" anchor="g:size(..)" lacuna="1"/>
+    
+    <integer name="lines" lacuna="5"/>
+  </properties>
+
+  <xsl:template name="addStaffLines">
+    <xsl:param name="yPosition" select="g:y1(.)" />
+    
+    <xsl:if test="$yPosition &gt; g:y2(.) - g:size(.)">
+      <svg:line x1="{g:x1(.)}" x2="{g:x2(.)}" y1="{$yPosition}" y2="{$yPosition}"/>
+      <xsl:call-template name="addStaffLines">
+        <xsl:with-param name="yPosition" select="$yPosition - 2 * g:size(.)"/>
+      </xsl:call-template>
+    </xsl:if>
+  </xsl:template>
+  
+  <draw>
+    <svg:g class="stafflines" stroke="currentColor">
+      <xsl:call-template name="addStaffLines"/>
+    </svg:g>
+  </draw>
+  
+</element>
+
+<element name="staffGroup">
+  <properties>
+    <elementReference name="start" lacuna="g:start(..)"/>
+    <elementReference name="end" lacuna="g:end(..)"/>
+    
+    <coordinate name="x1" anchor="g:x(g:start(.))" lacuna="0"/>
+    <coordinate name="x2" anchor="g:x(g:end(.))" lacuna="0"/>
+    <coordinate name="y" anchor="g:y(..)" lacuna="0"/>
+    
+    <coordinate name="x" anchor="g:x1(.)" lacuna="0"/>
+    <coordinate name="y1" anchor="g:y(.)" lacuna="0"/>
+    <coordinate name="y2" anchor="g:y(.)" lacuna="0"/>
+    
+    <scaleFactor name="size" anchor="g:size(..)" lacuna="1"/>
+  </properties>
+  
+  <draw/>
+</element>
+
+</elementDefinition>

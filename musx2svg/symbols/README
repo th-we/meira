@@ -1,0 +1,8 @@
+symbolmap_emmentaler.xml must be opened in a browser (best: Firefox)
+XSLT and JavaScript are used to convert the SVG font to symbols that
+can be referenced by <use> elements. Bounding box information is 
+added using the JavaScript API (getBBox), that's why a browser is
+needed.  The output SVG code will be displayed in the browser window
+has to be copied and pasted to lib.svg.
+
+TODO: Is there a more elegant solution?

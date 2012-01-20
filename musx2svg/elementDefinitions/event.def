@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<elementDefinition
+  xmlns="NS:DEF"
+  xmlns:svg="http://www.w3.org/2000/svg"
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+  xmlns:g="NS:GET">
+  
+<element name="event">
+  <!-- TODO: anchor="//page/?x" is provisional.
+       A proper anchoring solution has to be found.
+       Should the <event> elements in the <eventsequence> also determine the
+       system that elements associtated with the event elements belong to? -->
+  <properties>
+    <coordinate name="x" anchor="0" lacuna="0"/>
+  </properties>
+</element>
+
+</elementDefinition>

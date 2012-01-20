@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<elementDefinition
+    xmlns="NS:DEF"
+    xmlns:svg="http://www.w3.org/2000/svg"
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:xlink="http://www.w3.org/1999/xlink">
+
+<element name="musx">
+  <includeDefinition href="page.def"/>
+  <includeDefinition href="system.def"/>
+  <includeDefinition href="staff.def"/>
+  <includeDefinition href="svg.def"/>
+  <includeDefinition href="event.def"/>
+  <includeDefinition href="clef.def"/>
+  <includeDefinition href="rest.def"/>
+  
+  <draw/>
+
+</element>
+
+</elementDefinition>

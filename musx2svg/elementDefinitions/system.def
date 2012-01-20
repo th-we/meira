@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<elementDefinition
+    xmlns="NS:DEF"
+    xmlns:svg="http://www.w3.org/2000/svg"
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:g="NS:GET">
+
+<element name="system">
+  <properties>
+    <elementReference name="start" lacuna=".."/>
+    <elementReference name="end" lacuna=".."/>
+    
+    <!--<coordinate name="x1" anchor="g:x(..)" lacuna="0"/>-->
+    <coordinate name="x1" anchor="g:x(g:start(.))" lacuna="0"/>
+    <coordinate name="x2" anchor="g:x(g:end(.))" lacuna="0"/>
+    <coordinate name="y" anchor="g:y(..)" lacuna="0"/>
+    
+    <coordinate name="x" anchor="g:x1(.)" lacuna="0" />
+    <coordinate name="y1" anchor="g:y(.)" lacuna="0"/>
+    <coordinate name="y2" anchor="g:y(.)" lacuna="0"/>
+    
+    
+    <scaleFactor name="size" anchor="g:size(..)" lacuna="1" />
+  </properties>
+  
+  <draw/>
+
+</element>
+
+</elementDefinition>

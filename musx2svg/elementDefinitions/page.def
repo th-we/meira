@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<elementDefinition
+    xmlns="NS:DEF"
+    xmlns:svg="http://www.w3.org/2000/svg"
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:g="NS:GET">
+
+<element name="page">
+  <properties>
+    <coordinate name="x1" anchor="0" lacuna="0" />
+    <coordinate name="x2" anchor="0" lacuna="0" />
+    <coordinate name="y" anchor="0" lacuna="0" />
+    
+    <coordinate name="x" anchor="0" lacuna="0" />
+    <coordinate name="y1" anchor="0" lacuna="0" />
+    <coordinate name="y2" anchor="0" lacuna="0" />
+    
+    <scaleFactor name="size" anchor="1" lacuna="1"/>
+    
+<!--    <coordinate name="bb.left" anchor="g:x1(.)"/>
+    <coordinate name="bb.right" anchor="g:x2(.)"/>
+    <coordinate name="bb.top" anchor="g:y1(.)"/>
+    <coordinate name="bb.bottom" anchor="g:y2(.)"/>-->
+  </properties>
+
+  <draw>
+    <svg:rect stroke="black" fill="#fffffc" x="{g:x1(.)}" width="{g:x2(.) - g:x1(.)}" y="{g:y1(.)}" height="{g:y2(.) - g:y1(.)}"/>
+  </draw>
+
+</element>
+
+</elementDefinition>

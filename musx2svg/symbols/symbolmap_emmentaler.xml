@@ -1,0 +1,164 @@
+<?xml version="1.0" ?>
+<?xml-stylesheet type='text/xsl' href='svgfont2lib.xsl'?>
+<!-- TODO: Check symbols with glyph-name="" 
+     They might be unclear or  in the glyph font
+     
+     TODO: Add kerning information, e.g. for mp
+-->
+<symbolmap svgfont="emmentaler-20.svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svg="http://www.w3.org/2000/svg">
+  <!-- clefs -->
+  <symbol mei="clef.G" glyph-name="clefs.G"/>
+  <symbol mei="clef.F" glyph-name="clefs.F"/>
+  <symbol mei="clef.GG">
+    <svg:use xlink:href="#clef.G"/>
+    <!-- TODO: What is an appropriate translate() here? -->
+    <svg:use xlink:href="#clef.G" transform="translate(4)"/>
+  </symbol>
+  <symbol mei="clef.C" glyph-name="clefs.C"/>
+  <symbol mei="clef.perc" glyph-name="clefs.percussion"/>
+  <symbol mei="clef.TAB" glyph-name="clefs.tab"/>
+  
+  <!-- noteheads -->
+  <symbol mei="notehead.quarter" glyph-name="noteheads.s2"/>
+  <symbol mei="notehead.half" glyph-name="noteheads.s1"/>
+  <symbol mei="notehead.whole" glyph-name="noteheads.s0"/>
+  <symbol mei="notehead.dblwhole" glyph-name="noteheads.sM1"/>
+  <symbol mei="notehead.filldiamond" glyph-name="noteheads.s2harmonic"/>
+  <symbol mei="notehead.diamond" glyph-name="noteheads.s0harmonic"/>
+  <symbol mei="notehead.dwdiamond" glyph-name=""/>
+  <symbol mei="notehead.fillisotriangle" glyph-name="noteheads.u2do"/>
+  <symbol mei="notehead.isotriangle" glyph-name="noteheads.u1do"/>
+  <symbol mei="notehead.dwhisotriangle" glyph-name="noteheads.s0do"/>
+  <symbol mei="notehead.fillpiewedge" glyph-name="noteheads.u2ti"/>
+  <symbol mei="notehead.piewedge" glyph-name="noteheads.u1ti"/>
+  <symbol mei="notehead.dwhpiewedge" glyph-name="noteheads.s0ti"/>
+  <symbol mei="notehead.fillrectangle" glyph-name="noteheads.s2la"/>
+  <symbol mei="notehead.rectangle" glyph-name="noteheads.s1la"/>
+  <symbol mei="notehead.dwhrectangle" glyph-name="noteheads.s0la"/>
+  <symbol mei="notehead.fillrtriangle" glyph-name="noteheads.d2fa"/>
+  <symbol mei="notehead.rtriangle" glyph-name="noteheads.d1fa"/>
+  <symbol mei="notehead.dwrtriangle" glyph-name="noteheads.d0fa"/>
+  <symbol mei="notehead.fillurtriangle" glyph-name="noteheads.u2fa"/>
+  <symbol mei="notehead.urtriangle" glyph-name="noteheads.u1fa"/>
+  <symbol mei="notehead.dwurtriangle" glyph-name="noteheads.u0fa"/>
+  <symbol mei="notehead.fillsemicircle" glyph-name="noteheads.u2re"/>
+  <symbol mei="notehead.semicircle" glyph-name="noteheads.u1re"/>
+  <symbol mei="notehead.dwsemicircle" glyph-name="noteheads.s0re"/>
+  <symbol mei="notehead.fillslash" glyph-name=""/>
+  <symbol mei="notehead.slash" glyph-name=""/>
+  <symbol mei="notehead.dwslash" glyph-name=""/>
+  <symbol mei="notehead.x" glyph-name="noteheads.s2cross"/>
+  <symbol mei="notehead.blank" glyph-name=""/><!-- Does blank mean "no notehead"? -->
+  <symbol mei="notehead.circlex" glyph-name="noteheads.s2xcircle"/>
+  <symbol mei="notehead.cross" glyph-name=""/>
+ 
+  <!-- rests -->
+  <!-- Non-MEI naming -->
+  <!-- TODO: Name eighth to 128th similar to flags? -->
+  <symbol mei="rest.quadruplewhole" glyph-name="rests.M2"/>
+  <symbol mei="rest.dblwhole" glyph-name="rests.M1"/>
+  <symbol mei="rest.whole" glyph-name="rests.0"/>
+  <symbol mei="rest.half" glyph-name="rests.1o"/>
+  <symbol mei="rest.quarter" glyph-name="rests.2"/>
+  <symbol mei="rest.eighth" glyph-name="rests.3"/>
+  <symbol mei="rest.sixteenth" glyph-name="rests.4"/>
+  <symbol mei="rest.thirtysecond" glyph-name="rests.5"/>
+  <symbol mei="rest.sixtyfourth" glyph-name="rests.6"/>
+  <symbol mei="rest.hundredtwentyeighth" glyph-name="rests.7"/>
+
+  <!-- flags -->
+  <!-- Non-MEI naming -->
+  <!-- TODO: Name flags similar to eighth to 129th rests? -->
+  <symbol mei="flags.1" glyph-name="flags.u3"/>
+  <symbol mei="flags.2" glyph-name="flags.u4"/>
+  <symbol mei="flags.3" glyph-name="flags.u5"/>
+  <symbol mei="flags.4" glyph-name="flags.u6"/>
+  <symbol mei="flags.5" glyph-name="flags.u7"/>
+  <symbol mei="flags.-1" glyph-name="flags.d3"/>
+  <symbol mei="flags.-2" glyph-name="flags.d4"/>
+  <symbol mei="flags.-3" glyph-name="flags.d5"/>
+  <symbol mei="flags.-4" glyph-name="flags.d6"/>
+  <symbol mei="flags.-5" glyph-name="flags.d7"/>
+
+  <!-- accidentals -->
+  <symbol mei="accidental.s" glyph-name="accidentals.sharp"/>
+  <symbol mei="accidental.f" glyph-name="accidentals.flat"/>
+  <symbol mei="accidental.ss" glyph-name=""/>
+  <symbol mei="accidental.x" glyph-name="accidentals.doublesharp"/>
+  <symbol mei="accidental.ff" glyph-name="accidentals.flatflat"/>
+  <symbol mei="accidental.xs" glyph-name=""/>
+  <symbol mei="accidental.tb" glyph-name=""/>
+  <symbol mei="accidental.n" glyph-name="accidentals.natural"/>
+  <symbol mei="accidental.nf" glyph-name=""/><!-- "natural flat?"-->
+  <symbol mei="accidental.ns" glyph-name=""/><!-- "natural sharp?"-->
+  <symbol mei="accidental.su" glyph-name="accidentals.sharp.arrowup"/>
+  <symbol mei="accidental.sd" glyph-name="accidentals.sharp.arrowdown"/>
+  <symbol mei="accidental.fu" glyph-name="accidentals.flat.arrowup"/>
+  <symbol mei="accidental.fd" glyph-name="accidentals.flat.arrowdown"/>
+  <symbol mei="accidental.nu" glyph-name="accidentals.natural.arrowup"/>
+  <symbol mei="accidental.nd" glyph-name="accidentals.natural.arrowdown"/>
+
+  <!-- time signature symbols -->
+  <symbol mei="metersymbol.common" glyph-name="timesig.C44" transform="translate(0,-2)"/>
+  <symbol mei="metersymbol.cut" glyph-name="timesig.C22" transform="translate(0,-2)"/>
+  
+  <!-- "normal" ASCII glyphs -->
+  <!-- Non-MEI naming -->
+  <symbol mei="ascii.0" glyph-name="zero"/>
+  <symbol mei="ascii.1" glyph-name="one"/>
+  <symbol mei="ascii.2" glyph-name="two"/>
+  <symbol mei="ascii.3" glyph-name="three"/>
+  <symbol mei="ascii.4" glyph-name="four"/>
+  <symbol mei="ascii.5" glyph-name="five"/>
+  <symbol mei="ascii.6" glyph-name="six"/>
+  <symbol mei="ascii.7" glyph-name="seven"/>
+  <symbol mei="ascii.8" glyph-name="eight"/>
+  <symbol mei="ascii.9" glyph-name="nine"/>
+  <symbol mei="ascii.f" glyph-name="f"/>
+  <symbol mei="ascii.p" glyph-name="p"/>
+  <symbol mei="ascii.m" glyph-name="m"/>
+  <symbol mei="ascii.r" glyph-name="r"/>
+  <symbol mei="ascii.s" glyph-name="s"/>
+  <symbol mei="ascii.z" glyph-name="z"/>
+  <symbol mei="ascii.plus" glyph-name="plus"/>
+  <symbol mei="ascii.period" glyph-name="period"/>
+  <!-- TODO: Colon is missing (e.g. for tuplet captions like 3:4) -->
+  
+  <!-- articulation -->
+  <symbol mei="articulation.acc" glyph-name="scripts.sforzato"/>
+  <symbol mei="articulation.stacc" glyph-name="scripts.staccato"/>
+  <symbol mei="articulation.ten" glyph-name="scripts.tenuto"/>
+  <symbol mei="articulation.stacciss" glyph-name="scripts.dstaccatissimo"/>
+  <symbol mei="articulation.marc" glyph-name="scripts.dmarcato"/>
+  <symbol mei="articulation.marc-stacc" glyph-name=""/> <!-- TODO: combined glyphs -->
+  <symbol mei="articulation.acc-marc" glyph-name=""/>   <!-- TODO: combined glyphs -->
+  <symbol mei="articulation.spicc" glyph-name="scripts.staccato"/> <!-- TODO: Is this meant like this? -->
+  <symbol mei="articulation.rip" glyph-name=""/>
+  <symbol mei="articulation.doit" glyph-name=""/>
+  <symbol mei="articulation.plop" glyph-name=""/>
+  <symbol mei="articulation.fall" glyph-name=""/>
+  <symbol mei="articulation.bend" glyph-name=""/>
+  <symbol mei="articulation.flip" glyph-name=""/>
+  <symbol mei="articulation.smear" glyph-name=""/>
+  <symbol mei="articulation.dnbow" glyph-name="scripts.downbow"/>
+  <symbol mei="articulation.upbow" glyph-name="scripts.upbow"/>
+  <symbol mei="articulation.harm" glyph-name="scripts.flageolet"/>
+  <symbol mei="articulation.snap" glyph-name=""/>
+  <symbol mei="articulation.fingernail" glyph-name=""/>
+  <symbol mei="articulation.ten_stacc" glyph-name=""/> <!-- TODO: combined glyphs -->
+  <symbol mei="articulation.damp" glyph-name=""/>      
+  <symbol mei="articulation.dampall" glyph-name=""/>
+  <symbol mei="articulation.open" glyph-name="scripts.open"/>
+  <symbol mei="articulation.stop" glyph-name="scripts.stopped"/>
+  <symbol mei="articulation.dbltongue" glyph-name=""/>
+  <symbol mei="articulation.trpltongue" glyph-name=""/>
+  <symbol mei="articulation.heel" glyph-name="scripts.dpedalheel"/>
+  <symbol mei="articulation.toe" glyph-name="scripts.dpedaltoe"/>
+  <symbol mei="articulation.tap" glyph-name=""/>
+  <symbol mei="articulation.lhpizz" glyph-name=""/>
+  <symbol mei="articulation.dot" glyph-name="scripts.staccato"/> <!-- TODO: Is this meant like this? -->
+  <symbol mei="articulation.stroke" glyph-name="scripts.tenuto"/> <!-- TODO: Is this meant like this? -->
+  
+  <!-- "winglets" for sysbem brackets -->
+  <symbol mei="brackettip" glyph-name="brackettips.up"/>
+</symbolmap>
