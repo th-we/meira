@@ -6,7 +6,9 @@
     xmlns:def="NS:DEF"
     xmlns:g="NS:GET">
   <namespace-alias stylesheet-prefix="xsl" result-prefix=""/>
-  
+ 
+  <!-- Define prefix in a function because other templates can't access
+       a variable that's defined here, can they? -->
   <function name="g:musxPrefix">
     <value-of select="'musx:'"/>
   </function>
