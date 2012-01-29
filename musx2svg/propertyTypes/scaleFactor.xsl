@@ -12,7 +12,7 @@
     <xsl:copy-of select="1"/>
   </template>
   <template match="def:scaleFactor" mode="add-as-type-attribute">
-    <attribute name="as">xs:float*</attribute>
+    <attribute name="as">xs:double*</attribute>
   </template>
   
   <template match="def:scaleFactor" mode="create-getter-templates">
@@ -25,11 +25,16 @@
     </xsl:key>
     
     <!-- Elements without {@name} attribute (=> defaults) -->
-    <xsl:template mode="get_{@name}" priority="-1">
+    <xsl:template mode="get_{@name}" priority="-2">
       <attribute name="match">
         <value-of select="g:matchPattern($elementNames)"/>
       </attribute>
       <xsl:copy-of select="({@anchor}) * ({@lacuna})"/>
+    </xsl:template>
+    
+    <!-- Attribute wihtout Unit -->
+    <xsl:template mode="get_{@name}" match="{g:matchPattern($elementNames,concat('[@',@name,']'))}" priority="-1">
+      <xsl:copy-of select="number(@{@name})"/>
     </xsl:template>
     
     <!-- Attribute with p Unit -->
