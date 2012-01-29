@@ -12,34 +12,36 @@
   <properties>
     <elementReference name="start" lacuna=".."/>
     
-    <coordinate name="x" anchor="g:x(g:start(.))" lacuna="0"/>
-    <coordinate name="y" anchor="g:y(..)" lacuna="0"/>
+    <coordinate name="x" orientation="x" anchor="g:x(g:start(.))" lacuna="0"/>
+    <coordinate name="y" orientation="y" anchor="g:y(..)" lacuna="0"/>
     
-    <coordinate name="x1" anchor="g:x(.)" lacuna="0"/>
+    <coordinate name="x1" orientation="x" anchor="g:x(.)" lacuna="0"/>
     <!-- TODO: x2 should be calculated from the symbol width, something like
       ?x + ?size * document('../../symbol-library/lib.svg')/key('id',?symbol)/?x2
       How can we store the metadata with the symbols? Should we use getters
       or can we simply rely on attributes (preferable)?
       Analogously, x1, y1 and y2 should be calculated.
     -->
-    <coordinate name="x2" anchor="g:x(.)" lacuna="0"/>
-    <coordinate name="y1" anchor="g:y(.)" lacuna="0"/>
-    <coordinate name="y2" anchor="g:y(.)" lacuna="0"/>
+    <coordinate name="x2" orientation="x" anchor="g:x(.)" lacuna="0"/>
+    <coordinate name="y1" orientation="y" anchor="g:y(.)" lacuna="0"/>
+    <coordinate name="y2" orientation="y" anchor="g:y(.)" lacuna="0"/>
     
     <scaleFactor name="size" anchor="g:size(..)" lacuna="1"/>
     
     <symbol name="symbol" lacuna="clef.G"/>
     
-<!--    <coordinate name="bb.left" anchor="0" lacuna="g:bb.left(g:symbol(.),musx:*) * g:size(.)"/>
-    <coordinate name="bb.right" anchor="0" lacuna="g:bb.right(g:symbol(.),musx:*) * g:size(.)"/>
-    <coordinate name="bb.top" anchor="0" lacuna="g:bb.top(g:symbol(.),musx:*) * g:size(.)"/>
-    <coordinate name="bb.bottom" anchor="0" lacuna="g:bb.bottom(g:symbol(.),musx:*) * g:size(.)"/>
--->    
   </properties>
   
   <draw>
     <svg:use transform="translate({g:x(.)},{g:y(.)}) scale({g:size(.)})"
       xlink:href="{g:symbol(.)}"/>
+<!--    <xsl:variable name="BB" as="node()">
+      <xsl:apply-templates mode="get_symbol.BoundingBox" select="."/>
+    </xsl:variable>
+    <svg:polygon points="{$BB/@left},{$BB/@top} 
+                         {$BB/@left},{$BB/@bottom} 
+                         {$BB/@right},{$BB/@bottom}
+                         {$BB/@right},{$BB/@top}" stroke="green" fill="none"/>-->
   </draw>
 
 </element>

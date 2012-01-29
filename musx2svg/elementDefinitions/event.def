@@ -12,7 +12,7 @@
        Should the <event> elements in the <eventsequence> also determine the
        system that elements associtated with the event elements belong to? -->
   <properties>
-    <coordinate name="x" anchor="0" lacuna="0"/>
+    <coordinate name="x" orientation="x" anchor="0" lacuna="0"/>
   </properties>
 </element>
 

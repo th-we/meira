@@ -32,7 +32,13 @@
       </call-template>
       
       <for-each select="def:includeDefinition">
-        <apply-templates select="document(@href)/def:elementDefinition/def:element/*" mode="create-xsl-output"/>
+        <variable name="element" select="document(@href)/def:elementDefinition/def:element" as="node()*"/>
+        <!-- TODO: Currently, there is no guaranty that templates, function etc. with identical names are
+                   supplied by different element definitions. Work out naming scheme or check mechanism so
+                   that we prevent clashes when copying everything! -->
+        <copy-of select="$element/xsl-ns:*"/>
+        <apply-templates select="$element/def:OwnBoundingBox"/>
+        <apply-templates select="$element/def:draw"/>
       </for-each>
 
       <!-- Templates that are common for all draw templates -->
@@ -62,7 +68,7 @@
         <xsl:copy-of select="."/>
       </xsl:template>
       
-      <!-- Main template for convertin to SVG -->
+      <!-- Main template for converting to SVG -->
       <xsl:template match="/musx:musx">
         <svg:svg>
           <xsl:apply-templates select="musx:head[*]" mode="generate-defs"/>
@@ -71,33 +77,56 @@
       </xsl:template>
       
       <!-- Template for adding bounding box dimension info to the musx data.
-           To use this template, add-bounding-box has to be set as the initial mode 
-           (e.g. using the switch -im:add-bounding-boxes with saxonb-xslt) -->
-      <xsl:template match="@*|node()" mode="add-bounding-boxes">
+           To use this template, copy-and-add-bounding-box has to be set as the initial mode 
+           (e.g. using the switch -im:copy-and-add-bounding-boxes with saxonb-xslt) -->
+      <xsl:template match="@*|node()" mode="copy-and-add-bounding-boxes">
         <xsl:copy>
-          <xsl:apply-templates mode="add-bounding-boxes" select="@*|node()"/>
+          <xsl:apply-templates mode="copy-and-add-bounding-boxes" select="@*|node()"/>
         </xsl:copy>
       </xsl:template>
       
-      <!-- TODO: Implement bounding box properties -->
-<!--      <xsl:template match="musx:*" mode="add-bounding-boxes">
+      <xsl:template match="musx:*" mode="copy-and-add-bounding-boxes" priority="1">
+        <xsl:variable name="children" as="node()*">
+          <xsl:apply-templates mode="copy-and-add-bounding-boxes" select="node()"/>
+        </xsl:variable>
+        <!-- TODO: $allBoundingBoxes is always empty right now because def:OwnBoundingBox isn't 
+                   in any of the element definitions -->
+        <xsl:variable name="allBoundingBoxes" as="node()*">
+          <xsl:sequence select="$children/musx:BoundingBox"/>
+          <xsl:apply-templates mode="get_OwnBoundingBox" select="."/>
+        </xsl:variable>
         <xsl:copy>
-          <xsl:attribute name="bb.left">
-            <xsl:value-of select="g:bb.left(.)"/>
-          </xsl:attribute>
-          <xsl:attribute name="bb.right">
-            <xsl:value-of select="g:bb.right(.)"/>
-          </xsl:attribute>
-          <xsl:attribute name="bb.top">
-            <xsl:value-of select="g:bb.top(.)"/>
-          </xsl:attribute>
-          <xsl:attribute name="bb.bottom">
-            <xsl:value-of select="g:bb.bottom(.)"/>
-          </xsl:attribute>
-          <xsl:apply-templates select="@*|node()" mode="add-bounding-boxes"/>
+          <xsl:copy-of select="@*"/>
+          <xsl:copy-of select="$children"/>
+          <xsl:choose>
+            <xsl:when test="$allBoundingBoxes">
+<!--              $allBoundingBoxes <xsl:copy-of select="$allBoundingBoxes"/>
+              $allBoundingBoxes//@left = <xsl:value-of select="$allBoundingBoxes//@left"/>-->
+              <musx:BoundingBox 
+                left="{{min($allBoundingBoxes//@left)}}"
+                right="{{max($allBoundingBoxes//@right)}}"
+                top="{{min($allBoundingBoxes//@top)}}"
+                bottom="{{max($allBoundingBoxes//@bottom)}}"/>
+              <svg:polygon class="bbox"
+                points="{{min($allBoundingBoxes//@left)}},{{min($allBoundingBoxes//@top)}}
+                        {{min($allBoundingBoxes//@left)}},{{min($allBoundingBoxes//@bottom)}}
+                        {{min($allBoundingBoxes//@right)}},{{min($allBoundingBoxes//@bottom)}}
+                        {{min($allBoundingBoxes//@right)}},{{min($allBoundingBoxes//@top)}}"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <musx:BoundingBox 
+                left="{{g:x(.)}}"
+                right="{{g:x(.)}}"
+                top="{{g:y(.)}}"
+                bottom="{{g:y(.)}}"/>
+              
+            </xsl:otherwise>
+          </xsl:choose>
         </xsl:copy>
-      </xsl:template>-->
+      </xsl:template>
+      <xsl:template match="node()|@*" mode="get_OwnBoundingBox" priority="-1"/>
     </xsl:stylesheet>
+    
   </template>
   
   <function name="g:elementNames">
@@ -125,9 +154,13 @@
       <xsl:function name="g:{@name}">
         <apply-templates select="." mode="add-as-type-attribute"/>
         <xsl:param name="elements" as="node()*"/>
+        <xsl:variable name="result">
+          <apply-templates select="." mode="add-as-type-attribute"/>
+          <xsl:apply-templates select="$elements" mode="get_{@name}"/>
+        </xsl:variable>
         <xsl:choose>
-          <xsl:when test="$elements">
-            <xsl:apply-templates select="$elements" mode="get_{@name}"/>
+          <xsl:when test="$result">
+            <xsl:copy-of select="$result"/>
           </xsl:when>
           <xsl:otherwise>
             <apply-templates select="." mode="generic-default"/>
@@ -149,11 +182,7 @@
     
   </template>
 
-  <template match="xsl-ns:*" mode="create-xsl-output">
-    <copy-of select="."/>
-  </template>
-
-  <template match="def:draw" mode="create-xsl-output">
+  <template match="def:draw">
     <variable name="elementName" select="ancestor::def:element/@name"/>
     <xsl:template match="{g:musxPrefix()}{$elementName}" mode="draw">
       <svg:g>
@@ -167,6 +196,14 @@
       </svg:g>
     </xsl:template>
   </template>
+  
+  <template match="def:OwnBoundingBox">
+    <xsl:template match="musx:{parent::def:element/@name}" mode="get_OwnBoundingBox">
+      <copy-of select="*"/>
+    </xsl:template>
+  </template>
+  
+  <template match="*" mode="create-xsl-output"/>
   
   <template match="@svg:*" mode="copy-svg-attributes">
     <attribute name="{local-name()}">

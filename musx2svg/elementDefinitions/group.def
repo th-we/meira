@@ -10,13 +10,13 @@
       <elementReference name="start" lacuna="g:start(..)"/>
       <elementReference name="end" lacuna="g:end(..)"/>
       
-      <coordinate name="x1" anchor="g:x(g:start(.))" lacuna="0"/>
-      <coordinate name="x2" anchor="g:x(g:end(.))" lacuna="0"/>
-      <coordinate name="y" anchor="g:y(..)" lacuna="0"/>
+      <coordinate name="x1" orientation="x" anchor="g:x(g:start(.))" lacuna="0"/>
+      <coordinate name="x2" orientation="x" anchor="g:x(g:end(.))" lacuna="0"/>
+      <coordinate name="y" orientation="y" anchor="g:y(..)" lacuna="0"/>
       
-      <coordinate name="x" anchor="g:x1(.)" lacuna="0"/>
-      <coordinate name="y1" anchor="g:y(.)" lacuna="0"/>
-      <coordinate name="y2" anchor="g:y(.)" lacuna="0"/>
+      <coordinate name="x" orientation="x" anchor="g:x1(.)" lacuna="0"/>
+      <coordinate name="y1" orientation="y" anchor="g:y(.)" lacuna="0"/>
+      <coordinate name="y2" orientation="y" anchor="g:y(.)" lacuna="0"/>
       
       <scaleFactor name="size" anchor="g:size(..)" lacuna="1"/>
     </properties>

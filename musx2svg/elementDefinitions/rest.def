@@ -16,14 +16,18 @@
     <elementReference name="start" lacuna=".."/>
     <elementReference name="end" lacuna="g:start(.)"/>
     
-    <coordinate name="x" anchor="g:x(g:start(.))" lacuna="0"/>
+    <coordinate name="x" orientation="x" anchor="g:x(g:start(.))" lacuna="0"/>
     <!-- TODO: What should the baseline of rests be? -->
-    <coordinate name="y" anchor="g:y(..)" lacuna="-4 * g:size(ancestor::staff)"/>
+    <coordinate name="y" orientation="y" anchor="g:y(..)" lacuna="-4 * g:size(ancestor::staff)"/>
     
-    <coordinate name="x1" anchor="g:x(.)" lacuna="0"/>
-    <coordinate name="x2" anchor="g:x(g:end(.))" lacuna="0"/>
-    <coordinate name="y1" anchor="g:y(.)" lacuna="0"/>
-    <coordinate name="y2" anchor="g:y(.)" lacuna="0"/>
+    <coordinate name="x1" orientation="x" anchor="g:x(.)" lacuna="0"/>
+    <coordinate name="x2" orientation="x" anchor="g:x(g:end(.))" lacuna="0"/>
+    <coordinate name="y1" orientation="y" anchor="g:y(.)" lacuna="0"/>
+    <coordinate name="y2" orientation="y" anchor="g:y(.)" lacuna="0"/>
+    
+    <coordinate name="BB.left" orientation="x" anchor="0" lacuna="g:x1(.)"/>
+    <!-- QUESTION: Implement this like this?  Getter-templates for @symobl? -->
+    <!--<coordinate name="BB.right" orientation="y" anchor="0" lacuna="max(g:BB.right(@symbol|dots))"/>-->
     
     <!--<color name="color" lacuna="'black'"/>-->
     

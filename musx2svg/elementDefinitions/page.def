@@ -8,13 +8,13 @@
 
 <element name="page">
   <properties>
-    <coordinate name="x1" anchor="0" lacuna="0" />
-    <coordinate name="x2" anchor="0" lacuna="0" />
-    <coordinate name="y" anchor="0" lacuna="0" />
+    <coordinate name="x1" orientation="x" anchor="0" lacuna="0" />
+    <coordinate name="x2" orientation="x" anchor="0" lacuna="0" />
+    <coordinate name="y" orientation="y" anchor="0" lacuna="0" />
     
-    <coordinate name="x" anchor="0" lacuna="0" />
-    <coordinate name="y1" anchor="0" lacuna="0" />
-    <coordinate name="y2" anchor="0" lacuna="0" />
+    <coordinate name="x" orientation="x" anchor="0" lacuna="0" />
+    <coordinate name="y1" orientation="y" anchor="0" lacuna="0" />
+    <coordinate name="y2" orientation="y" anchor="0" lacuna="0" />
     
     <scaleFactor name="size" anchor="1" lacuna="1"/>
     
