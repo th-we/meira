@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<musx 
+    xmlns="NS:MUSX"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:svg="http://www.w3.org/2000/svg">
+  <head>
+    <svg:style type="text/css"><![CDATA[
+      .staff {
+        stroke-width:.8
+      }
+      .bbox {
+        display:none;
+      }
+      *:hover > .bbox {
+        display:inline;
+        stroke: green;
+        fill: none;
+      }
+    ]]>
+    </svg:style>
+    <symbols xlink:href="symbols/symbols.svg"/>
+  </head>
+  <page x2="220" y2="100">
+    <eventlist>
+      <event xml:id="e0" x="20"/>
+      <event xml:id="e1" x="50"/>
+    </eventlist>
+    <system start="e0" x2="p210" y="p25" size="p4" >
+      <staffBracket/>
+      <staffGroup>
+        <staff x2="p200" xml:id="thisStaff">
+          <clef symbol="G" y="L2" start="e0"/>
+          <svg x="p20" y="L-1" size="p1">
+            <svg:text>Test</svg:text>
+            <svg:text stroke="none" y="10">Hallihallo</svg:text>
+          </svg>
+          <rest start="e1" symbol="whole" y="S2"/>
+        </staff>
+      </staffGroup>
+    </system>
+  </page>
+</musx>
