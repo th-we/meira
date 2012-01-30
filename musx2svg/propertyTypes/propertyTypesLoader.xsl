@@ -6,4 +6,5 @@
   <import href="elementReference.xsl"/>
   <import href="integer.xsl"/>
   <import href="symbol.xsl"/>
+  <import href="string.xsl"/>
 </stylesheet>
