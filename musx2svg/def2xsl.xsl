@@ -126,7 +126,7 @@
         </xsl:copy>
       </xsl:template>
       <xsl:template match="node()|@*" mode="get_OwnBoundingBox" priority="-1"/>
-      <xsl:function name="g:OwnBoundingBox">
+      <xsl:function name="g:OwnBoundingBox" as="node()*">
         <xsl:param name="element" as="node()*"/>
         <xsl:apply-templates select="$element" mode="get_OwnBoundingBox"/>
       </xsl:function>
@@ -159,7 +159,7 @@
           <xsl:apply-templates select="$elements" mode="get_{@name}"/>
         </xsl:variable>
         <xsl:choose>
-          <xsl:when test="$result">
+          <xsl:when test="count($result) != 0">
             <xsl:sequence select="$result"/>
           </xsl:when>
           <xsl:otherwise>
@@ -191,7 +191,7 @@
           <xsl:value-of select="normalize-space(concat('{$elementName} ',@class))"/>
         </xsl:attribute>
         <xsl:apply-templates select="@*" mode="copy-svg-and-id-attributes"/>
-        <copy-of select="node()"/>
+        <copy-of select="*"/>
         <xsl:apply-templates mode="draw"/>
       </svg:g>
     </xsl:template>
