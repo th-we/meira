@@ -156,7 +156,7 @@
         </xsl:variable>
         <xsl:choose>
           <xsl:when test="$result">
-            <xsl:copy-of select="$result"/>
+            <xsl:sequence select="$result"/>
           </xsl:when>
           <xsl:otherwise>
             <apply-templates select="." mode="generic-default"/>
