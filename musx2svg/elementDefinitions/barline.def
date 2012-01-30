@@ -28,26 +28,79 @@
           else $staff
       )[1]"/>
 
-    <coordinate name="x" orientation="x" anchor="g:x(..)" lacuna="0"/>
+    <elementReference name="start" lacuna=".."/>
+
+    <coordinate name="x" orientation="x" anchor="g:x(g:start(.))" lacuna="0"/>
     <coordinate name="y1" orientation="y" anchor="g:y1(g:topStaff(.))" lacuna="0"/>
     <coordinate name="y2" orientation="y" anchor="g:y2(g:bottomStaff(.))" lacuna="0"/>
     
-    <!--<bracketType name="bracketType" lacuna="'straight'"/>-->
+    <coordinate name="x1" orientation="x" anchor="g:x(.)" lacuna="0"/>
+    <coordinate name="x2" orientation="x" anchor="g:x(.)" lacuna="0"/>
+    <coordinate name="y" orientation="y" anchor="g:y1(.)" lacuna="0"/>
     
     <!-- What's better - anchor="g:size(g:topStaff(.))", or like this: -->
     <scaleFactor name="size" anchor="g:size(..)" lacuna="1"/>
     
-    <!-- "passive" properties; do not set them! -->
-    <coordinate name="x1" orientation="x" anchor="g:x(.)" lacuna="0"/>
-    <coordinate name="x2" orientation="x" anchor="g:x(.)" lacuna="0"/>
-    <coordinate name="y" orientation="y" anchor="g:y1(.)" lacuna="0"/>
+    <string name="type" lacuna="normal"/>
   </properties>
 
 
   <!-- TODO: Don't hard code so much for drawing. Implement bounding box properties --> 
     
-  <draw stroke="currentColor">
-    <svg:line x1="{g:x(.)}" x2="{g:x(.)}" y1="{g:y1(.)}" y2="{g:y2(.)}" stroke="currentColor"/>
+  <xsl:template name="drawRepeatDots">
+    <xsl:param name="x"/>
+    <xsl:for-each select="(ancestor::musx:staff|ancestor::musx:staffGroup|ancestor::musx:system)[last()]/descendant-or-self::musx:staff">
+      <circle cx="{$x}" cy="{g:y1(.) + 3*g:size(.)}" r="{.25 * g:size(.)}"/>
+      <circle cx="{$x}" cy="{g:y1(.) + 5*g:size(.)}" r="{.25 * g:size(.)}"/>
+    </xsl:for-each>
+  </xsl:template>  
+    
+  <!-- TODO: Make line distance, line thickness and dot size configurable -->
+  <draw svg:stroke="currentColor">
+    <xsl:choose>
+      <xsl:when test="g:type(.)='normal'">
+        <svg:line x1="{g:x(.)}" x2="{g:x(.)}" y1="{g:y1(.)}" y2="{g:y2(.)}"/>
+      </xsl:when>
+      <xsl:when test="g:type(.)='double'">
+        <svg:line x1="{g:x(.)}" x2="{g:x(.)}" y1="{g:y1(.)}" y2="{g:y2(.)}"/>
+        <svg:line x1="{g:x(.) - g:size(.)}" x2="{g:x(.) - g:size(.)}" y1="{g:y1(.)}" y2="{g:y2(.)}"/>
+      </xsl:when>
+      <xsl:when test="g:type(.)='end'">
+        <!-- TODO: Alignment with end of staff -->
+        <svg:line x1="{g:x(.)}" x2="{g:x(.)}" y1="{g:y1(.)}" y2="{g:y2(.)}" stroke-width="{g:size(.)}"/>
+        <svg:line x1="{g:x(.) - g:size(.)}" x2="{g:x(.) - g:size(.)}" y1="{g:y1(.)}" y2="{g:y2(.)}"/>
+      </xsl:when>
+      <xsl:when test="g:type(.)='repeatStart'">
+        <svg:line x1="{g:x(.)}" x2="{g:x(.)}" y1="{g:y1(.)}" y2="{g:y2(.)}" stroke-width="{g:size(.)}"/>
+        <svg:line x1="{g:x(.) + g:size(.)}" x2="{g:x(.) + g:size(.)}" y1="{g:y1(.)}" y2="{g:y2(.)}"/>
+        <xsl:call-template name="drawRepeatDots">
+          <xsl:with-param name="x" select="g:x(.) + 2*g:size(.)"/>
+        </xsl:call-template>
+      </xsl:when>
+      <xsl:when test="g:type(.)='repeatEnd'">
+        <svg:line x1="{g:x(.)}" x2="{g:x(.)}" y1="{g:y1(.)}" y2="{g:y2(.)}" stroke-width="{g:size(.)}"/>
+        <svg:line x1="{g:x(.) - g:size(.)}" x2="{g:x(.) - g:size(.)}" y1="{g:y1(.)}" y2="{g:y2(.)}"/>
+        <xsl:call-template name="drawRepeatDots">
+          <xsl:with-param name="x" select="g:x(.) - 2*g:size(.)"/>
+        </xsl:call-template>
+      </xsl:when>
+      <xsl:when test="g:type(.)='repeatDouble'">
+        <svg:line x1="{g:x(.)}" x2="{g:x(.)}" y1="{g:y1(.)}" y2="{g:y2(.)}" stroke-width="{g:size(.)}"/>
+        <svg:line x1="{g:x(.) - g:size(.)}" x2="{g:x(.) - g:size(.)}" y1="{g:y1(.)}" y2="{g:y2(.)}"/>
+        <xsl:call-template name="drawRepeatDots">
+          <xsl:with-param name="x" select="g:x(.) - 2*g:size(.)"/>
+        </xsl:call-template>
+        <svg:line x1="{g:x(.) + g:size(.)}" x2="{g:x(.) + g:size(.)}" y1="{g:y1(.)}" y2="{g:y2(.)}"/>
+        <xsl:call-template name="drawRepeatDots">
+          <xsl:with-param name="x" select="g:x(.) + 2*g:size(.)"/>
+        </xsl:call-template>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:message>
+          WARNING: Barline <xsl:value-of select="@xml:id"/> of invalid type "<xsl:value-of select="g:type(.)"/>" is ignored.
+        </xsl:message>
+      </xsl:otherwise>
+    </xsl:choose>
   </draw>
 </element>
 
