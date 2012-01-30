@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<elementDefinition
+  xmlns="NS:DEF"
+  xmlns:svg="http://www.w3.org/2000/svg"
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+  xmlns:g="NS:GET">
+  
+<!-- TODO: The brace doesn't work. It has to be adapted for Lilypond symbols -->
+<element name="barline">
+  <!-- TODO: Much of this is duplicate code with staffBrackets.  Can it be shared somehow? -->
+  <properties>
+    <!-- QUESITON: Can the expression
+          (ancestor::musx:staff|ancestor::musx:staffGroup|ancestor::musx:system)[last()]/descendant-or-self::musx:staff 
+        be put in some sort of variable so that it doesn't have to be put twice in each variableReference? -->
+    <elementReference name="topStaff" lacuna="
+      (
+        for $staff in (ancestor::musx:staff|ancestor::musx:staffGroup|ancestor::musx:system)[last()]/descendant-or-self::musx:staff
+        return if (g:y($staff) &gt; g:y((ancestor::musx:staff|ancestor::musx:staffGroup|ancestor::musx:system)[last()]/descendant-or-self::musx:staff))
+          then ()
+          else $staff
+      )[1]"/>
+    <elementReference name="bottomStaff" lacuna="
+      (
+        for $staff in (ancestor::musx:staff|ancestor::musx:staffGroup|ancestor::musx:system)[last()]/descendant-or-self::musx:staff
+        return if (g:y($staff) &lt; g:y((ancestor::musx:staff|ancestor::musx:staffGroup|ancestor::musx:system)[last()]/descendant-or-self::musx:staff))
+          then ()
+          else $staff
+      )[1]"/>
+
+    <coordinate name="x" orientation="x" anchor="g:x(..)" lacuna="0"/>
+    <coordinate name="y1" orientation="y" anchor="g:y1(g:topStaff(.))" lacuna="0"/>
+    <coordinate name="y2" orientation="y" anchor="g:y2(g:bottomStaff(.))" lacuna="0"/>
+    
+    <!--<bracketType name="bracketType" lacuna="'straight'"/>-->
+    
+    <!-- What's better - anchor="g:size(g:topStaff(.))", or like this: -->
+    <scaleFactor name="size" anchor="g:size(..)" lacuna="1"/>
+    
+    <!-- "passive" properties; do not set them! -->
+    <coordinate name="x1" orientation="x" anchor="g:x(.)" lacuna="0"/>
+    <coordinate name="x2" orientation="x" anchor="g:x(.)" lacuna="0"/>
+    <coordinate name="y" orientation="y" anchor="g:y1(.)" lacuna="0"/>
+  </properties>
+
+
+  <!-- TODO: Don't hard code so much for drawing. Implement bounding box properties --> 
+    
+  <draw stroke="currentColor">
+    <svg:line x1="{g:x(.)}" x2="{g:x(.)}" y1="{g:y1(.)}" y2="{g:y2(.)}" stroke="currentColor"/>
+  </draw>
+</element>
+
+</elementDefinition>

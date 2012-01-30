@@ -20,16 +20,19 @@
     </svg:style>
     <symbols xlink:href="symbols/symbols.svg"/>
   </head>
-  <page x2="220" y2="100">
+  <page x2="500" y2="300">
     <eventlist>
       <event xml:id="e0" x="20"/>
+      <event xml:id="stehsatz" x="25"/>
       <event xml:id="e1" x="50"/>
+      <event xml:id="e_end" x="250"/>
     </eventlist>
-    <system start="e0" x2="p210" y="p25" size="p4" >
+    <system start="e0" end="e_end" y="p25" size="p3" >
+      <barline/>
       <staffBracket/>
       <staffGroup>
-        <staff x2="p200" xml:id="thisStaff">
-          <clef symbol="G" y="L2" start="e0">
+        <staff>
+          <clef symbol="G" y="L2" start="stehsatz">
             <transposeNumber placement="above">8</transposeNumber>
           </clef>
           <svg x="p20" y="L-1" size="p1">
@@ -37,6 +40,9 @@
             <svg:text stroke="none" y="10">Hallihallo</svg:text>
           </svg>
           <rest start="e1" symbol="whole" y="S2"/>
+        </staff>
+        <staff y="p50">
+          <clef symbol="F" y="L4" start="stehsatz"/>
         </staff>
       </staffGroup>
     </system>
