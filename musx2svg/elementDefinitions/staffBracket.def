@@ -29,10 +29,9 @@
       )[1]"/>
 
     <coordinate name="x" orientation="x" anchor="g:x(..)" lacuna="0"/>
-    <coordinate name="y1" orientation="y" anchor="g:y1(g:bottomStaff(.))" lacuna="0"/>
-    <coordinate name="y2" orientation="y" anchor="g:y2(g:topStaff(.))" lacuna="0"/>
+    <coordinate name="y1" orientation="y" anchor="g:y1(g:topStaff(.))" lacuna="0"/>
+    <coordinate name="y2" orientation="y" anchor="g:y2(g:bottomStaff(.))" lacuna="0"/>
     
-    <!--<color name="color" lacuna="'black'"/>-->
     <!--<bracketType name="bracketType" lacuna="'straight'"/>-->
     
     <scaleFactor name="size" anchor="g:size(..)" lacuna="1"/>
@@ -55,10 +54,10 @@
 
   <!-- TODO: Don't hard code so much for drawing. Implement bounding box properties --> 
     
-    <draw stroke="currentColor">
-    <svg:line x1="{g:x(.) - 1.5 * g:size(.)}" x2="{g:x(.) - 1.5 * g:size(.)}" y1="{g:y1(.) + 1.4 * g:size(.)}" y2="{g:y2(.) - 1.4 * g:size(.)}" stroke-width="{1.3 * g:size(.)}" fill="none" stroke="currentColor"/>
-    <svg:use xlink:href="{g:brackettip(.)}" transform="translate({g:x(.) - g:size(.)},{g:y1(.) + g:size(.)}) scale({g:size(.)},{- g:size(.)})"/>
-    <svg:use xlink:href="{g:brackettip(.)}" transform="translate({g:x(.) - g:size(.)},{g:y2(.) - g:size(.)}) scale({g:size(.)})" />
+  <draw stroke="currentColor">
+    <svg:line x1="{g:x(.) - 1.5 * g:size(.)}" x2="{g:x(.) - 1.5 * g:size(.)}" y1="{g:y1(.) - 1.4 * g:size(.)}" y2="{g:y2(.) + 1.4 * g:size(.)}" stroke-width="{1.3 * g:size(.)}" fill="none" stroke="currentColor"/>
+    <svg:use xlink:href="{g:brackettip(.)}" transform="translate({g:x(.) - g:size(.)},{g:y2(.) + g:size(.)}) scale({g:size(.)},{- g:size(.)})"/>
+    <svg:use xlink:href="{g:brackettip(.)}" transform="translate({g:x(.) - g:size(.)},{g:y1(.) - g:size(.)}) scale({g:size(.)})" />
   </draw>
 </element>
 
