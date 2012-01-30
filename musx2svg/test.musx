@@ -29,7 +29,9 @@
       <staffBracket/>
       <staffGroup>
         <staff x2="p200" xml:id="thisStaff">
-          <clef symbol="G" y="L2" start="e0"/>
+          <clef symbol="G" y="L2" start="e0">
+            <transposeNumber placement="above">8</transposeNumber>
+          </clef>
           <svg x="p20" y="L-1" size="p1">
             <svg:text>Test</svg:text>
             <svg:text stroke="none" y="10">Hallihallo</svg:text>

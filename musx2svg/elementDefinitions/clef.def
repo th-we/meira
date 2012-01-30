@@ -16,12 +16,6 @@
     <coordinate name="y" orientation="y" anchor="g:y(..)" lacuna="0"/>
     
     <coordinate name="x1" orientation="x" anchor="g:x(.)" lacuna="0"/>
-    <!-- TODO: x2 should be calculated from the symbol width, something like
-      ?x + ?size * document('../../symbol-library/lib.svg')/key('id',?symbol)/?x2
-      How can we store the metadata with the symbols? Should we use getters
-      or can we simply rely on attributes (preferable)?
-      Analogously, x1, y1 and y2 should be calculated.
-    -->
     <coordinate name="x2" orientation="x" anchor="g:x(.)" lacuna="0"/>
     <coordinate name="y1" orientation="y" anchor="g:y(.)" lacuna="0"/>
     <coordinate name="y2" orientation="y" anchor="g:y(.)" lacuna="0"/>
@@ -35,15 +29,34 @@
   <draw>
     <svg:use transform="translate({g:x(.)},{g:y(.)}) scale({g:size(.)})"
       xlink:href="{g:symbol(.)}"/>
-<!--    <xsl:variable name="BB" as="node()">
-      <xsl:apply-templates mode="get_symbol.BoundingBox" select="."/>
-    </xsl:variable>
-    <svg:polygon points="{$BB/@left},{$BB/@top} 
-                         {$BB/@left},{$BB/@bottom} 
-                         {$BB/@right},{$BB/@bottom}
-                         {$BB/@right},{$BB/@top}" stroke="green" fill="none"/>-->
   </draw>
 
+</element>
+  
+<element name="transposeNumber">
+  <!-- TODO: Refine placement of number -->
+  <properties>
+    <coordinate name="x" orientation="x" anchor="g:x(..)" lacuna="0"/>
+    <coordinate name="y" orientation="y" anchor="
+      if(g:placement(.)='above')
+        then g:OwnBoundingBox(..)//@top
+        else g:OwnBoundingBox(..)//@bottom + g:size(.)
+      " lacuna="0"/>
+    
+    <coordinate name="x1" orientation="x" anchor="g:x(.)" lacuna="0"/>
+    <coordinate name="x2" orientation="x" anchor="g:x(.)" lacuna="0"/>
+    <coordinate name="y1" orientation="y" anchor="g:y(.)" lacuna="0"/>
+    <coordinate name="y2" orientation="y" anchor="g:y(.)" lacuna="0"/>
+    
+    <string name="placement" lacuna="top"/>
+    <scaleFactor name="size" anchor="g:size(..)" lacuna="4"/>
+  </properties>
+  
+  <draw>
+    <!-- TODO: Add font information --> 
+    <svg:text transform="translate({g:x(.)},{g:y(.)}) scale({g:size(.)})" font-size="1"><xsl:copy-of select="node()"/></svg:text>
+  </draw>
+  
 </element>
   
 </elementDefinition>
