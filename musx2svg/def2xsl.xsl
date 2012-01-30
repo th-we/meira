@@ -107,11 +107,12 @@
                 right="{{max($allBoundingBoxes//@right)}}"
                 top="{{min($allBoundingBoxes//@top)}}"
                 bottom="{{max($allBoundingBoxes//@bottom)}}"/>
-              <svg:polygon class="bbox"
+              <!-- Uncomment the following for checking the bounding boxes visually -->
+              <!--<svg:polygon class="bbox"
                 points="{{min($allBoundingBoxes//@left)}},{{min($allBoundingBoxes//@top)}}
                         {{min($allBoundingBoxes//@left)}},{{min($allBoundingBoxes//@bottom)}}
                         {{min($allBoundingBoxes//@right)}},{{min($allBoundingBoxes//@bottom)}}
-                        {{min($allBoundingBoxes//@right)}},{{min($allBoundingBoxes//@top)}}"/>
+                        {{min($allBoundingBoxes//@right)}},{{min($allBoundingBoxes//@top)}}"/>-->
             </xsl:when>
             <xsl:otherwise>
               <musx:BoundingBox 
@@ -128,11 +129,6 @@
     </xsl:stylesheet>
     
   </template>
-  
-  <function name="g:elementNames">
-    <param name="elements" as="node()*"/>
-    <sequence select="$elements/ancestor::def:element/@name"/>
-  </function>
   
   <!-- Add functions and templates that are used to access properties (in "g:x(.)" style) -->
   <template name="add-getter-functions-and-templates">
@@ -202,8 +198,6 @@
       <copy-of select="*"/>
     </xsl:template>
   </template>
-  
-  <template match="*" mode="create-xsl-output"/>
   
   <template match="@svg:*" mode="copy-svg-attributes">
     <attribute name="{local-name()}">
