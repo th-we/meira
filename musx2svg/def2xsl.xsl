@@ -126,6 +126,10 @@
         </xsl:copy>
       </xsl:template>
       <xsl:template match="node()|@*" mode="get_OwnBoundingBox" priority="-1"/>
+      <xsl:function name="g:OwnBoundingBox">
+        <xsl:param name="element" as="node()*"/>
+        <xsl:apply-templates select="$element" mode="get_OwnBoundingBox"/>
+      </xsl:function>
     </xsl:stylesheet>
     
   </template>
