@@ -16,6 +16,7 @@
   <includeDefinition href="group.def"/>
   <includeDefinition href="staffBracket.def"/>
   <includeDefinition href="barline.def"/>
+  <includeDefinition href="note.def"/>
   
   <draw/>
 

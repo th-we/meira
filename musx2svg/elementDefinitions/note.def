@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<?xml-stylesheet type='text/xsl' href='def2xsl.xsl'?>
+<elementDefinition
+    xmlns="NS:DEF"
+    xmlns:svg="http://www.w3.org/2000/svg"
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:xlink="http://www.w3.org/1999/xlink">
+
+<!-- TODO: - Support stems on chords (already done?)
+           - Automatically flipped noteheads in chords with seconds 
+           - Properly implement ?orientation -->
+
+<element name="note">
+  <properties>
+    <elementReference name="start" lacuna=".."/>
+    
+    <coordinate name="x" orientation="x" anchor="g:x(g:start(.))" lacuna="0"/>
+    <coordinate name="y" orientation="y" anchor="g:y(..)" lacuna="0"/>
+    
+    <coordinate name="x1" orientation="x" anchor="g:x(.)" lacuna="0"/>
+    <coordinate name="x2" orientation="x" anchor="g:x(.)" lacuna="0"/>
+    <coordinate name="y1" orientation="y" anchor="g:y(.)" lacuna="0"/>
+    <coordinate name="y2" orientation="y" anchor="g:y(.)" lacuna="0"/>
+    
+    <scaleFactor name="size" anchor="g:size(..)" lacuna="1"/>
+    
+    <!-- Following the SVG coordinate system, "1" means stem down, "-1" means stem up -->
+    <!-- QUESTION: Is there a general rule for staffs with other than 5 lines?
+                   Especially, what about staffs with an even number of liens?
+                   What about staffs with 1 or 0 lines? -->
+    <integer name="direction" lacuna="
+        if (g:step(.) &lt; g:lines(ancestor::musx:staff))
+        then 1
+        else -1"/>
+
+    <!-- The following is only meant to implement a getter function g:step(.). 
+         QUESTION: Prevent this from being explicitly set as an attribute? -->
+    <!-- Usually, @y should be given with the 'S' unit.  The else branch would work for
+         any unit, but is much more inefficient for the typical case. -->
+    <number name="step" lacuna="(
+          if(substring(@y,1,1)='S')
+          then substring(@y,2)
+          else (g:y(.) - g:y(ancestor::musx:staff)) div g:size(ancestor::musx:staff)
+        ) cast as xs:double"/>
+    
+  </properties>
+  
+  <xsl:template name="addLedgerLines">
+    <!-- QUESTION: Allow shortened ledger lines after accidentals? (like Lilypond) -->
+    <!-- $headDirection is set to -1 if head is above staff, else 1 -->
+    <xsl:param name="headDirection" select="
+        if (g:step(.) &lt; 0)
+          then -1
+          else 1"/>
+    <xsl:param name="staffSize" select="g:size(ancestor::musx:staff)"/>
+    <xsl:param name="currentY" select="
+        if ($headDirection &lt; 0)
+        then g:y1(ancestor::musx:staff) - 2*$staffSize
+        else g:y2(ancestor::musx:staff) + 2*$staffSize
+      "/>
+    <xsl:param name="noteBoundingBox" select="g:OwnBoundingBox(musx:head)"/>
+    <!-- TODO: Don't hard code the protrusion of ledger lines -->
+    <xsl:param name="x1" select="number($noteBoundingBox//@left) - g:size(.)"/>
+    <xsl:param name="x2" select="number($noteBoundingBox//@right) + g:size(.)"/>
+    
+    <!-- As long as the difference between the note's y and the current ledger lines y
+         (respecting the direction) is not yet negative (which would mean, the ledger line
+         has gone beyond the note), draw another ledger line. "-.5*g:size(.) is there as
+         a tolerance to avoid omitted ledger lines due to rounding errors. -->
+    <xsl:if test="$headDirection*(g:y(.) - $currentY) &gt; -.5 * g:size(.)">
+      <svg:line x1="{$x1}" x2="{$x2}" y1="{$currentY}" y2="{$currentY}"/>
+      <!--<xsl:copy-of select="$noteBoundingBox"/>-->
+      <xsl:call-template name="addLedgerLines">
+        <xsl:with-param name="headDirection" select="$headDirection"/>
+        <xsl:with-param name="staffSize" select="$staffSize"/>
+        <xsl:with-param name="currentY" select="$currentY + 2 * $headDirection * $staffSize"/>
+        <xsl:with-param name="x1" select="$x1"/>
+        <xsl:with-param name="x2" select="$x2"/>
+      </xsl:call-template>
+    </xsl:if>
+  </xsl:template>
+  
+  <draw>
+    <svg:g class="ledgerlines" stroke="currentColor">
+      <xsl:call-template name="addLedgerLines"/>
+    </svg:g>
+  </draw>
+
+</element>
+  
+  <element name="head">
+    <properties>
+      <coordinate name="x" orientation="x" anchor="g:x(..)" lacuna="0"/>
+      <coordinate name="y" orientation="y" anchor="g:y(..)" lacuna="0"/>
+      
+      <coordinate name="x1" orientation="x" anchor="g:x(.)" lacuna="0"/>
+      <coordinate name="x2" orientation="x" anchor="g:x(.)" lacuna="0"/>
+      <coordinate name="y1" orientation="y" anchor="g:y(.)" lacuna="0"/>
+      <coordinate name="y2" orientation="y" anchor="g:y(.)" lacuna="0"/>
+      
+      <scaleFactor name="size" anchor="g:size(..)" lacuna="1"/>
+      
+      <symbol name="symbol" lacuna="notehead.quarter"/>
+      
+    </properties>
+    
+    <draw>
+      <svg:use transform="translate({g:x(.)},{g:y(.)}) scale({g:size(.)})" xlink:href="{g:symbol(.)}"/>
+    </draw>
+    
+  </element>
+  
+  <element name="accidental">
+    <properties>
+      <coordinate name="x" orientation="x" anchor="g:x(..)" lacuna="-3*g:size(.)"/>
+      <coordinate name="y" orientation="y" anchor="g:y(..)" lacuna="0"/>
+      
+      <coordinate name="x1" orientation="x" anchor="g:x(.)" lacuna="0"/>
+      <coordinate name="x2" orientation="x" anchor="g:x(.)" lacuna="0"/>
+      <coordinate name="y1" orientation="y" anchor="g:y(.)" lacuna="0"/>
+      <coordinate name="y2" orientation="y" anchor="g:y(.)" lacuna="0"/>
+      
+      <scaleFactor name="size" anchor="g:size(..)" lacuna="1"/>
+      
+      <symbol name="symbol" lacuna=""/>
+      
+    </properties>
+    
+    <draw>
+      <svg:use transform="translate({g:x(.)},{g:y(.)}) scale({g:size(.)})" xlink:href="{g:symbol(.)}"/>
+    </draw>
+    
+  </element>
+  
+  
+<element name="stem">
+  <!-- TODO: Take into account necessary elongation when there are flags. -->
+  <properties>
+    <!-- This doesn't feel ideal.  If there's no <head>, the x value will be 0 
+         QUESTION: make g:OwnBoundingBox() return bounding box coordinates relative to the head's x coordinate?-->
+    <coordinate name="x" orientation="x" anchor="0" lacuna="
+        if (g:direction(.) = 1)
+        then g:x(..)
+        else number(g:OwnBoundingBox(../musx:head)//@right)"/>
+    <coordinate name="y1" orientation="y" anchor="g:y(..)" lacuna="0"/>
+    <coordinate name="y2" orientation="y" anchor="g:y(ancestor::musx:staff)" lacuna="
+        (
+          max((g:direction(.)*(g:step(..) - 4) + 7, 0))
+          * g:direction(.) + 4
+        ) * g:size(ancestor::musx:staff)"/>
+
+    <coordinate name="x1" orientation="x" anchor="g:x(.)" lacuna="0"/>
+    <coordinate name="x2" orientation="x" anchor="g:x(.)" lacuna="0"/>
+    <coordinate name="y" orientation="y" anchor="g:y1(.)" lacuna="0"/>
+    
+    <integer name="direction" lacuna="g:direction(..)"/>
+    
+    <scaleFactor name="size" anchor="g:size(..)" lacuna="1"/>
+    
+  </properties>
+  
+  <draw>
+    <svg:line x1="{g:x1(.)}" x2="{g:x2(.)}" y1="{g:y1(.)}" y2="{g:y2(.)}" stroke="currentColor"/>
+  </draw>
+</element>
+  
+
+<!-- TODO: Add dots, flags -->
+
+</elementDefinition> 

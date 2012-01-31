@@ -21,7 +21,7 @@
     <xsl:stylesheet version="2.0"  exclude-result-prefixes="xs def g musx svg">
       <xsl:output indent="yes"/>
       
-      <xsl:variable name="symbolURIroot" select="/musx:musx/musx:head/musx:symbols/@xlink:href"/>
+      <xsl:variable name="symbolURIroot" select="/musx:musx/musx:musxHead/musx:symbols/@xlink:href"/>
       
       <call-template name="add-getter-functions-and-templates">
         <with-param name="properties" as="node()*">
@@ -57,8 +57,8 @@
       <!-- Default draw template: Ignore unknown content -->
       <xsl:template match="*" mode="draw" priority="-5"/>
       
-      <!-- Templates that transform <musx:head> to <svg:defs> -->
-      <xsl:template match="musx:head" mode="generate-defs">
+      <!-- Templates that transform <musx:musxHead> to <svg:defs> -->
+      <xsl:template match="musx:musxHead" mode="generate-defs">
         <svg:defs>
           <xsl:apply-templates mode="generate-defs"/>
         </svg:defs>
@@ -71,7 +71,7 @@
       <!-- Main template for converting to SVG -->
       <xsl:template match="/musx:musx">
         <svg:svg>
-          <xsl:apply-templates select="musx:head[*]" mode="generate-defs"/>
+          <xsl:apply-templates select="musx:musxHead[*]" mode="generate-defs"/>
           <xsl:apply-templates mode="draw"/>
         </svg:svg>
       </xsl:template>

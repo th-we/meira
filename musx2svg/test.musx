@@ -3,7 +3,7 @@
     xmlns="NS:MUSX"
     xmlns:xlink="http://www.w3.org/1999/xlink"
     xmlns:svg="http://www.w3.org/2000/svg">
-  <head>
+  <musxHead>
     <svg:style type="text/css"><![CDATA[
       .staff {
         stroke-width:.8
@@ -19,12 +19,17 @@
     ]]>
     </svg:style>
     <symbols xlink:href="symbols/symbols.svg"/>
-  </head>
+  </musxHead>
   <page x2="500" y2="300">
     <eventlist>
       <event xml:id="e0" x="20"/>
       <event xml:id="stehsatz" x="25"/>
       <event xml:id="e1" x="50"/>
+      <event xml:id="e2" x="70"/>
+      <event xml:id="e3" x="90"/>
+      <event xml:id="e4" x="110"/>
+      <event xml:id="e5" x="130"/>
+      <event xml:id="e6" x="150"/>
       <event xml:id="e_end" x="250"/>
     </eventlist>
     <system start="e0" end="e_end" y="p25" size="p3" >
@@ -43,8 +48,34 @@
         </staff>
         <staff y="p50">
           <clef symbol="F" y="L4" start="stehsatz"/>
+          <note start="e1" y="S2">
+            <head/>
+            <stem/>
+          </note>
+          <note start="e2" y="S6">
+            <head/>
+            <stem direction="1"/>
+          </note>
+          <note start="e3" y="S14">
+            <head/>
+            <stem direction="1"/>
+          </note>
+          <note start="e4" y="S-4">
+            <head/>
+            <stem/>
+          </note>
+          <note start="e5" y="S13">
+            <head/>
+            <stem/>
+          </note>
+          <note start="e6" y="S-5">
+            <head/>
+            <stem/>
+            <accidental symbol="s"/>
+          </note>
         </staff>
       </staffGroup>
+      <barline start="e_end" type="end"/>
     </system>
   </page>
 </musx>
