@@ -8,12 +8,12 @@
       .staff {
         stroke-width:.8
       }
-      .bbox {
-        display:none;
+      .BoundingBox {
+        fill:none;
+        stroke:green;
       }
-      *:hover > .bbox {
-        display:inline;
-        stroke: green;
+      *:hover > .BoundingBox {
+        stroke: red;
         fill: none;
       }
     ]]>
@@ -30,13 +30,18 @@
       <event xml:id="e4" x="110"/>
       <event xml:id="e5" x="130"/>
       <event xml:id="e6" x="150"/>
-      <event xml:id="e_end" x="250"/>
+      <event xml:id="e7" x="170"/>
+      <event xml:id="e8" x="190"/>
+      <event xml:id="e9" x="210"/>
+      <event xml:id="e10" x="230"/>
+      <event xml:id="e11" x="250"/>
+      <event xml:id="e_end" x="270"/>
     </eventlist>
     <system start="e0" end="e_end" y="p25" size="p3" >
       <barline/>
       <staffBracket/>
       <staffGroup>
-        <staff>
+        <staff lines="4">
           <clef symbol="G" y="L2" start="stehsatz">
             <transposeNumber placement="above">8</transposeNumber>
           </clef>
@@ -75,6 +80,11 @@
           </note>
         </staff>
       </staffGroup>
+      <barline start="e7" type="double"/>
+      <barline start="e8" type="repeatEnd"/>
+      <barline start="e9" type="repeatStart"/>
+      <barline start="e10"/>
+      <barline start="e10" type="repeatDouble"/>
       <barline start="e_end" type="end"/>
     </system>
   </page>

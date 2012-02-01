@@ -77,17 +77,17 @@
       </xsl:template>
       
       <!-- Template for adding bounding box dimension info to the musx data.
-           To use this template, copy-and-add-bounding-box has to be set as the initial mode 
-           (e.g. using the switch -im:copy-and-add-bounding-boxes with saxonb-xslt) -->
-      <xsl:template match="@*|node()" mode="copy-and-add-bounding-boxes">
+           To use this template, add-bounding-boxes has to be set as the initial mode 
+           (e.g. using the switch -im:add-bounding-boxes with saxonb-xslt) -->
+      <xsl:template match="@*|node()" mode="add-bounding-boxes">
         <xsl:copy>
-          <xsl:apply-templates mode="copy-and-add-bounding-boxes" select="@*|node()"/>
+          <xsl:apply-templates mode="add-bounding-boxes" select="@*|node()"/>
         </xsl:copy>
       </xsl:template>
       
-      <xsl:template match="musx:*" mode="copy-and-add-bounding-boxes" priority="1">
+      <xsl:template match="musx:*" mode="add-bounding-boxes" priority="1">
         <xsl:variable name="children" as="node()*">
-          <xsl:apply-templates mode="copy-and-add-bounding-boxes" select="node()"/>
+          <xsl:apply-templates mode="add-bounding-boxes" select="node()"/>
         </xsl:variable>
         <!-- TODO: $allBoundingBoxes is always empty right now because def:OwnBoundingBox isn't 
                    in any of the element definitions -->
@@ -130,6 +130,14 @@
         <xsl:param name="element" as="node()*"/>
         <xsl:apply-templates select="$element" mode="get_OwnBoundingBox"/>
       </xsl:function>
+      
+      <xsl:template match="/" mode="svg-with-bounding-boxes">
+        <xsl:variable name="musxWithBoundingBoxes">
+          <xsl:apply-templates select="." mode="add-bounding-boxes"/>
+        </xsl:variable>
+        <xsl:apply-templates select="$musxWithBoundingBoxes/musx:musx"/>
+      </xsl:template>
+      
     </xsl:stylesheet>
     
   </template>

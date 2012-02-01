@@ -17,6 +17,7 @@
   <includeDefinition href="staffBracket.def"/>
   <includeDefinition href="barline.def"/>
   <includeDefinition href="note.def"/>
+  <includeDefinition href="BoundingBox.def"/>
   
   <draw/>
 
