@@ -8,4 +8,5 @@
   <import href="symbol.xsl"/>
   <import href="string.xsl"/>
   <import href="number.xsl"/>
+  <import href="boolean.xsl"/>
 </stylesheet>

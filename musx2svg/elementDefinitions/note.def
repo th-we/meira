@@ -22,6 +22,20 @@
     <coordinate name="y1" orientation="y" anchor="g:y(.)" lacuna="0"/>
     <coordinate name="y2" orientation="y" anchor="g:y(.)" lacuna="0"/>
     
+    <integer name="ledgerLines.direction" lacuna="if (g:step(.) &lt; 0)
+                                                  then -1
+                                                  else 1"/>
+    <coordinate name="ledgerLines.y1" orientation="y" lacuna="0" anchor="
+        if (g:ledgerLines.direction(.) &lt; 0)
+        then for $staff in ancestor::musx:staff[last()] 
+             return g:y1($staff) - 2*g:size($staff)
+        else for $staff in ancestor::musx:staff[last()] 
+             return g:y2($staff) + 2*g:size($staff)"/>
+    <!-- QUESTION: Is it necessary to refine this? -->
+    <coordinate name="ledgerLines.y2" orientation="y" anchor="g:y(.)" lacuna="0"/>
+    <boolean name="ledgerLines.draw" lacuna="true()"/>
+    <scaleFactor name="ledgerLines.protrusion" anchor="g:size(..)" lacuna=".75"/>
+    
     <scaleFactor name="size" anchor="g:size(..)" lacuna="1"/>
     
     <!-- Following the SVG coordinate system, "1" means stem down, "-1" means stem up -->
@@ -47,35 +61,33 @@
   
   <xsl:template name="addLedgerLines">
     <!-- QUESTION: Allow shortened ledger lines after accidentals? (like Lilypond) -->
-    <!-- $headDirection is set to -1 if head is above staff, else 1 -->
-    <xsl:param name="headDirection" select="
-        if (g:step(.) &lt; 0)
-          then -1
-          else 1"/>
-    <xsl:param name="staffSize" select="g:size(ancestor::musx:staff)"/>
-    <xsl:param name="currentY" select="
-        if ($headDirection &lt; 0)
-        then g:y1(ancestor::musx:staff) - 2*$staffSize
-        else g:y2(ancestor::musx:staff) + 2*$staffSize
-      "/>
-    <xsl:param name="noteBoundingBox" select="g:OwnBoundingBox(musx:head)"/>
+    <!-- $direction is set to -1 if head is above staff, else 1 -->
+    <xsl:param name="direction" select="g:ledgerLines.direction(.)"/>
+    <xsl:param name="staffSize" select="g:size(ancestor::musx:staff[last()])"/>
+    <xsl:param name="currentY" select="g:ledgerLines.y1(.)"/>
+    <xsl:param name="headBoundingBox" select="g:OwnBoundingBox(musx:head)"/>
+    <xsl:param name="protrusion"  select="g:ledgerLines.protrusion(.)"/>
     <!-- TODO: Don't hard code the protrusion of ledger lines -->
-    <xsl:param name="x1" select="number($noteBoundingBox//@left) - g:size(.)"/>
-    <xsl:param name="x2" select="number($noteBoundingBox//@right) + g:size(.)"/>
+    <xsl:param name="x1" select="number($headBoundingBox//@left) - $protrusion"/>
+    <xsl:param name="x2" select="number($headBoundingBox//@right) + $protrusion"/>
+    <xsl:param name="noteY" select="g:y(.)"/>
     
-    <!-- As long as the difference between the note's y and the current ledger lines y
+    <!-- As long as the difference between the note's y and the current ledger line's y
          (respecting the direction) is not yet negative (which would mean, the ledger line
          has gone beyond the note), draw another ledger line. "-.5*g:size(.) is there as
          a tolerance to avoid omitted ledger lines due to rounding errors. -->
-    <xsl:if test="$headDirection*(g:y(.) - $currentY) &gt; -.5 * g:size(.)">
+    <xsl:if test="$direction*($noteY - $currentY) &gt; -.5 * g:size(.)">
       <svg:line x1="{$x1}" x2="{$x2}" y1="{$currentY}" y2="{$currentY}"/>
-      <!--<xsl:copy-of select="$noteBoundingBox"/>-->
+      <!--<xsl:copy-of select="$headBoundingBox"/>-->
       <xsl:call-template name="addLedgerLines">
-        <xsl:with-param name="headDirection" select="$headDirection"/>
+        <xsl:with-param name="direction" select="$direction"/>
         <xsl:with-param name="staffSize" select="$staffSize"/>
-        <xsl:with-param name="currentY" select="$currentY + 2 * $headDirection * $staffSize"/>
+        <xsl:with-param name="currentY" select="$currentY + 2 * $direction * $staffSize"/>
+        <xsl:with-param name="headBoundingBox" select="$headBoundingBox"/>
+        <xsl:with-param name="protrusion" select="$protrusion"/>
         <xsl:with-param name="x1" select="$x1"/>
         <xsl:with-param name="x2" select="$x2"/>
+        <xsl:with-param name="noteY" select="$noteY"/>
       </xsl:call-template>
     </xsl:if>
   </xsl:template>
@@ -85,52 +97,65 @@
       <xsl:call-template name="addLedgerLines"/>
     </svg:g>
   </draw>
+  
+  <OwnBoundingBox>
+    <xsl:variable name="headBoundingBox" select="g:OwnBoundingBox(musx:head)"/>
+    <xsl:variable name="protrusion" select="g:ledgerLines.protrusion(.)"/>
+    <xsl:variable name="y1" select="g:ledgerLines.y1(.)"/>
+    <xsl:variable name="headY" select="g:y(musx:head)"/>
+    <xsl:if test="g:ledgerLines.draw(.)">
+      <BoundingBox left="{number($headBoundingBox//@left) - $protrusion}"
+                   right="{number($headBoundingBox//@right) + $protrusion}"
+                   top="{min(($headY,$y1))}"
+                   bottom="{max(($headY,$y1))}"/>
+    </xsl:if>
+  </OwnBoundingBox>
 
 </element>
   
-  <element name="head">
-    <properties>
-      <coordinate name="x" orientation="x" anchor="g:x(..)" lacuna="0"/>
-      <coordinate name="y" orientation="y" anchor="g:y(..)" lacuna="0"/>
-      
-      <coordinate name="x1" orientation="x" anchor="g:x(.)" lacuna="0"/>
-      <coordinate name="x2" orientation="x" anchor="g:x(.)" lacuna="0"/>
-      <coordinate name="y1" orientation="y" anchor="g:y(.)" lacuna="0"/>
-      <coordinate name="y2" orientation="y" anchor="g:y(.)" lacuna="0"/>
-      
-      <scaleFactor name="size" anchor="g:size(..)" lacuna="1"/>
-      
-      <symbol name="symbol" lacuna="notehead.quarter"/>
-      
-    </properties>
+<element name="head">
+  <properties>
+    <coordinate name="x" orientation="x" anchor="g:x(..)" lacuna="0"/>
+    <coordinate name="y" orientation="y" anchor="g:y(..)" lacuna="0"/>
     
-    <draw>
-      <svg:use transform="translate({g:x(.)},{g:y(.)}) scale({g:size(.)})" xlink:href="{g:symbol(.)}"/>
-    </draw>
+    <coordinate name="x1" orientation="x" anchor="g:x(.)" lacuna="0"/>
+    <coordinate name="x2" orientation="x" anchor="g:x(.)" lacuna="0"/>
+    <coordinate name="y1" orientation="y" anchor="g:y(.)" lacuna="0"/>
+    <coordinate name="y2" orientation="y" anchor="g:y(.)" lacuna="0"/>
     
-  </element>
+    <scaleFactor name="size" anchor="g:size(..)" lacuna="1"/>
+    
+    <symbol name="symbol" lacuna="notehead.quarter"/>
+    
+  </properties>
   
-  <element name="accidental">
-    <properties>
-      <coordinate name="x" orientation="x" anchor="g:x(..)" lacuna="-3*g:size(.)"/>
-      <coordinate name="y" orientation="y" anchor="g:y(..)" lacuna="0"/>
-      
-      <coordinate name="x1" orientation="x" anchor="g:x(.)" lacuna="0"/>
-      <coordinate name="x2" orientation="x" anchor="g:x(.)" lacuna="0"/>
-      <coordinate name="y1" orientation="y" anchor="g:y(.)" lacuna="0"/>
-      <coordinate name="y2" orientation="y" anchor="g:y(.)" lacuna="0"/>
-      
-      <scaleFactor name="size" anchor="g:size(..)" lacuna="1"/>
-      
-      <symbol name="symbol" lacuna=""/>
-      
-    </properties>
+  <draw>
+    <svg:use transform="translate({g:x(.)},{g:y(.)}) scale({g:size(.)})" xlink:href="{g:symbol(.)}"/>
+  </draw>
+  
+</element>
+
+<element name="accidental">
+  <properties>
+    <coordinate name="x" orientation="x" anchor="g:x(..)" lacuna="-3*g:size(.)"/>
+    <coordinate name="y" orientation="y" anchor="g:y(..)" lacuna="0"/>
     
-    <draw>
-      <svg:use transform="translate({g:x(.)},{g:y(.)}) scale({g:size(.)})" xlink:href="{g:symbol(.)}"/>
-    </draw>
+    <coordinate name="x1" orientation="x" anchor="g:x(.)" lacuna="0"/>
+    <coordinate name="x2" orientation="x" anchor="g:x(.)" lacuna="0"/>
+    <coordinate name="y1" orientation="y" anchor="g:y(.)" lacuna="0"/>
+    <coordinate name="y2" orientation="y" anchor="g:y(.)" lacuna="0"/>
     
-  </element>
+    <scaleFactor name="size" anchor="g:size(..)" lacuna="1"/>
+    
+    <symbol name="symbol" lacuna=""/>
+    
+  </properties>
+  
+  <draw>
+    <svg:use transform="translate({g:x(.)},{g:y(.)}) scale({g:size(.)})" xlink:href="{g:symbol(.)}"/>
+  </draw>
+  
+</element>
   
   
 <element name="stem">
@@ -162,6 +187,10 @@
   <draw>
     <svg:line x1="{g:x1(.)}" x2="{g:x2(.)}" y1="{g:y1(.)}" y2="{g:y2(.)}" stroke="currentColor"/>
   </draw>
+  
+  <OwnBoundingBox>
+    <BoundingBox left="{g:x(.)}" right="{g:x(.)}" top="{min((g:y1(.),g:y2(.)))}" bottom="{max((g:y1(.),g:y2(.)))}"/>
+  </OwnBoundingBox>
 </element>
   
 
