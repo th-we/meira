@@ -6,7 +6,6 @@
   xmlns:xlink="http://www.w3.org/1999/xlink"
   xmlns:g="NS:GET">
   
-<!-- TODO: The brace doesn't work. It has to be adapted for Lilypond symbols -->
 <element name="barline">
   <!-- TODO: Much of this is duplicate code with staffBrackets.  Can it be shared somehow? -->
   <properties>
@@ -38,6 +37,13 @@
     <coordinate name="x2" orientation="x" anchor="g:x(.)" lacuna="0"/>
     <coordinate name="y" orientation="y" anchor="g:y1(.)" lacuna="0"/>
     
+    <scaleFactor name="lineOffset" anchor="g:size(.)" lacuna="1"/>
+    <scaleFactor name="dotOffset" anchor="g:size(.)" lacuna="1.25"/>
+    <scaleFactor name="dotRadius" anchor="1" lacuna=".25"/>
+    
+    <scaleFactor name="lineWidth" anchor="g:size(.)" lacuna=".25"/>
+    <scaleFactor name="boldLineWidth" anchor="g:size(.)" lacuna="1"/>
+    
     <!-- What's better - anchor="g:size(g:topStaff(.))", or like this: -->
     <scaleFactor name="size" anchor="g:size(..)" lacuna="1"/>
     
@@ -45,54 +51,80 @@
   </properties>
 
 
-  <!-- TODO: Don't hard code so much for drawing. Implement bounding box properties --> 
+  <!-- TODO: Implement bounding box properties --> 
     
-  <xsl:template name="drawRepeatDots">
-    <xsl:param name="x"/>
-    <xsl:for-each select="(ancestor::musx:staff|ancestor::musx:staffGroup|ancestor::musx:system)[last()]/descendant-or-self::musx:staff">
-      <circle cx="{$x}" cy="{g:y1(.) + 3*g:size(.)}" r="{.25 * g:size(.)}"/>
-      <circle cx="{$x}" cy="{g:y1(.) + 5*g:size(.)}" r="{.25 * g:size(.)}"/>
+  <xsl:template name="drawThinBarline">
+    <xsl:param name="offsetDirection" select="0" as="xs:integer*"/>
+    <xsl:variable name="barlineElement" select="."/>
+    <xsl:variable name="rawX" select="g:x(.)"/>
+    <xsl:variable name="y1" select="g:y1(.)"/>
+    <xsl:variable name="y2" select="g:y2(.)"/>
+    <xsl:variable name="dotRadius" select="g:dotRadius(.)"/>
+    <xsl:variable name="dotOffset" select="g:dotOffset(.)"/>
+    <xsl:variable name="lineOffset" select="g:lineOffset(.)"/>
+    <xsl:variable name="lineWidth" select="g:lineWidth(.)"/>
+    <xsl:variable name="boldLineWidth" select="g:boldLineWidth(.)"/>
+    <xsl:variable name="type" select="g:type(.)"/>
+    
+    <xsl:for-each select="$offsetDirection">
+      <xsl:variable name="x">
+        <xsl:choose>
+          <xsl:when test="current() = 0">
+            <xsl:sequence select="$rawX"/>
+          </xsl:when>
+          <xsl:when test="$type='double' and current() = -1">
+            <xsl:sequence select="$rawX - $lineOffset"/>
+          </xsl:when>
+          <xsl:when test="$type='repeatDouble'">
+            <xsl:sequence select="$rawX + current()*((.5*$boldLineWidth - $lineWidth) + $lineOffset)"/>
+          </xsl:when>
+          <xsl:otherwise> <!-- repeatStart, repeatEnd and end -->
+            <xsl:sequence select="$rawX + current()*(($boldLineWidth - $lineWidth) + $lineOffset)"/>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:variable>
+      
+      <svg:line x1="{$x}" x2="{$x}" y1="{$y1}" y2="{$y2}"/>
+      
+      <!-- Draw dots if we have a repeat barline -->
+      <xsl:if test="starts-with($barlineElement/@type,'repeat')">
+        <xsl:variable name="dotX" select="$x + current() * $dotOffset"/>
+        <xsl:for-each select="$barlineElement/(ancestor::musx:staff|ancestor::musx:staffGroup|ancestor::musx:system)[last()]/descendant-or-self::musx:staff">
+          <!-- $dotStraddle tells us the distance from the staff "center" (which is the center line for 
+               staffs with an odd number of lines, and the center space for ones with an even number).
+               For staffs with an odd number of lines, $dotStraddle is 1, otherwise 2 -->
+          <xsl:variable name="dotStraddle" select="(g:lines(.) - 1) mod 2 + 1"/>
+          <svg:circle cx="{$dotX}" cy="{g:y1(.) + g:size(.)*(g:lines(.) - 1 + $dotStraddle)}" r="{$dotRadius * g:size(.)}"/>
+          <svg:circle cx="{$dotX}" cy="{g:y1(.) + g:size(.)*(g:lines(.) - 1 - $dotStraddle)}" r="{$dotRadius * g:size(.)}"/>
+        </xsl:for-each>
+      </xsl:if>
     </xsl:for-each>
-  </xsl:template>  
+  </xsl:template>
     
-  <!-- TODO: Make line distance, line thickness and dot size configurable -->
-  <draw svg:stroke="currentColor">
+  <draw svg:stroke="currentColor" stroke-width="{g:lineWidth(.)}">
     <xsl:choose>
       <xsl:when test="g:type(.)='normal'">
-        <svg:line x1="{g:x(.)}" x2="{g:x(.)}" y1="{g:y1(.)}" y2="{g:y2(.)}"/>
+        <xsl:call-template name="drawThinBarline"/>
       </xsl:when>
       <xsl:when test="g:type(.)='double'">
-        <svg:line x1="{g:x(.)}" x2="{g:x(.)}" y1="{g:y1(.)}" y2="{g:y2(.)}"/>
-        <svg:line x1="{g:x(.) - g:size(.)}" x2="{g:x(.) - g:size(.)}" y1="{g:y1(.)}" y2="{g:y2(.)}"/>
-      </xsl:when>
-      <xsl:when test="g:type(.)='end'">
-        <!-- TODO: Alignment with end of staff -->
-        <svg:line x1="{g:x(.)}" x2="{g:x(.)}" y1="{g:y1(.)}" y2="{g:y2(.)}" stroke-width="{g:size(.)}"/>
-        <svg:line x1="{g:x(.) - g:size(.)}" x2="{g:x(.) - g:size(.)}" y1="{g:y1(.)}" y2="{g:y2(.)}"/>
-      </xsl:when>
-      <xsl:when test="g:type(.)='repeatStart'">
-        <svg:line x1="{g:x(.)}" x2="{g:x(.)}" y1="{g:y1(.)}" y2="{g:y2(.)}" stroke-width="{g:size(.)}"/>
-        <svg:line x1="{g:x(.) + g:size(.)}" x2="{g:x(.) + g:size(.)}" y1="{g:y1(.)}" y2="{g:y2(.)}"/>
-        <xsl:call-template name="drawRepeatDots">
-          <xsl:with-param name="x" select="g:x(.) + 2*g:size(.)"/>
+        <xsl:call-template name="drawThinBarline">
+          <xsl:with-param name="offsetDirection" select="(0,-1)"/>
         </xsl:call-template>
       </xsl:when>
-      <xsl:when test="g:type(.)='repeatEnd'">
-        <svg:line x1="{g:x(.)}" x2="{g:x(.)}" y1="{g:y1(.)}" y2="{g:y2(.)}" stroke-width="{g:size(.)}"/>
-        <svg:line x1="{g:x(.) - g:size(.)}" x2="{g:x(.) - g:size(.)}" y1="{g:y1(.)}" y2="{g:y2(.)}"/>
-        <xsl:call-template name="drawRepeatDots">
-          <xsl:with-param name="x" select="g:x(.) - 2*g:size(.)"/>
+      <xsl:when test="g:type(.)=('end','repeatStart','repeatEnd')">
+        <xsl:variable name="offsetDirection" select="if (g:type(.)='repeatStart')
+                                                     then 1
+                                                     else -1"/>
+        <xsl:variable name="boldX" select="g:x(.) + $offsetDirection*.5*(g:boldLineWidth(.) - g:lineWidth(.))"/>
+        <svg:line x1="{$boldX}" x2="{$boldX}" y1="{g:y1(.)}" y2="{g:y2(.)}" stroke-width="{g:boldLineWidth(.)}"/>
+        <xsl:call-template name="drawThinBarline">
+          <xsl:with-param name="offsetDirection" select="$offsetDirection"/>
         </xsl:call-template>
       </xsl:when>
       <xsl:when test="g:type(.)='repeatDouble'">
-        <svg:line x1="{g:x(.)}" x2="{g:x(.)}" y1="{g:y1(.)}" y2="{g:y2(.)}" stroke-width="{g:size(.)}"/>
-        <svg:line x1="{g:x(.) - g:size(.)}" x2="{g:x(.) - g:size(.)}" y1="{g:y1(.)}" y2="{g:y2(.)}"/>
-        <xsl:call-template name="drawRepeatDots">
-          <xsl:with-param name="x" select="g:x(.) - 2*g:size(.)"/>
-        </xsl:call-template>
-        <svg:line x1="{g:x(.) + g:size(.)}" x2="{g:x(.) + g:size(.)}" y1="{g:y1(.)}" y2="{g:y2(.)}"/>
-        <xsl:call-template name="drawRepeatDots">
-          <xsl:with-param name="x" select="g:x(.) + 2*g:size(.)"/>
+        <svg:line x1="{g:x(.)}" x2="{g:x(.)}" y1="{g:y1(.)}" y2="{g:y2(.)}" stroke-width="{g:boldLineWidth(.)}"/>
+        <xsl:call-template name="drawThinBarline">
+          <xsl:with-param name="offsetDirection" select="(-1,1)"/>
         </xsl:call-template>
       </xsl:when>
       <xsl:otherwise>
@@ -102,6 +134,36 @@
       </xsl:otherwise>
     </xsl:choose>
   </draw>
+
+  <OwnBoundingBox>
+    <xsl:choose>
+      <xsl:when test="g:type(.)='normal'">
+        <BoundingBox left="{g:x(.)}" right="{g:x(.)}" top="{g:y1(.)}" bottom="{g:y2(.)}"/>
+      </xsl:when>
+      <xsl:when test="g:type(.)='double'">
+        <BoundingBox left="{g:x(.) - g:lineOffset(.)}" right="{g:x(.)}" top="{g:y1(.)}" bottom="{g:y2(.)}"/>
+      </xsl:when>
+      <xsl:when test="g:type(.)='end'">
+        <BoundingBox left="{g:x(.) - g:lineOffset(.) - g:boldLineWidth(.) + g:lineWidth(.)}" right="{g:x(.)}" top="{g:y1(.)}" bottom="{g:y2(.)}"/>
+      </xsl:when>
+      <xsl:when test="g:type(.)='repeatEnd'">
+        <BoundingBox left="{g:x(.) - g:lineOffset(.) - g:boldLineWidth(.) + g:lineWidth(.) - g:dotOffset(.) - g:dotRadius(.)}" right="{g:x(.)}" top="{g:y1(.)}" bottom="{g:y2(.)}"/>
+      </xsl:when>
+      <xsl:when test="g:type(.)='repeatStart'">
+        <BoundingBox left="{g:x(.)}" right="{g:x(.) + g:lineOffset(.) + g:boldLineWidth(.) - g:lineWidth(.) + g:dotOffset(.) + g:dotRadius(.)}" top="{g:y1(.)}" bottom="{g:y2(.)}"/>
+      </xsl:when>
+      <xsl:when test="g:type(.)='repeatDouble'">
+        <xsl:variable name="distanceFromCenter" select=".5*g:boldLineWidth(.) - g:lineWidth(.) + g:lineOffset(.) + g:dotOffset(.) + g:dotRadius(.)"/>
+        <BoundingBox left="{g:x(.) - $distanceFromCenter}" right="{g:x(.) + $distanceFromCenter}" top="{g:y1(.)}" bottom="{g:y2(.)}"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:message>
+          WARNING: Barline <xsl:value-of select="@xml:id"/> of invalid type "<xsl:value-of select="g:type(.)"/>" is ignored.
+        </xsl:message>
+      </xsl:otherwise>
+    </xsl:choose>
+    
+  </OwnBoundingBox>
 </element>
 
 </elementDefinition>
