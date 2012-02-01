@@ -51,8 +51,6 @@
   </properties>
 
 
-  <!-- TODO: Implement bounding box properties --> 
-    
   <xsl:template name="drawThinBarline">
     <xsl:param name="offsetDirection" select="0" as="xs:integer*"/>
     <xsl:variable name="barlineElement" select="."/>
@@ -91,7 +89,7 @@
         <xsl:variable name="dotX" select="$x + current() * $dotOffset"/>
         <xsl:for-each select="$barlineElement/(ancestor::musx:staff|ancestor::musx:staffGroup|ancestor::musx:system)[last()]/descendant-or-self::musx:staff">
           <!-- $dotStraddle tells us the distance from the staff "center" (which is the center line for 
-               staffs with an odd number of lines, and the center space for ones with an even number).
+               staffs with an odd number of lines, and the center space for those with an even number).
                For staffs with an odd number of lines, $dotStraddle is 1, otherwise 2 -->
           <xsl:variable name="dotStraddle" select="(g:lines(.) - 1) mod 2 + 1"/>
           <svg:circle cx="{$dotX}" cy="{g:y1(.) + g:size(.)*(g:lines(.) - 1 + $dotStraddle)}" r="{$dotRadius * g:size(.)}"/>
