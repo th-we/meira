@@ -39,7 +39,10 @@
     
     <scaleFactor name="lineOffset" anchor="g:size(.)" lacuna="1"/>
     <scaleFactor name="dotOffset" anchor="g:size(.)" lacuna="1.25"/>
-    <scaleFactor name="dotRadius" anchor="1" lacuna=".25"/>
+    <!-- dotRadius isn't anchored to g:size(.) because dots are drawn on multiple staffs,
+         and the actual radius depends on the respective staff size, not on the size
+         of this barline. (QUESTION: Or *should* the radius be dependent on g:size(.)?) -->
+    <scaleFactor name="dotRadius" anchor="1" lacuna=".4"/>
     
     <scaleFactor name="lineWidth" anchor="g:size(.)" lacuna=".25"/>
     <scaleFactor name="boldLineWidth" anchor="g:size(.)" lacuna="1"/>
@@ -88,12 +91,16 @@
       <xsl:if test="starts-with($barlineElement/@type,'repeat')">
         <xsl:variable name="dotX" select="$x + current() * $dotOffset"/>
         <xsl:for-each select="$barlineElement/(ancestor::musx:staff|ancestor::musx:staffGroup|ancestor::musx:system)[last()]/descendant-or-self::musx:staff">
+          <xsl:variable name="spaces" select="g:lines(.) - 1"/>
           <!-- $dotStraddle tells us the distance from the staff "center" (which is the center line for 
-               staffs with an odd number of lines, and the center space for those with an even number).
-               For staffs with an odd number of lines, $dotStraddle is 1, otherwise 2 -->
-          <xsl:variable name="dotStraddle" select="(g:lines(.) - 1) mod 2 + 1"/>
-          <svg:circle cx="{$dotX}" cy="{g:y1(.) + g:size(.)*(g:lines(.) - 1 + $dotStraddle)}" r="{$dotRadius * g:size(.)}"/>
-          <svg:circle cx="{$dotX}" cy="{g:y1(.) + g:size(.)*(g:lines(.) - 1 - $dotStraddle)}" r="{$dotRadius * g:size(.)}"/>
+            staffs with an odd number of lines, and the center space for those with an even number).
+            For staffs with an odd number of lines, $dotStraddle is 1, otherwise 2 -->
+          <xsl:variable name="dotStraddle" select="$spaces mod 2 + 1"/>
+          <xsl:variable name="staffSize" select="g:size(.)"/>
+          <svg:g transform="translate({$dotX},{g:y1(.)}) scale({$staffSize})" stroke="none">
+            <svg:circle cy="{$spaces + $dotStraddle}" r="{$dotRadius}"/>
+            <svg:circle cy="{$spaces - $dotStraddle}" r="{$dotRadius}"/>
+          </svg:g>
         </xsl:for-each>
       </xsl:if>
     </xsl:for-each>
@@ -134,6 +141,10 @@
   </draw>
 
   <OwnBoundingBox>
+    <xsl:variable name="staffs" select="(ancestor::musx:staff|ancestor::musx:staffGroup|ancestor::musx:system)[last()]/descendant-or-self::musx:staff"/>
+    <xsl:variable name="maxDotRadius" select="max(g:size($staffs))*g:dotRadius(.)"/>
+    <xsl:variable name="distanceFromBoldLineToFarSideOfDots" 
+        select="g:lineOffset(.) - g:lineWidth(.) + g:dotOffset(.) + $maxDotRadius"/>
     <xsl:choose>
       <xsl:when test="g:type(.)='normal'">
         <BoundingBox left="{g:x(.)}" right="{g:x(.)}" top="{g:y1(.)}" bottom="{g:y2(.)}"/>
@@ -145,13 +156,13 @@
         <BoundingBox left="{g:x(.) - g:lineOffset(.) - g:boldLineWidth(.) + g:lineWidth(.)}" right="{g:x(.)}" top="{g:y1(.)}" bottom="{g:y2(.)}"/>
       </xsl:when>
       <xsl:when test="g:type(.)='repeatEnd'">
-        <BoundingBox left="{g:x(.) - g:lineOffset(.) - g:boldLineWidth(.) + g:lineWidth(.) - g:dotOffset(.) - g:dotRadius(.)}" right="{g:x(.)}" top="{g:y1(.)}" bottom="{g:y2(.)}"/>
+        <BoundingBox left="{g:x(.) - g:boldLineWidth(.) - $distanceFromBoldLineToFarSideOfDots}" right="{g:x(.)}" top="{g:y1(.)}" bottom="{g:y2(.)}"/>
       </xsl:when>
       <xsl:when test="g:type(.)='repeatStart'">
-        <BoundingBox left="{g:x(.)}" right="{g:x(.) + g:lineOffset(.) + g:boldLineWidth(.) - g:lineWidth(.) + g:dotOffset(.) + g:dotRadius(.)}" top="{g:y1(.)}" bottom="{g:y2(.)}"/>
+        <BoundingBox left="{g:x(.)}" right="{g:x(.) + g:boldLineWidth(.) + $distanceFromBoldLineToFarSideOfDots}" top="{g:y1(.)}" bottom="{g:y2(.)}"/>
       </xsl:when>
       <xsl:when test="g:type(.)='repeatDouble'">
-        <xsl:variable name="distanceFromCenter" select=".5*g:boldLineWidth(.) - g:lineWidth(.) + g:lineOffset(.) + g:dotOffset(.) + g:dotRadius(.)"/>
+        <xsl:variable name="distanceFromCenter" select=".5*g:boldLineWidth(.) + $distanceFromBoldLineToFarSideOfDots"/>
         <BoundingBox left="{g:x(.) - $distanceFromCenter}" right="{g:x(.) + $distanceFromCenter}" top="{g:y1(.)}" bottom="{g:y2(.)}"/>
       </xsl:when>
       <xsl:otherwise>
