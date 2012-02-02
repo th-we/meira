@@ -75,7 +75,8 @@
           </note>
           <note start="e6" y="S-5">
             <head/>
-            <stem/>
+            <stem svg:stroke-dasharray="4,3"/>
+            <dots number="2"/>
             <accidental symbol="s"/>
           </note>
         </staff>
