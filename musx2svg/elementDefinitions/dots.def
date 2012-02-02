@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<?xml-stylesheet type='text/xsl' href='def2xsl.xsl'?>
+<elementDefinition
+    xmlns="NS:DEF"
+    xmlns:svg="http://www.w3.org/2000/svg"
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:xlink="http://www.w3.org/1999/xlink">
+
+<element name="dots">
+  <properties>
+    <!-- TODO: Support dots on rests -->
+    <coordinate name="x" orientation="x" anchor="g:x(..)" lacuna="0" />
+    <coordinate name="y" orientation="y" anchor="g:y(..)" lacuna="if (g:step(..) mod 2 = 0)
+      then g:size(ancestor::musx:staff[last()])
+      else 0" />
+    
+    <!-- QUESTION: Should x1/x2 be leftmost/rightmost "touching" point of dots? -->
+    <coordinate orientation="x" name="x1" anchor="g:OwnBoundingBox(../musx:head)//@right" lacuna="g:offset(.)"/>
+    <coordinate orientation="x" name="x2" anchor="g:x1(.)" lacuna="(g:number(.) - 1) * g:distance(.)"/>
+    <coordinate orientation="y" name="y1" anchor="g:y(.)" lacuna="0"/>
+    <coordinate orientation="y" name="y2" anchor="g:y(.)" lacuna="0"/>
+    
+    <!-- QUESTION: Define this as a separate property, or simply insert it as lacuna to g:x(.)? -->
+    <scaleFactor name="offset" anchor="g:size(.)" lacuna="1"/>
+    <scaleFactor name="distance" anchor="g:size(.)" lacuna="1.2"/>
+    
+    <scaleFactor name="size" anchor="g:size(..)" lacuna="1"/>
+    <scaleFactor name="radius" anchor="g:size(..)" lacuna=".25"/>
+    <integer name="number" lacuna="1"/>
+    
+    <integer name="direction" lacuna="g:direction(..)"/>
+  </properties>
+  
+  <xsl:template name="addDots">
+    <!-- Start with furthest away dot. -->
+    <xsl:param name="x" select="g:x1(.)"/>
+    <xsl:param name="y" select="g:y(.)"/>
+    <xsl:param name="distance" select="g:distance(.)"/>
+    <xsl:param name="x2plusTolerance" select="g:x2(.) + .5*$distance"/>
+    <xsl:param name="radius" select="g:radius(.)"/>
+    
+    <xsl:if test="$x &lt; $x2plusTolerance">
+      <svg:circle cx="{$x}" cy="{$y}" r="{$radius}"/>
+      <xsl:call-template name="addDots">
+        <xsl:with-param name="x" select="$x + $distance"/>
+        <xsl:with-param name="y" select="$y"/>
+        <xsl:with-param name="radius" select="$radius"/>
+        <xsl:with-param name="x2plusTolerance" select="$x2plusTolerance"/>
+      </xsl:call-template>
+    </xsl:if>
+  </xsl:template>
+  
+  <draw>
+    <xsl:call-template name="addDots"/>
+  </draw>
+  
+  <OwnBoundingBox>
+    <BoundingBox left="{g:x1(.) - g:radius(.)}" right="{g:x2(.) + g:radius(.)}"
+                 top=" {g:y(.)  - g:radius(.)}" bottom="{g:y(.) + g:radius(.)}"/>
+  </OwnBoundingBox>
+</element>
+  
+</elementDefinition> 
