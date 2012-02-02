@@ -29,8 +29,6 @@
     <!-- QUESTION: Implement this like this?  Getter-templates for @symobl? -->
     <!--<coordinate name="BB.right" orientation="y" anchor="0" lacuna="max(g:BB.right(@symbol|dots))"/>-->
     
-    <!--<color name="color" lacuna="'black'"/>-->
-    
     <scaleFactor name="size" anchor="g:size(..)" lacuna="1"/>
     
     <symbol name="symbol"/>

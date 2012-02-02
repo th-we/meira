@@ -6,8 +6,6 @@
   xmlns:xlink="http://www.w3.org/1999/xlink"
   xmlns:g="NS:GET">
 
-<!-- TODO: Octave numbers obove/below --> 
-
 <element name="clef">
   <properties>
     <elementReference name="start" lacuna=".."/>

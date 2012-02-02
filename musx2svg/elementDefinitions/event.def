@@ -7,11 +7,8 @@
   xmlns:g="NS:GET">
   
 <element name="event">
-  <!-- TODO: anchor="//page/?x" is provisional.
-       A proper anchoring solution has to be found.
-       Should the <event> elements in the <eventsequence> also determine the
-       system that elements associtated with the event elements belong to? -->
   <properties>
+    <!-- QUESTION: Should this be anchor="g:x(..)" or something? -->
     <coordinate name="x" orientation="x" anchor="0" lacuna="0"/>
   </properties>
 </element>
