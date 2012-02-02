@@ -38,18 +38,19 @@
       <xsl:sequence select="concat($symbolURIroot,'#',local-name(),'.',@{@name})"/>
     </xsl:template>
     
-    <xsl:template mode="get_OwnBoundingBox" match="{g:matchPattern($elementNames)}" priority="1">
+    <xsl:key name="svgID" match="*[@id]" use="@id"/>
+    <xsl:template mode="get_OwnBoundingBox" match="{g:matchPattern($elementNames)}" priority="-1">
       <xsl:variable name="symbolID" select="substring-after(g:{@name}(.),'#')" as="xs:string"/>
-      <!-- Why doesn't this work? -->
-      <!--      <xsl:variable name="symbolBBox" select="id($symbolID,document($symbolURIroot))/svg:metadata/bbox" as="node()"/>-->
-      <xsl:variable name="symbolBBox" select="document($symbolURIroot)//svg:*[@id=$symbolID]/svg:metadata/*:bbox" as="node()"/>
-      
+      <xsl:variable name="symbolBBox" select="key('svgID',$symbolID,document($symbolURIroot))/svg:metadata/*:bbox" as="node()"/>
+      <xsl:variable name="size" select="g:size(.)"/>
+      <xsl:variable name="x" select="g:x(.)"/>
+      <xsl:variable name="y" select="g:y(.)"/>
       
       <musx:BoundingBox
-        left="{{g:x(.) + g:size(..)*number($symbolBBox/@x)}}"
-        right="{{g:x(.) + g:size(..)*sum(($symbolBBox/@x,$symbolBBox/@width))}}"
-        top="{{g:y(.) + g:size(..)*number($symbolBBox/@y)}}"
-        bottom="{{g:y(.) + g:size(..)*sum(($symbolBBox/@y,$symbolBBox/@height))}}"
+        left="{{  $x + $size*number($symbolBBox/@x)}}"
+        right="{{ $x + $size*sum(($symbolBBox/@x,$symbolBBox/@width))}}"
+        top="{{   $y + $size*number($symbolBBox/@y)}}"
+        bottom="{{$y + $size*sum(($symbolBBox/@y,$symbolBBox/@height))}}"
         source="symbol '{@name}' on {{local-name()}}"/>
     </xsl:template>
     
