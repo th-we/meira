@@ -6,10 +6,6 @@
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xlink="http://www.w3.org/1999/xlink">
 
-<!-- TODO: - Support stems on chords (already done?)
-           - Automatically flipped noteheads in chords with seconds 
-           - Properly implement ?orientation -->
-
 <element name="note">
   <properties>
     <elementReference name="start" lacuna=".."/>
@@ -33,7 +29,7 @@
              return g:y2($staff) + 2*g:size($staff)"/>
     <!-- QUESTION: Is it necessary to refine this? -->
     <coordinate name="ledgerLines.y2" orientation="y" anchor="g:y(.)" lacuna="0"/>
-    <boolean name="ledgerLines.draw" lacuna="true()"/>
+    <boolean name="ledgerLines.draw" lacuna="g:step(.) &lt; -1 or g:step(.) &gt; 9"/>
     <scaleFactor name="ledgerLines.protrusion" anchor="g:size(..)" lacuna=".75"/>
     
     <scaleFactor name="size" anchor="g:size(..)" lacuna="1"/>
@@ -92,11 +88,11 @@
   </draw>
   
   <OwnBoundingBox>
-    <xsl:variable name="headBoundingBox" select="g:OwnBoundingBox(musx:head)"/>
-    <xsl:variable name="protrusion" select="g:ledgerLines.protrusion(.)"/>
-    <xsl:variable name="y1" select="g:ledgerLines.y1(.)"/>
-    <xsl:variable name="headY" select="g:y(musx:head)"/>
     <xsl:if test="g:ledgerLines.draw(.)">
+      <xsl:variable name="headBoundingBox" select="g:OwnBoundingBox(musx:head)"/>
+      <xsl:variable name="protrusion" select="g:ledgerLines.protrusion(.)"/>
+      <xsl:variable name="y1" select="g:ledgerLines.y1(.)"/>
+      <xsl:variable name="headY" select="g:y(musx:head)"/>
       <BoundingBox left="{number($headBoundingBox//@left) - $protrusion}"
                    right="{number($headBoundingBox//@right) + $protrusion}"
                    top="{min(($headY,$y1))}"
@@ -118,7 +114,7 @@
     
     <scaleFactor name="size" anchor="g:size(..)" lacuna="1"/>
     
-    <symbol name="symbol" lacuna="notehead.quarter"/>
+    <symbol name="symbol" lacuna="'notehead.quarter'"/>
     
   </properties>
   
@@ -140,7 +136,7 @@
     
     <scaleFactor name="size" anchor="g:size(..)" lacuna="1"/>
     
-    <symbol name="symbol" lacuna=""/>
+    <symbol name="symbol" lacuna="''"/>
     
   </properties>
   
@@ -187,6 +183,30 @@
 </element>
   
 
-<!-- TODO: Add dots, flags -->
-
+<element name="flags">
+  <properties>
+    <coordinate name="x" orientation="x" anchor="g:x((../musx:stem, ..))[1]" lacuna="0"/>
+    <coordinate name="y" orientation="y" anchor="g:y2((../musx:stem, ..))[1]" lacuna="0"/>
+    
+    <coordinate name="x1" orientation="x" anchor="g:x(.)" lacuna="0"/>
+    <coordinate name="x2" orientation="x" anchor="g:x(.)" lacuna="0"/>
+    <coordinate name="y1" orientation="y" anchor="g:y(.)" lacuna="0"/>
+    <coordinate name="y2" orientation="y" anchor="g:y(.)" lacuna="0"/>
+    
+    <scaleFactor name="size" anchor="g:size(..)" lacuna="1"/>
+    
+    <integer name="direction" lacuna="g:direction((../musx:stem, ..))[1]"/>
+    <integer name="number" lacuna="1"/>
+    
+    <!-- TODO: Make direction sign of flags in symbol.svg consistent with  
+         conventions rather than making g:direction(.) negative here -->
+    <symbol name="symbol" lacuna="concat('flags.',-g:direction(.)*g:number(.))"/>
+    
+  </properties>
+  
+  <draw>
+    <svg:use transform="translate({g:x(.)},{g:y(.)}) scale({g:size(.)})" xlink:href="{g:symbol(.)}"/>
+  </draw>
+  
+</element>
 </elementDefinition> 
