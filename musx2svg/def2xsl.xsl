@@ -125,7 +125,7 @@
           </xsl:choose>
         </xsl:copy>
       </xsl:template>
-      <xsl:template match="node()|@*" mode="get_OwnBoundingBox" priority="-1"/>
+      <xsl:template match="node()|@*" mode="get_OwnBoundingBox" priority="-2"/>
       <xsl:function name="g:OwnBoundingBox" as="node()*">
         <xsl:param name="element" as="node()*"/>
         <xsl:apply-templates select="$element" mode="get_OwnBoundingBox"/>
@@ -206,7 +206,7 @@
   </template>
   
   <template match="def:OwnBoundingBox">
-    <xsl:template match="musx:{parent::def:element/@name}" mode="get_OwnBoundingBox">
+    <xsl:template match="musx:{parent::def:element/@name}" mode="get_OwnBoundingBox" priority="1">
       <copy-of select="*"/>
     </xsl:template>
   </template>
