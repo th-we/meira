@@ -157,17 +157,22 @@
         then g:x(..)
         else number(g:OwnBoundingBox(../musx:head)//@right)"/>
     <coordinate name="y1" orientation="y" anchor="g:y(..)" lacuna="0"/>
-    <coordinate name="y2" orientation="y" anchor="g:y(ancestor::musx:staff)" lacuna="
-        (
-          max((g:direction(.)*(g:step(..) - 4) + 7, 0))
-          * g:direction(.) + 4
-        ) * g:size(ancestor::musx:staff)"/>
+    <coordinate name="y2" orientation="y" anchor="g:y(..)" lacuna="g:direction(.) * g:length(.) * g:size(ancestor::musx:staff[last()])"/>
 
     <coordinate name="x1" orientation="x" anchor="g:x(.)" lacuna="0"/>
     <coordinate name="x2" orientation="x" anchor="g:x(.)" lacuna="0"/>
     <coordinate name="y" orientation="y" anchor="g:y1(.)" lacuna="0"/>
     
     <integer name="direction" lacuna="g:direction(..)"/>
+    <number name="length" lacuna="
+        max((
+          7,
+          g:direction(.)*((g:lines(ancestor::musx:staff[last()])-1) - g:step(..)), 
+          (: As we're using Lilypond flags right now, adopt the stem length adjustment that Lilypond uses :)
+          if (g:number(musx:flags) &lt; 5)
+            then 7 + .75 * g:number(musx:flags)
+            else g:number(musx:flags) + 7 (: In theory, we can handle more than 5 flags, if we add the symbol :)
+        ))"/>
     
     <scaleFactor name="size" anchor="g:size(..)" lacuna="1"/>
     
@@ -185,8 +190,8 @@
 
 <element name="flags">
   <properties>
-    <coordinate name="x" orientation="x" anchor="g:x((../musx:stem, ..))[1]" lacuna="0"/>
-    <coordinate name="y" orientation="y" anchor="g:y2((../musx:stem, ..))[1]" lacuna="0"/>
+    <coordinate name="x" orientation="x" anchor="g:x(..)" lacuna="0"/>
+    <coordinate name="y" orientation="y" anchor="g:y2(..)" lacuna="0"/>
     
     <coordinate name="x1" orientation="x" anchor="g:x(.)" lacuna="0"/>
     <coordinate name="x2" orientation="x" anchor="g:x(.)" lacuna="0"/>
@@ -195,7 +200,7 @@
     
     <scaleFactor name="size" anchor="g:size(..)" lacuna="1"/>
     
-    <integer name="direction" lacuna="g:direction((../musx:stem, ..))[1]"/>
+    <integer name="direction" lacuna="g:direction(..)"/>
     <integer name="number" lacuna="1"/>
     
     <!-- TODO: Make direction sign of flags in symbol.svg consistent with  
