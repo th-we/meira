@@ -148,7 +148,6 @@
   
   
 <element name="stem">
-  <!-- TODO: Take into account necessary elongation when there are flags. -->
   <properties>
     <!-- This doesn't feel ideal.  If there's no <head>, the x value will be 0 
          QUESTION: make g:OwnBoundingBox() return bounding box coordinates relative to the head's x coordinate?-->
@@ -164,15 +163,32 @@
     <coordinate name="y" orientation="y" anchor="g:y1(.)" lacuna="0"/>
     
     <integer name="direction" lacuna="g:direction(..)"/>
+    
+    <!-- Stems length is determined as follows (inspired by Lilypond/Musescore):
+       - Notes with a stem pointing towards staff center that are more than 7 steps away from staff center 
+         (positive $distanceFromCenter, > 7) get length that's equal to said distance
+       - notes with a stem pointing towards staff center that are between 7 and 0 steps away from staff center
+         ($distanceFromCenter between 0 and 7) get a stem length of 7
+       - notes with a stem pointing away from staff center that are more than 5 steps away from staff center
+         ($distanceFromCenter negative, -5 and less), get a shortened stem length of 5  
+       - notes with a stem pointing away from staff center that are 0 and 5 steps away from staff center
+         ($distanceFromCenter negative between 0 and -5), get their length linearly interpolated between the 
+         stem lengths of notes that are 0 and "-5" steps away from center 
+       If the height of the flag symbol is greater than the so determined length, the flag height determines
+       the stem length -->
     <number name="length" lacuna="
-        max((
-          7,
-          g:direction(.)*((g:lines(ancestor::musx:staff[last()])-1) - g:step(..)), 
-          (: As we're using Lilypond flags right now, adopt the stem length adjustment that Lilypond uses :)
-          if (g:number(musx:flags) &lt; 5)
-            then 7 + .75 * g:number(musx:flags)
-            else g:number(musx:flags) + 7 (: In theory, we can handle more than 5 flags, if we add the symbol :)
-        ))"/>
+      max((
+        for $distanceFromCenter in g:direction(.) * (g:lines(ancestor::musx:staff) - 1 - g:step(..)) return
+          if ($distanceFromCenter &gt; 7)
+            then $distanceFromCenter
+          else if ($distanceFromCenter &gt;= 0)
+            then 7
+          else if ($distanceFromCenter &gt; -5)
+            then .4 * $distanceFromCenter + 7
+          else 5
+        ,
+        g:svgSymbolBoundingBox(g:symbol(musx:flags))//@height
+      ))"/>
     
     <scaleFactor name="size" anchor="g:size(..)" lacuna="1"/>
     
