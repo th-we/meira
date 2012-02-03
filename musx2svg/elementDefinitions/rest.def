@@ -25,13 +25,19 @@
     <coordinate name="y1" orientation="y" anchor="g:y(.)" lacuna="0"/>
     <coordinate name="y2" orientation="y" anchor="g:y(.)" lacuna="0"/>
     
-    <coordinate name="BB.left" orientation="x" anchor="0" lacuna="g:x1(.)"/>
+    <!--<coordinate name="BB.left" orientation="x" anchor="0" lacuna="g:x1(.)"/>-->
     <!-- QUESTION: Implement this like this?  Getter-templates for @symobl? -->
     <!--<coordinate name="BB.right" orientation="y" anchor="0" lacuna="max(g:BB.right(@symbol|dots))"/>-->
     
     <scaleFactor name="size" anchor="g:size(..)" lacuna="1"/>
     
-    <symbol name="symbol"/>
+    <number name="step" lacuna="(
+          if(substring(@y,1,1)='S')
+          then substring(@y,2)
+          else (g:y(.) - g:y(ancestor::musx:staff)) div g:size(ancestor::musx:staff)
+        ) cast as xs:double"/>
+    
+    <symbol name="symbol" lacuna="''"/>
   </properties>
   
   <draw>
