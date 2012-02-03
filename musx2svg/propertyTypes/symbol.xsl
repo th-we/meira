@@ -10,9 +10,7 @@
   <import href="../shared/matchingHelper.xsl"/>
   <namespace-alias stylesheet-prefix="xsl" result-prefix=""/>
   
-  <template match="def:symbol" mode="generic-default">
-    <text>''</text>
-  </template>
+  <template match="def:symbol" mode="generic-default"/>
   <template match="def:symbol" mode="add-as-type-attribute">
     <attribute name="as">xs:string*</attribute>
   </template>
@@ -38,20 +36,20 @@
       <xsl:sequence select="concat($symbolURIroot,'#',local-name(),'.',@{@name})"/>
     </xsl:template>
     
-    <xsl:key name="svgID" match="*[@id]" use="@id"/>
     <xsl:template mode="get_OwnBoundingBox" match="{g:matchPattern($elementNames)}" priority="-1">
-      <xsl:variable name="symbolID" select="substring-after(g:{@name}(.),'#')" as="xs:string"/>
-      <xsl:variable name="symbolBBox" select="key('svgID',$symbolID,document($symbolURIroot))/svg:metadata/*:bbox" as="node()"/>
-      <xsl:variable name="size" select="g:size(.)"/>
-      <xsl:variable name="x" select="g:x(.)"/>
-      <xsl:variable name="y" select="g:y(.)"/>
-      
-      <musx:BoundingBox
-        left="{{  $x + $size*number($symbolBBox/@x)}}"
-        right="{{ $x + $size*sum(($symbolBBox/@x,$symbolBBox/@width))}}"
-        top="{{   $y + $size*number($symbolBBox/@y)}}"
-        bottom="{{$y + $size*sum(($symbolBBox/@y,$symbolBBox/@height))}}"
-        source="symbol '{@name}' on {{local-name()}}"/>
+      <xsl:variable name="symbolBBox" select="g:svgSymbolBoundingBox(g:{@name}(.))" as="node()*"/>
+      <xsl:if test="$symbolBBox">
+        <xsl:variable name="size" select="g:size(.)"/>
+        <xsl:variable name="x" select="g:x(.)"/>
+        <xsl:variable name="y" select="g:y(.)"/>
+        
+        <musx:BoundingBox
+          left="{{  $x + $size*number($symbolBBox/@x)}}"
+          right="{{ $x + $size*sum(($symbolBBox/@x,$symbolBBox/@width))}}"
+          top="{{   $y + $size*number($symbolBBox/@y)}}"
+          bottom="{{$y + $size*sum(($symbolBBox/@y,$symbolBBox/@height))}}"
+          source="symbol '{@name}' on {{local-name()}}"/>
+      </xsl:if>
     </xsl:template>
     
   </template>

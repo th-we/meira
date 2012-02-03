@@ -89,8 +89,6 @@
         <xsl:variable name="children" as="node()*">
           <xsl:apply-templates mode="add-bounding-boxes" select="node()"/>
         </xsl:variable>
-        <!-- TODO: $allBoundingBoxes is always empty right now because def:OwnBoundingBox isn't 
-                   in any of the element definitions -->
         <xsl:variable name="allBoundingBoxes" as="node()*">
           <xsl:sequence select="$children/musx:BoundingBox"/>
           <xsl:apply-templates mode="get_OwnBoundingBox" select="."/>
@@ -98,37 +96,30 @@
         <xsl:copy>
           <xsl:copy-of select="@*"/>
           <xsl:copy-of select="$children"/>
-          <xsl:choose>
-            <xsl:when test="$allBoundingBoxes">
-<!--              $allBoundingBoxes <xsl:copy-of select="$allBoundingBoxes"/>
-              $allBoundingBoxes//@left = <xsl:value-of select="$allBoundingBoxes//@left"/>-->
-              <musx:BoundingBox 
-                left="{{min($allBoundingBoxes//@left)}}"
-                right="{{max($allBoundingBoxes//@right)}}"
-                top="{{min($allBoundingBoxes//@top)}}"
-                bottom="{{max($allBoundingBoxes//@bottom)}}"/>
-              <!-- Uncomment the following for checking the bounding boxes visually -->
-              <!--<svg:polygon class="bbox"
-                points="{{min($allBoundingBoxes//@left)}},{{min($allBoundingBoxes//@top)}}
-                        {{min($allBoundingBoxes//@left)}},{{min($allBoundingBoxes//@bottom)}}
-                        {{min($allBoundingBoxes//@right)}},{{min($allBoundingBoxes//@bottom)}}
-                        {{min($allBoundingBoxes//@right)}},{{min($allBoundingBoxes//@top)}}"/>-->
-            </xsl:when>
-            <xsl:otherwise>
-              <musx:BoundingBox 
-                left="{{g:x(.)}}"
-                right="{{g:x(.)}}"
-                top="{{g:y(.)}}"
-                bottom="{{g:y(.)}}"/>
-              
-            </xsl:otherwise>
-          </xsl:choose>
+          <xsl:if test="$allBoundingBoxes">
+            <musx:BoundingBox 
+              left="{{min($allBoundingBoxes//@left)}}"
+              right="{{max($allBoundingBoxes//@right)}}"
+              top="{{min($allBoundingBoxes//@top)}}"
+              bottom="{{max($allBoundingBoxes//@bottom)}}"/>
+          </xsl:if>
         </xsl:copy>
       </xsl:template>
       <xsl:template match="node()|@*" mode="get_OwnBoundingBox" priority="-2"/>
       <xsl:function name="g:OwnBoundingBox" as="node()*">
         <xsl:param name="element" as="node()*"/>
         <xsl:apply-templates select="$element" mode="get_OwnBoundingBox"/>
+      </xsl:function>
+      
+      <xsl:key name="svgID" match="svg:*[@id]" use="@id"/>
+      <xsl:function name="g:svgSymbolBoundingBox" as="node()*">
+        <xsl:param name="symbolURI" as="xs:string*"/>
+
+        <xsl:for-each select="$symbolURI">
+          <xsl:variable name="symbolID" select="substring-after(.,'#')" as="xs:string"/>
+          <xsl:variable name="documentURI" select="substring-before(.,'#')" as="xs:string"/>
+          <xsl:sequence select="key('svgID',$symbolID,document($documentURI))/svg:metadata/*:bbox"/>
+        </xsl:for-each>
       </xsl:function>
       
       <xsl:template match="/" mode="svg-with-bounding-boxes">
