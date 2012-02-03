@@ -42,7 +42,7 @@
     <coordinate name="x2" orientation="x" anchor="g:x(.)" lacuna="0"/>
     <coordinate name="y" orientation="y" anchor="g:y1(.)" lacuna="0"/>
 
-    <symbol name="brackettip" lacuna="brackettip"/>
+    <symbol name="brackettip" lacuna="'brackettip'"/>
   </properties>
 
   <!-- TODO: Also scale vertically -->

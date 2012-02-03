@@ -20,7 +20,7 @@
     
     <scaleFactor name="size" anchor="g:size(..)" lacuna="1"/>
     
-    <symbol name="symbol" lacuna="clef.G"/>
+    <symbol name="symbol" lacuna="'clef.G'"/>
     
   </properties>
   

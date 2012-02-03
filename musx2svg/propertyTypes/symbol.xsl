@@ -22,7 +22,7 @@
 
     <!-- Elements without @{@name} attribute (=> defaults) -->
     <xsl:template mode="get_{@name}" match="{g:matchPattern($elementNames)}" priority="-1">
-      <xsl:sequence select="concat($symbolURIroot,'#{@lacuna}')"/>
+      <xsl:value-of select="concat($symbolURIroot,'#',{@lacuna})"/>
     </xsl:template>
     
     <variable name="dot">
