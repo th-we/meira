@@ -15,6 +15,9 @@
   <namespace-alias stylesheet-prefix="xsl" result-prefix=""/>
   <output indent="yes"/>
   
+  <!-- TODO: In elementDefinitions, avoid requiring the musx: prefix in XPath expressions.
+             This can be achieved by making musx the default namespace -->
+  
   <!-- All content with xsl: prefix is written as output -->
   
   <template match="/def:elementDefinition/def:element[@name='musx']">
@@ -76,8 +79,8 @@
         </svg:svg>
       </xsl:template>
       
-      <!-- Template for adding bounding box dimension info to the musx data.
-           To use this template, add-bounding-boxes has to be set as the initial mode 
+      <!-- Templates for adding bounding box dimension info to the musx data.
+           To use these templates, add-bounding-boxes has to be set as the initial mode 
            (e.g. using the switch -im:add-bounding-boxes with saxonb-xslt) -->
       <xsl:template match="@*|node()" mode="add-bounding-boxes">
         <xsl:copy>
@@ -105,12 +108,19 @@
           </xsl:if>
         </xsl:copy>
       </xsl:template>
+      
+      <!-- Functions/Templates to get bounding box information for a musx element
+           "Own"BoundingBox means only the bounding box of this element, not its children.
+           E.g., the <staff>'s OwnBoundingBox are the dimensions of the staff lines, not the
+           dimensions of all elements inside the staff. -->
       <xsl:template match="node()|@*" mode="get_OwnBoundingBox" priority="-2"/>
       <xsl:function name="g:OwnBoundingBox" as="node()*">
         <xsl:param name="element" as="node()*"/>
         <xsl:apply-templates select="$element" mode="get_OwnBoundingBox"/>
       </xsl:function>
       
+      <!-- We require every symbol in the symbols.svg file to have a <bbox> element inside a <metadata> element.
+           This is the function to access the <bbox> element. -->
       <xsl:key name="svgID" match="svg:*[@id]" use="@id"/>
       <xsl:function name="g:svgSymbolBoundingBox" as="node()*">
         <xsl:param name="symbolURI" as="xs:string*"/>
@@ -122,6 +132,9 @@
         </xsl:for-each>
       </xsl:function>
       
+      <!-- Template for adding visualized bounding boxes to the SVG output.
+        To use this template, svg-with-bounding-boxes has to be set as the initial mode 
+        (e.g. using the switch -im:svg-with-bounding-boxes with saxonb-xslt) -->
       <xsl:template match="/" mode="svg-with-bounding-boxes">
         <xsl:variable name="musxWithBoundingBoxes">
           <xsl:apply-templates select="." mode="add-bounding-boxes"/>
