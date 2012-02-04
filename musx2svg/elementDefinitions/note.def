@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<?xml-stylesheet type='text/xsl' href='def2xsl.xsl'?>
 <elementDefinition
     xmlns="NS:DEF"
     xmlns:svg="http://www.w3.org/2000/svg"
@@ -67,7 +66,7 @@
     <xsl:param name="x1" select="number($headBoundingBox//@left) - $protrusion"/>
     <xsl:param name="x2" select="number($headBoundingBox//@right) + $protrusion"/>
     <xsl:param name="finalYPlusTolerance" select="$direction * g:y(.) + .5 * $staffSize"/>
-           <!-- Added tolerance is for avoiding missed ledgerLines because of rounding errors -->
+           <!-- Added tolerance ".5 * $staffSize" is for avoiding missed ledgerLines because of rounding errors -->
     
     <xsl:if test="$direction*$y &lt; $finalYPlusTolerance">
       <svg:line x1="{$x1}" x2="{$x2}" y1="{$y}" y2="{$y}"/>
@@ -187,6 +186,7 @@
             then .4 * $distanceFromCenter + 7
           else 5
         ,
+        (: QUESTION: Is this the best way to get the right stem elongation? :) 
         g:svgSymbolBoundingBox(g:symbol(musx:flags))//@height
       ))"/>
     
@@ -221,7 +221,7 @@
     
     <!-- TODO: Make direction sign of flags in symbol.svg consistent with  
          conventions rather than making g:direction(.) negative here -->
-    <symbol name="symbol" lacuna="concat('flags.',-g:direction(.)*g:number(.))"/>
+    <symbol name="symbol" lacuna="concat('flags.',g:direction(.)*g:number(.))"/>
     
   </properties>
   
