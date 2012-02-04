@@ -44,11 +44,10 @@
         <xsl:variable name="y" select="g:y(.)"/>
         
         <musx:BoundingBox
-          left="{{  $x + $size*number($symbolBBox/@x)}}"
-          right="{{ $x + $size*sum(($symbolBBox/@x,$symbolBBox/@width))}}"
-          top="{{   $y + $size*number($symbolBBox/@y)}}"
-          bottom="{{$y + $size*sum(($symbolBBox/@y,$symbolBBox/@height))}}"
-          source="symbol '{@name}' on {{local-name()}}"/>
+          left="{{  $x + $size*number($symbolBBox/@left)}}"
+          right="{{ $x + $size*number($symbolBBox/@right)}}"
+          top="{{   $y + $size*number($symbolBBox/@top)}}"
+          bottom="{{$y + $size*number($symbolBBox/@bottom)}}"/>
       </xsl:if>
     </xsl:template>
     

@@ -1,6 +1,5 @@
 <?xml version="1.0" ?>
 <!-- QUESTIONS:
-  - Should Lilypond baselines be used for clefs?  Yes, as MEI specifies clef position this way as well.
   - Should Score convention ("align right") be used for accidentals?
   - Should Lilypond convention for articulation marks be used (origin is at the center)? Yes!
 -->
@@ -62,10 +61,12 @@
             //symbol.setAttribute("transform","scale(" + scaleFactor + "," + (-scaleFactor) + ")")
        
             bboxElement = document.createElementNS('','bbox')
-            bboxElement.setAttribute('x',      scaleFactor * bbox.x)
-            bboxElement.setAttribute('y',      scaleFactor * bbox.y)
-            bboxElement.setAttribute('width',  scaleFactor * bbox.width)
-            bboxElement.setAttribute('height', scaleFactor * bbox.height)
+            bboxElement.setAttribute('left',   scaleFactor * bbox.x)
+            bboxElement.setAttribute('top',    scaleFactor * bbox.y)
+            bboxElement.setAttribute('width',  scaleFactor * (bbox.width))
+            bboxElement.setAttribute('height', scaleFactor * (bbox.height))
+            bboxElement.setAttribute('right',  scaleFactor * (bbox.x + bbox.width))
+            bboxElement.setAttribute('bottom', scaleFactor * (bbox.y + bbox.height))
             
             var metadata = symbol.getElementsByTagName('metadata')[0]
             if (!metadata) {
@@ -137,62 +138,57 @@
     </svg>
   </xsl:template>
   
-  <xsl:template match="symbol[string-length(@mei) != 0 and string-length(@glyph-name) != 0]" priority="1">
+  <xsl:template match="symbol[string-length(@musx) != 0 and (string-length(@glyph-name)!=0 or svg:*)]" priority="1">
     <xsl:param name="svgfont"/>
     <xsl:variable name="glyph-name" select="@glyph-name"/>
-    <xsl:variable name="id" select="@mei"/>
+    <xsl:variable name="id" select="@musx"/>
     <xsl:variable name="transform" select="concat(@transform, substring(' ',string-length(@transform)))"/>
     <xsl:variable name="directSVG" select="svg:*"/>
     
-    <!-- TODO: Check whether occurence of @mei is unique, otherwise we'll end up with non-unique IDs -->
+    <!-- TODO: Check whether occurence of @musx is unique, otherwise we'll end up with non-unique IDs -->
     <!-- TODO: Generalize the following transform. The scaling factor must be defined in the symbolmap. -->
     <xsl:for-each select="$svgfont">
       <xsl:choose>
         <xsl:when test="key('glyph',$glyph-name) or $directSVG">
+          <xsl:variable name="glyph" select="key('glyph',$glyph-name)"/>
           <g id="{$id}" transform="{$transform}scale(.0075,-.0075)" class="symbol" style="stroke:none">
-            <xsl:apply-templates select="key('glyph',$glyph-name)"/>
-            <xsl:copy-of select="$directSVG"/>
+            <metadata>
+              <xsl:apply-templates select="$glyph" mode="add-metadata"/>
+            </metadata>
+            <xsl:apply-templates select="$glyph/@d" mode="glyph-to-path"/>
+            <xsl:copy-of select="$directSVG|$glyph/*"/>
           </g>
         </xsl:when>
         <xsl:otherwise>
           <xsl:message>
-            WARNING: Neither glyph <xsl:value-of select="$glyph-name"/> nor a direct SVG definition was found for symbol <xsl:value-of select="@mei"/>.
+            WARNING: Neither glyph <xsl:value-of select="$glyph-name"/> nor a direct SVG definition was found for symbol <xsl:value-of select="@musx"/>.
           </xsl:message>
         </xsl:otherwise>
       </xsl:choose>
     </xsl:for-each>
   </xsl:template>
   
-  <xsl:template match="symbol[svg:*]" priority="1">
-    <g id="{@mei}" class="symbol" style="stroke:none">
-      <metadata/>
-      <xsl:copy-of select="svg:*"/>
-    </g>
-  </xsl:template>
-  
-  <xsl:template match="symbol[@mei]" priority="0">
+  <xsl:template match="symbol[@musx]" priority="0">
     <xsl:message>
-      MEI symbol <xsl:value-of select="@mei"/> skipped. No corresponding glyph defined.
+      symbol <xsl:value-of select="@musx"/> skipped. No corresponding glyph defined.
     </xsl:message>
   </xsl:template>
 
-  <xsl:template match="svg:glyph">
-    <metadata>
-      <!-- TODO: Is an SVG namespaced <glyph> O.K. here? Should the information be stored differently? -->
-      <glyph>
-        <xsl:apply-templates select="@*[local-name()!='d']"/>
-      </glyph>
-    </metadata>
-    <xsl:apply-templates select="@d|*"/>
+  <xsl:template match="svg:glyph" mode="add-metadata">
+    <!-- TODO: Is an SVG namespaced <glyph> O.K. here? Should the information be stored differently? -->
+    <glyph>
+      <xsl:apply-templates select="@*"/>
+    </glyph>
   </xsl:template>
-
-  <xsl:template match="@d">
-    <path d="{.}"/>
-  </xsl:template>
-  
   <xsl:template match="@*">
     <xsl:copy-of select="."/>
   </xsl:template>
+  <xsl:template match="@d|@xml:id|@id"/>
+  
+  <xsl:template match="@d" mode="glyph-to-path">
+    <path d="{.}"/>
+  </xsl:template>
+  
   
   <xsl:template match="@horiz-adv-x">
     <xsl:attribute name="horiz-adv-x">
