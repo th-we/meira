@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<?xml-stylesheet type='text/xsl' href='def2xsl.xsl'?>
 <elementDefinition
     xmlns="NS:DEF"
     xmlns:svg="http://www.w3.org/2000/svg"
@@ -11,7 +10,7 @@
     <!-- TODO: Support dots on rests -->
     <coordinate name="x" orientation="x" anchor="g:x(..)" lacuna="0" />
     <coordinate name="y" orientation="y" anchor="g:y(..)" lacuna="if (g:step(..) mod 2 = 0)
-      then g:size(ancestor::musx:staff[last()])
+      then -g:size(ancestor::musx:staff[last()])
       else 0" />
     
     <!-- QUESTION: Should x1/x2 be leftmost/rightmost "touching" point of dots? -->
