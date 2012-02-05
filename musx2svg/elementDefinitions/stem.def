@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<elementDefinition
+    xmlns="NS:DEF"
+    xmlns:svg="http://www.w3.org/2000/svg"
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:xlink="http://www.w3.org/1999/xlink">
+
+<element name="stem">
+  <properties>
+    <!-- lacuna is set to 0 for downstem, to the right of the notehead if upstem -->
+    <coordinate name="x" orientation="x" anchor="g:x(..)" lacuna="
+        if (g:direction(.) = 1 or not(..//musx:head or parent::musx:rest))
+        then 0
+             (: the width of the first symbol found in this sequence gets returned 
+                if parent is a chord, g:topNote(..) will return something;
+                if parent is a note, ../musx:head will return something,
+                otherwise, this should be a rest :)
+        else g:width((g:topNote(..)/musx:head, ../musx:head, ..)[1])"/>
+    <coordinate name="y1" orientation="y" anchor="g:y1(..)" lacuna="0"/>
+    <coordinate name="y2" orientation="y" anchor="g:y2(..)" lacuna="g:direction(.) * g:length(.) * g:size(ancestor::musx:staff[last()])"/>
+
+    <coordinate name="x1" orientation="x" anchor="g:x(.)" lacuna="0"/>
+    <coordinate name="x2" orientation="x" anchor="g:x(.)" lacuna="0"/>
+    <coordinate name="y" orientation="y" anchor="g:y1(.)" lacuna="0"/>
+    
+    <integer name="direction" lacuna="g:direction(..)"/>
+    
+    <!-- Stem's length is determined as follows (inspired by Lilypond/Musescore):
+       - Notes with a stem pointing towards staff center that are more than 7 steps away from staff center 
+         (positive $distanceFromCenter, > 7) get length that's equal to said distance
+       - notes with a stem pointing towards staff center that are between 7 and 0 steps away from staff center
+         ($distanceFromCenter between 0 and 7) get a stem length of 7
+       - notes with a stem pointing away from staff center that are more than 5 steps away from staff center
+         ($distanceFromCenter negative, -5 and less), get a shortened stem length of 5  
+       - notes with a stem pointing away from staff center that are between 0 and 5 steps away from staff center
+         ($distanceFromCenter negative between 0 and -5), get their length linearly interpolated between the 
+         stem lengths of notes that are 0 and "-5" steps away from center 
+       If the height of the flag symbol is greater than the so determined length, the flag height determines
+       the stem length -->
+    <number name="length" lacuna="
+      max((
+        for $direction in g:direction(.),
+            $stemOutletStep in   (: QUESTION: Find a better name? '$stemOutletStep' is where the stem 'leaves' a chord :)  
+              if (not(parent::musx:chord))
+              then g:step(..)
+              else if ($direction = 1)
+              then g:step(g:bottomNote(..))
+              else g:step(g:topNote(..)),
+            $distanceFromCenter in g:direction(.) * (g:lines(ancestor::musx:staff[last()]) - 1 - $stemOutletStep) 
+        return
+          if ($distanceFromCenter &gt; 7)
+            then $distanceFromCenter
+          else if ($distanceFromCenter &gt;= 0)
+            then 7
+          else if ($distanceFromCenter &gt; -5)
+            then .4 * $distanceFromCenter + 7
+          else 5
+        ,
+        if (musx:flags)  (: if there are flags, the stem must be at least as long as the flags symbol :) 
+        then for $symbolBB in g:svgSymbolBoundingBox(g:symbol(musx:flags)) return
+             max((abs($symbolBB//@top),abs($symbolBB//@bottom))) 
+             + (if (g:direction(.) = 1) then 1 else 0)
+             (: For downstemmed notes, we need to make the stem at least one step longer than the flag 
+             because otherwise the flag runs into the head :)
+        else ()
+      ))"/>
+    
+    <scaleFactor name="size" anchor="g:size(..)" lacuna="1"/>
+  </properties>
+  
+  <draw>
+    <svg:line x1="{g:x1(.)}" x2="{g:x2(.)}" y1="{g:y1(.)}" y2="{g:y2(.)}" stroke="currentColor"/>
+  </draw>
+  
+  <OwnBoundingBox>
+    <BoundingBox left="{g:x(.)}" right="{g:x(.)}" top="{min((g:y1(.),g:y2(.)))}" bottom="{max((g:y1(.),g:y2(.)))}"/>
+  </OwnBoundingBox>
+</element>
+  
+
+<element name="flags">
+  <properties>
+    <coordinate name="x" orientation="x" anchor="g:x(..)" lacuna="0"/>
+    <coordinate name="y" orientation="y" anchor="g:y2(..)" lacuna="0"/>
+    
+    <coordinate name="x1" orientation="x" anchor="g:x(.)" lacuna="0"/>
+    <coordinate name="x2" orientation="x" anchor="g:x(.)" lacuna="0"/>
+    <coordinate name="y1" orientation="y" anchor="g:y(.)" lacuna="0"/>
+    <coordinate name="y2" orientation="y" anchor="g:y(.)" lacuna="0"/>
+    
+    <scaleFactor name="size" anchor="g:size(..)" lacuna="1"/>
+    
+    <integer name="direction" lacuna="g:direction(..)"/>
+    <integer name="number" lacuna="1"/>
+    
+    <symbol name="symbol" lacuna="concat('flags.',g:direction(.)*g:number(.))"/>
+    
+  </properties>
+  
+  <draw>
+    <svg:use transform="translate({g:x(.)},{g:y(.)}) scale({g:size(.)})" xlink:href="{g:symbol(.)}"/>
+  </draw>
+</element>
+
+</elementDefinition> 
