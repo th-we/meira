@@ -17,13 +17,25 @@
                 otherwise, this should be a rest :)
         else g:width((g:topNote(..)/musx:head, ../musx:head, ..)[1])"/>
     <coordinate name="y1" orientation="y" anchor="g:y1(..)" lacuna="0"/>
-    <coordinate name="y2" orientation="y" anchor="g:y2(..)" lacuna="g:direction(.) * g:length(.) * g:staffSize(.)"/>
+    <coordinate name="y2" orientation="y" anchor="
+          if (..//@beam)
+          then g:y(g:beam(.),g:x(.))
+          else g:y2(..)" 
+        lacuna="
+          if (..//@beam)
+          then 0
+          else g:direction(.) * g:length(.) * g:staffSize(.)"/>
 
     <coordinate name="x1" orientation="x" anchor="g:x(.)" lacuna="0"/>
     <coordinate name="x2" orientation="x" anchor="g:x(.)" lacuna="0"/>
     <coordinate name="y" orientation="y" anchor="g:y1(.)" lacuna="0"/>
     
-    <integer name="direction" lacuna="g:direction(..)"/>
+    <integer name="direction" lacuna="
+        if (@beam)
+        then g:direction(g:beam(.))
+        else g:direction(..)"/>
+    
+    <elementReference name="beam" lacuna="()"/>
     
     <!-- Stem's length is determined as follows (inspired by Lilypond/Musescore):
        - Notes with a stem pointing towards staff center that are more than 7 steps away from staff center 

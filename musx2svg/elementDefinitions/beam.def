@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<elementDefinition
+    xmlns="NS:DEF"
+    xmlns:svg="http://www.w3.org/2000/svg"
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:xlink="http://www.w3.org/1999/xlink">
+
+<element name="beam">
+  <properties>
+    <!-- lacuna is set to 0 for downstem, to the right of the notehead if upstem -->
+    <elementReference name="start" lacuna=".."/>
+    <elementReference name="end" lacuna=".."/>
+    
+                               <!-- Select first stem of start element; if there is none, simply pick the start element -->
+<!--    <coordinate name="x1" orientation="x" anchor="g:x(..)" lacuna="0"/>
+    <coordinate name="x2" orientation="x" anchor="g:x(..)" lacuna="0"/>-->
+    <coordinate name="x1" orientation="x" anchor="g:x((g:start(.)//musx:stem, g:start(.))[1])" lacuna="0"/>
+    <coordinate name="x2" orientation="x" anchor="g:x((g:end(.)//musx:stem, g:end(.))[1])" lacuna="0"/>
+    <coordinate name="y1" orientation="y" anchor="g:y(..)" lacuna="0"/>
+    <coordinate name="y2" orientation="y" anchor="g:y(..)" lacuna="0"/>
+    
+    <coordinate name="x" orientation="x" anchor="g:x1(.)" lacuna="0"/>
+    <coordinate name="y" orientation="y" anchor="g:y1(.)" lacuna="0"/>
+    
+    <!--<integer name="direction" lacuna=""/>-->
+    <scaleFactor name="size" anchor="g:size(..)" lacuna="1"/>
+    
+    <!-- The caluclateDirection function is defined in note.def -->
+    <integer name="direction" lacuna="g:calculateDirection(.)"/>
+  </properties>
+  
+  <xsl:function name="g:y">
+    <xsl:param name="beam" as="node()"/>
+    <xsl:param name="x" as="xs:double"/>
+    <!-- Use basic line equation 
+      y = mx + n 
+      to calculate y at point x.  We move x1 of the beam to the origin, therefore we have
+      y = m(x-x1) + n
+      Our y-intercept is then y1, therefore
+      y = m(x-x1) + y1
+      m is the usual difference quotient, therefore
+      y = (y2-y1)/(x2-x1) * (x-x1) + y1
+      We must be careful not to divide by zero (if x2-x1=0)
+    -->
+    <xsl:variable name="dx" select="g:x2($beam) - g:x1($beam)"/>
+    <xsl:choose>
+      <xsl:when test="$dx = 0">
+        <xsl:sequence select="g:y1($beam)"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:variable name="m" select="(g:y2($beam) - g:y1($beam)) div $dx"/>
+        <xsl:sequence select="$m * ($x - g:x1($beam)) + g:y1($beam)"/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:function>
+  
+  <xsl:key name="beamNotes" match="musx:note[.//@beam]" use=".//@beam[1]"/>
+  
+  <draw>
+    <xsl:message>
+      g:x((g:start(.)//musx:stem, g:start(.))[1]) = "<xsl:value-of select="g:x((g:start(.)//musx:stem, g:start(.))[1])"/>"
+      g:x((g:end(.)//musx:stem, g:end(.))[1]) = "<xsl:value-of select="g:x((g:end(.)//musx:stem, g:end(.))[1])"/>"
+    </xsl:message>
+    <svg:line x1="{g:x1(.)}" x2="{g:x2(.)}" y1="{g:y1(.)}" y2="{g:y2(.)}" stroke="currentColor" stroke-width="{g:size(.)*4}"/>
+  </draw>
+  
+<!--  <OwnBoundingBox>
+    <BoundingBox left="{g:x(.)}" right="{g:x(.)}" top="{min((g:y1(.),g:y2(.)))}" bottom="{max((g:y1(.),g:y2(.)))}"/>
+  </OwnBoundingBox>-->
+</element>
+
+</elementDefinition> 
