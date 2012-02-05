@@ -10,12 +10,13 @@
     <!-- TODO: Properly support dots on rests (vertical position)
                Properly align dots on chords with shifted noteheads -->
     <coordinate name="x" orientation="x" anchor="g:x(..)" lacuna="0" />
-    <coordinate name="y" orientation="y" anchor="g:y(..)" lacuna="if (g:step(..) mod 2 = 0)
-      then -g:size(ancestor::musx:staff[last()])
-      else 0" />
+    <coordinate name="y" orientation="y" anchor="g:y(..)" lacuna="
+        if (g:step(..) mod 2 = 0)
+        then -g:staffSize(.)
+        else 0" />
     
     <!-- QUESTION: Should x1/x2 be leftmost/rightmost "touching" point of dots? -->
-    <coordinate orientation="x" name="x1" anchor="g:width((../musx:head, ..)[1])" lacuna="g:offset(.)"/>
+    <coordinate orientation="x" name="x1" anchor="g:x(..)" lacuna="g:width((../musx:head, ..)[1]) + g:offset(.)"/>
     <coordinate orientation="x" name="x2" anchor="g:x1(.)" lacuna="(g:number(.) - 1) * g:distance(.)"/>
     <coordinate orientation="y" name="y1" anchor="g:y(.)" lacuna="0"/>
     <coordinate orientation="y" name="y2" anchor="g:y(.)" lacuna="0"/>
