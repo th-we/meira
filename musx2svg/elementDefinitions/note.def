@@ -39,10 +39,8 @@
                    What about staffs with 1 or 0 lines? -->
     <integer name="direction" lacuna="
         if (musx:stem/@direction)
-        then g:direction(musx:stem[1])
-        else if (g:step(.) &lt; g:lines(ancestor::musx:staff[last()]))
-        then 1
-        else -1"/>
+        then g:direction(musx:stem[@direction][1])
+        else g:calculateDirection(.)"/>
 
     <!-- The following is only meant to implement a getter function g:step(.). 
          QUESTION: Prevent this from being explicitly set as an attribute? -->
@@ -176,11 +174,7 @@
     <integer name="direction" lacuna="
         if (musx:stem/@direction)
         then g:direction(musx:stem[1])
-        else for $meanStepValue in .5*(g:step(g:bottomNote(.)) + g:step(g:topNote(.))),
-                 $centerStep in g:lines(ancestor::musx:staff[last()]) - 1
-        return if ($meanStepValue &gt; $centerStep)
-               then -1
-               else 1"/>
+        else g:calculateDirection(.)"/>
     
     <coordinate name="x" orientation="x" anchor="g:x(g:start(.))" lacuna="0"/>
     <coordinate name="y1" orientation="y" anchor="
@@ -200,6 +194,23 @@
     <scaleFactor name="size" anchor="g:size(..)" lacuna="1"/>
     
   </properties>
+  
+  <!-- This function is also used by beams. The 'beamNotes' key is defined there. --> 
+  <xsl:function name="g:calculateDirection">
+    <xsl:param name="element"/>
+    <xsl:variable name="notes" select="$element/(self::musx:note, self::musx:chord/musx:note, key('beamNotes',@xml:id))"/>
+    <xsl:variable name="sortedSteps" as="xs:double*">
+      <xsl:for-each select="g:step($notes)">
+        <xsl:sort select="."/>
+        <xsl:sequence select="."/>
+      </xsl:for-each>
+    </xsl:variable>
+    <xsl:variable name="staffCenter" select="g:lines($notes[1]/ancestor::musx:staff[last()]) - 1"/>
+    <xsl:sequence select="
+        if (.5*($sortedSteps[last()] + $sortedSteps[1]) &gt; $staffCenter)
+        then -1
+        else 1"/>
+  </xsl:function>
   
   <draw/>
 </element>
