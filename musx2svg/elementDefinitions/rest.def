@@ -32,11 +32,24 @@
     <!--<coordinate name="BB.right" orientation="y" anchor="0" lacuna="max(g:BB.right(@symbol|dots))"/>-->
     
     <scaleFactor name="size" anchor="g:size(..)" lacuna="1"/>
+
+    <!-- direction and step are here in analogy to notes to makes stems possible on rests -->
+    <!-- QUESTION: This is duplicate code with notes. How can it be shared? -->
+    <integer name="direction" lacuna="
+      if (musx:stem/@direction)
+      then g:direction(musx:stem[1])
+      else if (g:step(.) &lt; g:lines(ancestor::musx:staff))
+      then 1
+      else -1"/>
     
+    <!-- The following is only meant to implement a getter function g:step(.). 
+      QUESTION: Prevent this from being explicitly set as an attribute? -->
+    <!-- Usually, @y should be given with the 'S' unit.  The else branch would work for
+      any unit, but is much more inefficient for the typical case. -->
     <number name="step" lacuna="
-          if(substring(@y,1,1)='S')
-          then number(substring(@y,2))
-          else (g:y(.) - g:y(ancestor::musx:staff)) div g:size(ancestor::musx:staff)"/>
+      if(substring(@y,1,1)='S')
+      then number(substring(@y,2))
+      else (g:y(.) - g:y(ancestor::musx:staff)) div g:size(ancestor::musx:staff[last()])"/>
     
     <symbol name="symbol" lacuna="''"/>
   </properties>
