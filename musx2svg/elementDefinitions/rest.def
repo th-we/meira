@@ -33,11 +33,10 @@
     
     <scaleFactor name="size" anchor="g:size(..)" lacuna="1"/>
     
-    <number name="step" lacuna="(
+    <number name="step" lacuna="
           if(substring(@y,1,1)='S')
-          then substring(@y,2)
-          else (g:y(.) - g:y(ancestor::musx:staff)) div g:size(ancestor::musx:staff)
-        ) cast as xs:double"/>
+          then number(substring(@y,2))
+          else (g:y(.) - g:y(ancestor::musx:staff)) div g:size(ancestor::musx:staff)"/>
     
     <symbol name="symbol" lacuna="''"/>
   </properties>
