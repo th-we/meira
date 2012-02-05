@@ -107,13 +107,15 @@
     <coordinate name="x" orientation="x" anchor="g:x(g:start(.))" lacuna="
       if (g:flip(.) = 0)
       then 0
-      else g:flip(.) * number(g:svgSymbolBoundingBox(g:symbol(.))//@right) * g:size(.)"/>
+      else g:flip(.) * g:width(.)"/>
     <coordinate name="y" orientation="y" anchor="g:y(..)" lacuna="0"/>
     
     <coordinate name="x1" orientation="x" anchor="g:x(.)" lacuna="0"/>
     <coordinate name="x2" orientation="x" anchor="g:x(.)" lacuna="0"/>
     <coordinate name="y1" orientation="y" anchor="g:y(.)" lacuna="0"/>
     <coordinate name="y2" orientation="y" anchor="g:y(.)" lacuna="0"/>
+    
+    <scaleFactor name="width" anchor="g:size(.)" lacuna="number(g:svgSymbolBoundingBox(g:symbol(.))//@right)"/>
     
     <integer name="flip" lacuna="
       if(../parent::musx:chord)

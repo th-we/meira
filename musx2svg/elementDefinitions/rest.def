@@ -33,6 +33,8 @@
     
     <scaleFactor name="size" anchor="g:size(..)" lacuna="1"/>
 
+    <scaleFactor name="width" anchor="g:size(.)" lacuna="number(g:svgSymbolBoundingBox(g:symbol(.))//@right)"/>
+    
     <!-- direction and step are here in analogy to notes to makes stems possible on rests -->
     <!-- QUESTION: This is duplicate code with notes. How can it be shared? -->
     <integer name="direction" lacuna="
