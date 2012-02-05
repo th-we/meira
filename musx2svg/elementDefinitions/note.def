@@ -21,11 +21,10 @@
                                                   then -1
                                                   else 1"/>
     <coordinate name="ledgerLines.y1" orientation="y" lacuna="0" anchor="
+      for $staff in ancestor::musx:staff[last()] return
         if (g:ledgerLines.direction(.) &lt; 0)
-        then for $staff in ancestor::musx:staff[last()] 
-             return g:y1($staff) - 2*g:size($staff)
-        else for $staff in ancestor::musx:staff[last()] 
-             return g:y2($staff) + 2*g:size($staff)"/>
+        then g:y1($staff) - 2*g:size($staff)
+        else g:y2($staff) + 2*g:size($staff)"/>
     <!-- QUESTION: Is it necessary to refine this? -->
     <coordinate name="ledgerLines.y2" orientation="y" anchor="g:y(.)" lacuna="0"/>
     <boolean name="ledgerLines.draw" lacuna="g:step(.) &lt; -1 or g:step(.) &gt; 9"/>
@@ -38,7 +37,9 @@
                    Especially, what about staffs with an even number of liens?
                    What about staffs with 1 or 0 lines? -->
     <integer name="direction" lacuna="
-        if (g:step(.) &lt; g:lines(ancestor::musx:staff))
+        if (musx:stem/@direction)
+        then g:direction(musx:stem)[1]
+        else if (g:step(.) &lt; g:lines(ancestor::musx:staff))
         then 1
         else -1"/>
 
@@ -46,11 +47,10 @@
          QUESTION: Prevent this from being explicitly set as an attribute? -->
     <!-- Usually, @y should be given with the 'S' unit.  The else branch would work for
          any unit, but is much more inefficient for the typical case. -->
-    <number name="step" lacuna="(
+    <number name="step" lacuna="
           if(substring(@y,1,1)='S')
-          then substring(@y,2)
-          else (g:y(.) - g:y(ancestor::musx:staff)) div g:size(ancestor::musx:staff)
-        ) cast as xs:double"/>
+          then number(substring(@y,2))
+          else (g:y(.) - g:y(ancestor::musx:staff)) div g:size(ancestor::musx:staff[last()])"/>
     
   </properties>
   
@@ -186,8 +186,13 @@
             then .4 * $distanceFromCenter + 7
           else 5
         ,
-        (: QUESTION: Is this the best way to get the right stem elongation? :) 
-        g:svgSymbolBoundingBox(g:symbol(musx:flags))//@height
+        (: QUESTION: Is this the best way to get the right stem elongation? :)
+        if (musx:flags) 
+        then number(g:svgSymbolBoundingBox(g:symbol(musx:flags))//@height) 
+             + (if (g:direction(.) = 1) then 1 else 0)
+             (: For downstemmed notes, we need to make the stem at least one step longer than the flag 
+             because otherwise the flag runs into the head :)
+        else ()
       ))"/>
     
     <scaleFactor name="size" anchor="g:size(..)" lacuna="1"/>
