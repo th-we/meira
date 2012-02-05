@@ -119,6 +119,11 @@
         <xsl:apply-templates select="$element" mode="get_OwnBoundingBox"/>
       </xsl:function>
       
+      <xsl:function name="g:staffSize" as="xs:double*">
+        <xsl:param name="element" as="node()*"/>
+        <xsl:sequence select="g:size($element/ancestor::musx:staff[last()])"/>
+      </xsl:function>
+      
       <!-- We require every symbol in the symbols.svg file to have a <bbox> element inside a <metadata> element.
            This is the function to access the <bbox> element. -->
       <xsl:key name="svgID" match="svg:*[@id]" use="@id"/>

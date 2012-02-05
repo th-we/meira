@@ -47,20 +47,20 @@
     </xsl:template>
     <!-- s Unit: relative to default anchor position, in staff units ("scale steps") -->
     <xsl:template mode="get_{@name}" match="key('{g:createKeyName(@name,$elementNames)}','s')">
-      <xsl:variable name="staff" select="ancestor::musx:staff" as="node()"/>
+      <xsl:variable name="staff" select="ancestor::musx:staff[last()]" as="node()"/>
       <xsl:copy-of select="({@anchor}) + (g:size($staff) * number(substring(@{@name},2)))"/>
     </xsl:template>
     <!-- These two units only make sense for vertical coordinates -->
     <if test="@orientation = 'y'">
       <!-- S Unit: relative to staff position, in staff units ("scale steps") -->
       <xsl:template mode="get_{@name}" match="key('{g:createKeyName(@name,$elementNames)}','S')">
-        <xsl:variable name="staff" select="ancestor::musx:staff" as="node()"/>
+        <xsl:variable name="staff" select="ancestor::musx:staff[last()]" as="node()"/>
         <xsl:copy-of select="(g:y1($staff)) + 
           (g:size($staff) * number(substring(@{@name},2)))"/>
       </xsl:template>
       <!-- L Unit: relative to staff position, in line distances (from bottom up!) -->
       <xsl:template mode="get_{@name}" match="key('{g:createKeyName(@name,$elementNames)}','L')">
-        <xsl:variable name="staff" select="ancestor::musx:staff" as="node()"/>
+        <xsl:variable name="staff" select="ancestor::musx:staff[last()]" as="node()"/>
         <xsl:copy-of select="(g:y2($staff)) - 
           + 2 * g:size($staff) * (number(substring(@{@name},2)) - 1)"/>
       </xsl:template>

@@ -17,7 +17,7 @@
                 otherwise, this should be a rest :)
         else g:width((g:topNote(..)/musx:head, ../musx:head, ..)[1])"/>
     <coordinate name="y1" orientation="y" anchor="g:y1(..)" lacuna="0"/>
-    <coordinate name="y2" orientation="y" anchor="g:y2(..)" lacuna="g:direction(.) * g:length(.) * g:size(ancestor::musx:staff[last()])"/>
+    <coordinate name="y2" orientation="y" anchor="g:y2(..)" lacuna="g:direction(.) * g:length(.) * g:staffSize(.)"/>
 
     <coordinate name="x1" orientation="x" anchor="g:x(.)" lacuna="0"/>
     <coordinate name="x2" orientation="x" anchor="g:x(.)" lacuna="0"/>

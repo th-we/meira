@@ -40,7 +40,7 @@
     <integer name="direction" lacuna="
         if (musx:stem/@direction)
         then g:direction(musx:stem[1])
-        else if (g:step(.) &lt; g:lines(ancestor::musx:staff))
+        else if (g:step(.) &lt; g:lines(ancestor::musx:staff[last()]))
         then 1
         else -1"/>
 
@@ -51,7 +51,7 @@
     <number name="step" lacuna="
           if(substring(@y,1,1)='S')
           then number(substring(@y,2))
-          else (g:y(.) - g:y(ancestor::musx:staff)) div g:size(ancestor::musx:staff[last()])"/>
+          else (g:y(.) - g:y(ancestor::musx:staff[last()])) div g:staffSize(.)"/>
     
   </properties>
   
@@ -59,7 +59,7 @@
     <!-- QUESTION: Allow shortened ledger lines after accidentals? (like Lilypond) -->
     <!-- $direction is set to -1 if head is above staff, else 1 -->
     <xsl:param name="direction" select="g:ledgerLines.direction(.)"/>
-    <xsl:param name="staffSize" select="g:size(ancestor::musx:staff[last()])"/>
+    <xsl:param name="staffSize" select="g:staffSize(.)"/>
     <xsl:param name="increment" select="2 * $direction * $staffSize"/>
     <xsl:param name="y" select="g:ledgerLines.y1(.)"/>
     <xsl:param name="headBoundingBox" select="g:OwnBoundingBox(musx:head)"/>
