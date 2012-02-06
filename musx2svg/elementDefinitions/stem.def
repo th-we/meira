@@ -19,7 +19,7 @@
     <coordinate name="y1" orientation="y" anchor="g:y1(..)" lacuna="0"/>
     <coordinate name="y2" orientation="y" anchor="
           if (..//@beam)
-          then g:y(g:beam(.),g:x(.))
+          then g:beamY(.)
           else g:y2(..)" 
         lacuna="
           if (..//@beam)

@@ -11,6 +11,7 @@
       .BoundingBox {
         fill:none;
         stroke:green;
+        opacity:.5;
       }
       *:hover > .BoundingBox {
         stroke: red;
@@ -45,47 +46,87 @@
           <clef symbol="G" y="L2" start="stehsatz">
             <transposeNumber placement="above">8</transposeNumber>
           </clef>
-          <svg x="p20" y="L-1" size="p1">
-            <svg:text>Test</svg:text>
-            <svg:text stroke="none" y="10">Hallihallo</svg:text>
-          </svg>
-          <rest start="e1" symbol="whole" y="S2"/>
+          <barline start="e1" xml:id="b1"/>
+          <rest start="b1" end="b2" symbol="whole" y="S2"/>
+          <barline start="e2" xml:id="b2"/>
+          <note start="e2" y="S2">
+            <head/>
+            <dots/>
+            <stem>
+              <flags/>
+            </stem>
+          </note>
+          <note y="S6" xml:id="note1" start="e5">
+            <head/>
+            <stem beam="beam1" _y2="S0" _direction="-1"/>
+          </note>
+          <note y="S6" start="e6" xml:id="note2">
+            <head/>
+            <stem beam="beam1" _y2="S0" _direction="-1"/>
+          </note>
+          <note y="S5" start="e7" xml:id="note3">
+            <head/>
+            <stem/>
+          </note>
+          <beam start="note1" end="note3" y1="S-2" y2="S-2" xml:id="beam1" number="2">
+            <subbeam end="note2">
+              <subbeam end="note1" x2="s2"/>
+            </subbeam>
+          </beam>
+         
         </staff>
         <staff y="p50">
           <clef symbol="F" y="L4" start="stehsatz"/>
-          <note start="e1" y="S2">
+          <note start="e1" y="S0">
             <head/>
             <stem/>
           </note>
-          <note start="e2" y="S6">
-            <head/>
-            <stem direction="1"/>
-          </note>
-          <note start="e3" y="S14">
-            <head/>
-            <stem direction="1"/>
-          </note>
-          <note start="e4" y="S-4">
+          <note start="e2" y="S3">
             <head/>
             <stem/>
           </note>
-          <note start="e5" y="S13">
+          <note start="e3" y="S6">
             <head/>
             <stem/>
           </note>
-          <note start="e6" y="S-5">
+          <note start="e4" y="S5">
             <head/>
-            <stem svg:stroke-dasharray="4,3"/>
-            <dots number="2"/>
-            <accidental symbol="s"/>
+            <stem/>
           </note>
+          <note start="e5" y="S10">
+            <head/>
+            <stem/>
+          </note>
+          <note start="e6" y="S11">
+            <head/>
+            <stem/>
+          </note>
+          <note start="e7" y="S14">
+            <head/>
+            <stem/>
+          </note>
+          <chord start="e8">
+            <note y="S0">
+              <head/>
+            </note>
+            <note y="S3">
+              <head/>
+            </note>
+            <note y="S4">
+              <head/>
+            </note>
+            <note y="S6">
+              <head/>
+            </note>
+            <stem/>
+          </chord>
         </staff>
       </staffGroup>
-      <barline start="e7" type="double"/>
+<!--      <barline start="e7" type="double"/>
       <barline start="e8" type="repeatEnd"/>
       <barline start="e9" type="repeatStart"/>
       <barline start="e10"/>
-      <barline start="e10" type="repeatDouble"/>
+      <barline start="e10" type="repeatDouble"/>-->
       <barline start="e_end" type="end"/>
     </system>
   </page>
