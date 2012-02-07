@@ -19,13 +19,7 @@
     
     <coordinate name="x" orientation="x" anchor="g:x1(.)" lacuna="0"/>
     <!-- TODO: GO ON HERE, implement lacuna y -->
-    <coordinate name="y" orientation="y" anchor="g:y(..)" lacuna="0(:
-        for $centerStep in g:lines(g:staff(.)) - 1,
-            $note in key('beamNotes',@xml:id)
-        return
-          if (step(.) 
-          then
-          else:)"/>
+    <coordinate name="y" orientation="y" anchor="g:y(..)" lacuna="g:beamYLacuna(.)"/>
     
     <scaleFactor name="size" anchor="g:size(..)" lacuna="1"/>
     <scaleFactor name="width" anchor="g:size(.)" lacuna="1"/>
@@ -34,8 +28,54 @@
     <!-- The caluclateDirection function is defined in note.def -->
     <integer name="direction" lacuna="g:calculateDirection(.)"/>
     <integer name="number" lacuna="1"/>
+    
   </properties>
-  
+
+  <xsl:function name="g:beamYLacuna">
+    <xsl:param name="beam"/>
+    <xsl:variable name="direction" select="g:direction($beam)"/>
+    <xsl:variable name="steps" select="g:step(key('beamNotes',$beam/@xml:id,$beam/ancestor::musx:musx))"/>
+    <xsl:variable name="centerStep" select="g:lines($beam/ancestor::musx:staff[last()]) - 1"/>
+    <xsl:variable name="staffSize" select="g:staffSize($beam)"/>
+    <xsl:variable name="stepsSortedInBeamDirection" as="xs:double*">
+      <xsl:for-each select="$steps">
+        <xsl:sort select=". * $direction"/>
+        <xsl:sequence select=". * $direction"/>
+      </xsl:for-each>
+    </xsl:variable>
+    <xsl:variable name="stepClosestToBeam" select="$stepsSortedInBeamDirection[last()] - $centerStep * $direction"/>
+    <xsl:variable name="stepFurthestFromBeam" select="$stepsSortedInBeamDirection[1] - $centerStep * $direction"/>
+    <xsl:variable name="beamHeightInSteps" select="((g:summedBeamNumber($beam) - 1) * g:distance($beam) + g:width($beam)) div $staffSize"/>
+    
+    <xsl:variable name="beamStepsFromCenter" select="
+        max((
+          0, 
+          $stepClosestToBeam + 4 + $beamHeightInSteps, 
+          $stepFurthestFromBeam + 7
+        ))"/>
+    <xsl:sequence select="($direction * $beamStepsFromCenter + $centerStep) * $staffSize"/>
+<!--    <xsl:message>
+      $direction = <xsl:value-of select="$direction"/>
+      notes = <xsl:copy-of select="key('beamNotes',$beam/@xml:id,$beam)"/>
+      $steps = <xsl:value-of select="$steps"/>
+      $centerStep = <xsl:value-of select="$centerStep"/>
+      $staffSize = <xsl:value-of select="$staffSize"/>
+      $stepsSortedInBeamDirection = <xsl:value-of select="$stepsSortedInBeamDirection"/>
+      $stepClosestToBeam = <xsl:value-of select="$stepClosestToBeam"/>
+      $stepFurthestFromBeam = <xsl:value-of select="$stepFurthestFromBeam"/>
+      $beamHeightInSteps = <xsl:value-of select="$beamHeightInSteps"/>
+      $beamStepsFromCenter = <xsl:value-of select="$beamStepsFromCenter"/>
+      $resultStep = <xsl:sequence select="($direction * $beamStepsFromCenter - $centerStep)"/>
+    </xsl:message>-->
+  </xsl:function>
+
+  <xsl:function name="g:summedBeamNumber">
+    <xsl:param name="beam" as="node()*"/>
+    <xsl:for-each select="$beam">
+      <xsl:sequence select="max((g:summedBeamNumber($beam/musx:subbeam), 0)) + g:number($beam)"/>
+    </xsl:for-each>
+  </xsl:function>
+
   <xsl:function name="g:beamY">
     <xsl:param name="stem"/>
     <xsl:variable name="beam" select="g:beam($stem)"/>
@@ -61,7 +101,8 @@
     </xsl:choose>
   </xsl:function>
   
-  <xsl:key name="beamNotes" match="musx:note[.//@beam]" use=".//@beam[1]"/>
+<!--  <xsl:key name="beamNotes" match="musx:note" use="(.//@beam|parent::musx:chord/@beam)[1]"/>-->
+  <xsl:key name="beamNotes" match="musx:note" use="musx:stem/@beam"/>
   
   <xsl:template name="drawBeam">
     <xsl:param name="number" select="g:number(.)"/>
@@ -94,6 +135,9 @@
   </xsl:template>
   
   <draw>
+<!--    <xsl:message>
+      <xsl:copy-of select="key('beamNotes',@xml:id)"/>
+    </xsl:message>-->
     <xsl:call-template name="drawBeam"/>
   </draw>
   

@@ -42,7 +42,7 @@
       <barline/>
       <staffBracket/>
       <staffGroup>
-        <staff lines="4">
+        <staff lines="5">
           <clef symbol="G" y="L2" start="stehsatz">
             <transposeNumber placement="above">8</transposeNumber>
           </clef>
@@ -60,20 +60,38 @@
             <head/>
             <stem beam="beam1" _y2="S0" _direction="-1"/>
           </note>
-          <note y="S6" start="e6" xml:id="note2">
+          <note y="S4" start="e6" xml:id="note2">
             <head/>
             <stem beam="beam1" _y2="S0" _direction="-1"/>
           </note>
-          <note y="S5" start="e7" xml:id="note3">
+          <note y="S3" start="e7" xml:id="note3">
             <head/>
-            <stem/>
+            <stem beam="beam1"/>
           </note>
-          <beam start="note1" end="note3" y1="S-2" y2="S-2" xml:id="beam1" number="2">
+          <beam start="note1" end="note3" _y1="S-2" _y2="S-2" xml:id="beam1" number="2">
             <subbeam end="note2">
               <subbeam end="note1" x2="s2"/>
             </subbeam>
           </beam>
-         
+          
+          <note y="S10" xml:id="note4" start="e8">
+            <head/>
+            <stem beam="beam2" _y2="S0" _direction="-1"/>
+          </note>
+          <note y="S11" start="e9" xml:id="note5">
+            <head/>
+            <stem beam="beam2" _y2="S0" _direction="-1"/>
+          </note>
+          <note y="S8" start="e10" xml:id="note6">
+            <head/>
+            <stem beam="beam2"/>
+          </note>
+          <beam start="note4" end="note6" _y1="S-2" _y2="S-2" xml:id="beam2" number="2">
+            <subbeam end="note5">
+              <subbeam end="note4" x2="s2"/>
+            </subbeam>
+          </beam>
+          
         </staff>
         <staff y="p50">
           <clef symbol="F" y="L4" start="stehsatz"/>
@@ -108,15 +126,19 @@
           <chord start="e8">
             <note y="S0">
               <head/>
+              <dots/>
             </note>
             <note y="S3">
               <head/>
+              <dots/>
             </note>
             <note y="S4">
               <head/>
+              <dots/>
             </note>
             <note y="S6">
               <head/>
+              <dots/>
             </note>
             <stem/>
           </chord>
