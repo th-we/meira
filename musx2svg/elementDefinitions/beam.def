@@ -18,7 +18,6 @@
     <coordinate name="y2" orientation="y" anchor="g:y(.)" lacuna="0"/>
     
     <coordinate name="x" orientation="x" anchor="g:x1(.)" lacuna="0"/>
-    <!-- TODO: GO ON HERE, implement lacuna y -->
     <coordinate name="y" orientation="y" anchor="g:y(..)" lacuna="g:beamYLacuna(.)"/>
     
     <scaleFactor name="size" anchor="g:size(..)" lacuna="1"/>
@@ -134,16 +133,26 @@
     
   </xsl:template>
   
+  <xsl:template name="beamBoundingBox">
+    <xsl:variable name="beamHeight" select="(g:summedBeamNumber(.) - 1) * g:distance(.) + g:width(.)"/>
+    <xsl:variable name="yValues" select="(g:y1(.),g:y2(.))"/>
+    <xsl:choose>
+      <xsl:when test="g:direction(.)=1">
+        <BoundingBox left="{g:x1(.)}" right="{g:x2(.)}" top="{min($yValues) - $beamHeight}" bottom="{max($yValues)}"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <BoundingBox left="{g:x1(.)}" right="{g:x2(.)}" top="{min($yValues)}" bottom="{max($yValues) + $beamHeight}"/>
+      </xsl:otherwise> 
+    </xsl:choose>
+  </xsl:template>
+  
   <draw>
-<!--    <xsl:message>
-      <xsl:copy-of select="key('beamNotes',@xml:id)"/>
-    </xsl:message>-->
     <xsl:call-template name="drawBeam"/>
   </draw>
   
-<!--  <OwnBoundingBox>
-    <BoundingBox left="{g:x(.)}" right="{g:x(.)}" top="{min((g:y1(.),g:y2(.)))}" bottom="{max((g:y1(.),g:y2(.)))}"/>
-  </OwnBoundingBox>-->
+  <OwnBoundingBox>
+    <xsl:call-template name="beamBoundingBox"/>
+  </OwnBoundingBox>
 </element>
   
 <element name="subbeam">
@@ -171,6 +180,10 @@
   <draw>
     <xsl:call-template name="drawBeam"/>
   </draw>
+
+  <OwnBoundingBox>
+    <xsl:call-template name="beamBoundingBox"/>
+  </OwnBoundingBox>
 </element>
 
 </elementDefinition> 
