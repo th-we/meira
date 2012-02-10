@@ -151,7 +151,7 @@
             + 1)}"
           start="_t0">  
       <!-- Display staff label -->
-      <svg y="S-2" x="s-2">
+      <svg y="S6" x="s-2">
         <svg:text font-size="4" text-anchor="end">
           <xsl:value-of select="@n"/>
         </svg:text>
@@ -223,7 +223,7 @@
   <xsl:template match="mei:staff">
     <group class="measure">
       <!-- Display measure number -->
-      <svg y="S-10" x="p{-1 * $barlineSpace}">
+      <svg y="S-2" x="p{-1 * $barlineSpace}">
         <xsl:apply-templates select="ancestor-or-self::*/@synch:id"/>
         <svg:text font-size="3"  text-anchor="end">
           <xsl:value-of select="ancestor::mei:measure/@n"/>
