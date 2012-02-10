@@ -73,7 +73,7 @@
       
       <!-- Main template for converting to SVG -->
       <xsl:template match="/musx:musx">
-        <svg:svg>
+        <svg:svg width="{{g:x2(//musx:page[1])}}" height="{{g:y2(//musx:page[1])}}">
           <xsl:apply-templates select="musx:musxHead[*]" mode="generate-defs"/>
           <xsl:apply-templates mode="draw"/>
         </svg:svg>

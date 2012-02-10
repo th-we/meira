@@ -2621,19 +2621,7 @@
                     select="         max((           0,            $stepClosestToBeam + 4 + $beamHeightInSteps,            $stepFurthestFromBeam + 7         ))"
                     as="xs:double"/>
       <xsl:sequence select="($direction * $beamStepsFromCenter + $centerStep) * $staffSize"/>
-      <!--    <xsl:message>
-      $direction = <xsl:value-of select="$direction"/>
-      notes = <xsl:copy-of select="key('beamNotes',$beam/@xml:id,$beam)"/>
-      $steps = <xsl:value-of select="$steps"/>
-      $centerStep = <xsl:value-of select="$centerStep"/>
-      $staffSize = <xsl:value-of select="$staffSize"/>
-      $stepsSortedInBeamDirection = <xsl:value-of select="$stepsSortedInBeamDirection"/>
-      $stepClosestToBeam = <xsl:value-of select="$stepClosestToBeam"/>
-      $stepFurthestFromBeam = <xsl:value-of select="$stepFurthestFromBeam"/>
-      $beamHeightInSteps = <xsl:value-of select="$beamHeightInSteps"/>
-      $beamStepsFromCenter = <xsl:value-of select="$beamStepsFromCenter"/>
-      $resultStep = <xsl:sequence select="($direction * $beamStepsFromCenter - $centerStep)"/>
-    </xsl:message>-->
+
   </xsl:function>
    <xsl:function xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                  name="g:summedBeamNumber">
@@ -2643,7 +2631,7 @@
       </xsl:for-each>
   </xsl:function>
    <xsl:function xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="g:beamY">
-      <xsl:param name="stem"/>
+      <xsl:param name="stem" as="node()"/>
       <xsl:variable name="beam" select="g:beam($stem)"/>
       <!-- Use basic line equation 
       y = mx + n 
@@ -2662,8 +2650,10 @@
          </xsl:when>
          <xsl:otherwise>
             <xsl:variable name="m" select="(g:y2($beam) - g:y1($beam)) div $dx"/>
-            <xsl:sequence select="$m * (g:x($stem) - g:x1($beam)) + g:y1($beam)"/>
-         </xsl:otherwise>
+            <xsl:sequence select="$m * (g:x($stem) - g:x1($beam)) + g:y1($beam) - .5*g:direction($beam)*g:width($beam)"/>
+                                                                       <!-- - .5*g:direction($beam)*g:width($beam) makes sure
+                                                                            that stem doesn't protrude over beam -->
+      </xsl:otherwise>
       </xsl:choose>
   </xsl:function>
    <xsl:key xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="beamNotes"
@@ -2761,7 +2751,7 @@
       <copy-of select="."/>
    </template>
    <template match="/musx:musx">
-      <svg:svg>
+      <svg:svg width="{g:x2(//musx:page[1])}" height="{g:y2(//musx:page[1])}">
          <apply-templates select="musx:musxHead[*]" mode="generate-defs"/>
          <apply-templates mode="draw"/>
       </svg:svg>
