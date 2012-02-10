@@ -22,7 +22,7 @@
     <symbols xlink:href="symbols/symbols.svg"/>
   </musxHead>
   <page x2="500" y2="300">
-    <eventlist>
+    <eventList>
       <event xml:id="e0" x="20"/>
       <event xml:id="stehsatz" x="25"/>
       <event xml:id="e1" x="50"/>
@@ -37,7 +37,7 @@
       <event xml:id="e10" x="230"/>
       <event xml:id="e11" x="250"/>
       <event xml:id="e_end" x="270"/>
-    </eventlist>
+    </eventList>
     <system start="e0" end="e_end" y="p25" size="p3" >
       <barline/>
       <staffBracket/>
