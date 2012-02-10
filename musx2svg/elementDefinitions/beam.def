@@ -83,8 +83,8 @@
       </xsl:when>
       <xsl:otherwise>
         <xsl:variable name="m" select="(g:y2($beam) - g:y1($beam)) div $dx"/>
-        <xsl:sequence select="$m * (g:x($stem) - g:x1($beam)) + g:y1($beam) - .5*g:dirction($beam)*g:width($beam)"/>
-                                                                       <!-- - .5*g:dirction($beam)*g:width($beam) makes sure
+        <xsl:sequence select="$m * (g:x($stem) - g:x1($beam)) + g:y1($beam) - .5*g:direction($beam)*g:width($beam)"/>
+                                                                       <!-- - .5*g:direction($beam)*g:width($beam) makes sure
                                                                             that stem doesn't protrude over beam -->
       </xsl:otherwise>
     </xsl:choose>
