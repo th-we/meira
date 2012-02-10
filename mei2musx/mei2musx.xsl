@@ -50,7 +50,6 @@
         <xsl:for-each-group select="//mei:*[@synch:*]" group-by="@synch:rounded">
           <!-- Question: Is "number()" required here? -->
           <xsl:sort select="number(@synch:rounded)"/>
-          <xsl:message>IN!!</xsl:message>
           <xsl:call-template name="write-event"/>
         </xsl:for-each-group>
         <!-- Add event for last barline -->
@@ -161,20 +160,6 @@
       <clef symbol="clef.{(@clef.shape|mei:clef/@shape)[last()]}" 
             y="L{(@clef.line|mei:clef/@line)[last()]}"
             x="s{1}"/>
-      <!-- TODO: Add a preprocessing step that converts @key.sig into <keysig>.  This avoids complicated 
-           XPath constructions that try to take into account both the attribute and child element variants. -->
-      <keySignature symbol="accidental.{
-                              substring(
-                                concat(mei:keySig/@accid,
-                                       substring(@key.sig,2))
-                               ,1,1)}"
-                    y="L{(@clef.line|mei:clef/@line)[last()]}"
-                    x="p{$clefSpace}">
-                    <!-- $clefSpace tells us how much space the preceding clef takes up -->
-        <xsl:attribute name="pattern">
-          <xsl:apply-templates mode="get-keysignature-pattern" select="."/>
-        </xsl:attribute>
-      </keySignature>
       <timeSignature x="p{$clefSpace + $keysignatureSpace}">
         <!-- Look for meter definition, either in this very element or a preceding scoredef -->
         <xsl:apply-templates select="(ancestor-or-self::mei:*[@*[starts-with(local-name(),'meter.')]])[last()]" 
@@ -198,27 +183,35 @@
     </fraction>
   </xsl:template>
   
-  <xsl:template mode="get-keysignature-pattern" match="mei:staffDef">
-    <!-- Extract pattern from table
-        - first with substring-after get the section that follows "s" for sharps and "f" for flats 
-        - then, again with substring-after get section that belongs to the current clef (G, C or F; GG has same pattern as G
-        - then with substring get the first $n 4-char "table cells" which represent the pattern -->
-    <xsl:value-of select="
-        substring(
-          substring-after(
+  <xsl:template mode="get-keysignature-pattern" match="mei:staffDef[mei:keySig]">
+    <keySignature symbol="accidental.{mei:keySig/@accid}"
+      y="L{(@clef.line|mei:clef/@line)[last()]}"
+      x="p{$clefSpace}">
+      <!-- $clefSpace tells us how much space the preceding clef takes up -->
+      <xsl:attribute name="pattern">
+        <!-- Extract pattern from table
+          - first with substring-after get the section that follows "s" for sharps and "f" for flats 
+          - then, again with substring-after get section that belongs to the current clef (G, C or F; GG has same pattern as G
+          - then with substring get the first $n 4-char "table cells" which represent the pattern -->
+        <xsl:value-of select="
+          substring(
             substring-after(
-              's G-6  -3  -7  -4  -1  -5  -2  
-                 C-3   0  -4  -1   2  -2   1
-                 F 0   3  -1   2   5   1   4
-               f G-2  -5  -1  -4   0  -3   1  
-                 C 1  -2   2  -1   3   0   4
-                 F 4   1   5   2   6   3   7',
-              mei:keySig/@accid
-            ),
-            substring((@clef.shape|mei:clef/@shape)[last()],1,1)
-         ), 1, mei:keySig/@n*4)"/>
+              substring-after(
+                's G-6  -3  -7  -4  -1  -5  -2  
+                   C-3   0  -4  -1   2  -2   1
+                   F 0   3  -1   2   5   1   4
+                 f G-2  -5  -1  -4   0  -3   1  
+                   C 1  -2   2  -1   3   0   4
+                   F 4   1   5   2   6   3   7',
+                mei:keySig/@accid
+              ),
+              substring((@clef.shape|mei:clef/@shape)[last()],1,1)
+           ), 1, mei:keySig/@n*4)"/>
+         </xsl:attribute>
+    </keySignature>
     <!-- TODO: Handle more complex ("mixed") patterns -->
   </xsl:template>
+  <xsl:template mode="get-keysignature-pattern" match="*"/>
   
   <xsl:template match="mei:staff">
     <group class="measure">
