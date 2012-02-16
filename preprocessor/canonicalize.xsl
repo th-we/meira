@@ -9,6 +9,9 @@
     - keysig (below are basics)
     - clef
     - ...
+    
+    Add @dur to mei:ftrem|mei:btrem|mei:space|mei:halfmRpt|mei:mRest|mei:mSpace
+    !!! @dur on ftrem/btrem is not conformant with the specs, but useful !!!
   -->
   
   <xsl:template match="*">
