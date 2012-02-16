@@ -65,7 +65,7 @@
       </when>
       <otherwise>
         <message terminate="yes">
-          <value-of select="local-name()"/> element <value-of select="@xml:id"/> has unexpected grandparent element <value-of select="local-name()"/>  
+          ERROR: <value-of select="local-name()"/> element <value-of select="@xml:id"/> has unexpected grandparent element <value-of select="local-name(../..)"/>  
         </message>
       </otherwise>
     </choose>
