@@ -7,7 +7,12 @@
     xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
   <import href="fraction.xsl"/>
-  <import href="contentChronologyKeys.xsl"/>  
+  <import href="contentChronologyKeys.xsl"/>
+	
+                                    	<!-- QUESTION: Is this the complete list of "events" that take up time?                  Why can't I use boolean(@dur) -->
+	<key name="timeConsumingElements" match="mei:note|mei:rest|mei:chord|mei:ftrem|mei:btrem|mei:space|mei:halfmRpt|mei:mRest|mei:mSpace" use="if (@dur)
+		                                                                                                                                         then 'withDur'
+		                                                                                                                                         else 'withoutDur'"/>
   
   <template match="@*|node()">
     <copy>
@@ -88,7 +93,7 @@
     </choose>
   </template>
   
-  <template match="mei:*[@dur]" priority="2" >
+	<template match="key('timeConsumingElements','withDur')" priority="2">
     <variable name="rawNumerator" as="xs:integer">
       <apply-templates mode="get-raw-numerator" select="@dur"/>
     </variable>
@@ -114,7 +119,12 @@
       <apply-templates select="@*|node()"/>
     </copy>
   </template>
-  
+	<template match="key('timeConsumingElements','withoutDur')" priority="2">
+		<message terminate="yes">
+			ERROR: @dur required on <value-of select="local-name()"/> element <value-of select="@xml:id"/>
+		</message>
+	</template>
+		
   <template match="@dur" mode="get-raw-numerator" priority="-1">
     <value-of select="1"/>
   </template>
