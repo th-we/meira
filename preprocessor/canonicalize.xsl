@@ -60,6 +60,11 @@
          - Handle [@key.accid], @key.mode, @key.pname, @key.sig.mixed, @key.sig.show, @key.sig.showchange
     -->
   </xsl:template>
+	
+	<xsl:template match="@accid"/>
+	<xsl:template match="@accid" mode="turn-attributes-into-element">
+		<mei:accid accid="{.}"/>
+	</xsl:template>
   
   <xsl:template match="@*" mode="turn-attributes-into-element"/>
 

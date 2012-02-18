@@ -19,8 +19,8 @@
     </note>
   </xsl:template>
   
-  <xsl:template match="@accid">
-    <accidental symbol="accidental.{string()}"/>
+  <xsl:template match="mei:accid">
+    <accidental symbol="accidental.{@accid}"/>
   </xsl:template>
   
   <xsl:template match="@artic">

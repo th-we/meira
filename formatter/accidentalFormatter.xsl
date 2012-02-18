@@ -2,18 +2,22 @@
 <stylesheet version="2.0"
     xmlns="http://www.w3.org/1999/XSL/Transform"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
-    xmlns:update="NS:UPDATE">
+    xmlns:update="NS:UPDATE"
+	  xmlns:musx="NS:MUSX">
   <import href="update.xsl"/>
 
+  <!-- TODO: - Arrange accidentals in "C-Shape" (see Gieseking)
+             - Check whether there are noteheads flipped to the left and move accidentals further left accordingly -->
   <!-- These parameters are in scale steps, i.e. the "s" unit -->
-  <param name="columnWidth" select="2"/>
-  <param name="distanceFromNotes" select="1"/>
+  <param name="columnWidth" select="2.5"/>
+	<!-- Is accidental origin currently on the left or the right of the symbol? -->
+  <param name="distanceFromNotes" select="2.5"/>
 
   <template match="/">
     <variable name="updateTree">
       <document>
-        <for-each select="//staff">
-          <for-each-group select=".//note[accidental]" group-by="ancestor-or-self::*/@event">
+        <for-each select="//musx:staff">
+          <for-each-group select=".//musx:note[musx:accidental]" group-by="ancestor-or-self::*/@start">
             <call-template name="arrange-accidentals">
               <with-param name="notes" as="element()*">
                 <perform-sort select="current-group()" >
@@ -44,7 +48,7 @@
     <variable name="remainingNotes" select="$notes[not(. intersect $notesInFirstColumn)]"/>
     
     <for-each select="$notesInFirstColumn">
-      <update:attribute name="x" element="{generate-id(accidental)}" value="s{$columndIndex * $columnWidth + $distanceFromNotes}"/>
+      <update:attribute name="x" element="{generate-id(musx:accidental)}" value="s{-($columndIndex * $columnWidth + $distanceFromNotes)}"/>
     </for-each>
     
     <if test="$remainingNotes">
