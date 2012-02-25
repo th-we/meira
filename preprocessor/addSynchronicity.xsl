@@ -9,15 +9,65 @@
   
   <import href="fraction.xsl"/>
   <import href="contentChronologyKeys.xsl"/>
+	
+	<param name="floatToFractionPrecision" select="100" as="xs:integer"/>
   
   
-  <template match="@*|node()">
-    <copy>
-      <apply-templates select="@*|node()"/>
-    </copy>
+  <template match="/">
+  	<variable name="meiWithSynch">
+  		<apply-templates/>
+  	</variable>
+  	
+  	<apply-templates select="$meiWithSynch" mode="add-tstamp-synch"/>
   </template>
   
-  <template match="key('contentChronology','synchronous')">
+	<template match="@*|node()">
+		<copy>
+			<apply-templates select="@*|node()"/>
+		</copy>
+	</template>
+	
+	<template match="@*|node()" mode="add-tstamp-synch">
+		<copy>
+			<apply-templates select="@*|node()" mode="add-tstamp-synch"/>
+		</copy>
+	</template>
+	
+	<function name="synch:getMeasureSynch" as="xs:integer*">
+		<param name="measure" as="node()"/>
+		<sequence select="($measure/@synch:numerator cast as xs:integer, $measure/@synch:denominator cast as xs:integer)"/>
+	</function>
+	
+	<function name="synch:getFractionalPart">
+		<param name="tstamp" as="xs:string"/>
+		<sequence select="frac:completelyReduce(
+			round((number($tstamp) - 1) * $floatToFractionPrecision) cast as xs:integer,
+			$floatToFractionPrecision
+		)"/> 
+	</function>
+	
+	<template match="@tstamp" mode="add-tstamp-synch">
+		<copy-of select="."/>
+		<variable name="measureSynch" select="synch:getMeasureSynch(ancestor::mei:measure)" as="xs:integer*"/>
+		<variable name="tstampFraction" select="synch:getFractionalPart(.)" as="xs:integer*"/>
+		<call-template name="write-synch">
+			<with-param name="synch" select="frac:add($measureSynch,$tstampFraction)"/>
+		</call-template>
+	</template>
+	
+	<template match="@dur[contains(.,'m+')]" mode="add-tstamp-synch">
+		<copy-of select="."/>
+		<variable name="endMeasureOffset" select="substring-before(.,'m') cast as xs:integer" as="xs:integer"/>
+		<variable name="endMeasure" select="(ancestor::mei:measure/(.|following-sibling::mei:measure))[$endMeasureOffset + 1]" as="node()"/>
+		<variable name="endMeasureSynch" select="synch:getMeasureSynch($endMeasure)" as="xs:integer*"/>
+		<variable name="endTstamp" select="synch:getFractionalPart(substring-after(.,'m+'))" as="xs:integer*"/>
+		<call-template name="write-synch">
+			<with-param name="synch" select="frac:add($endMeasureSynch,$endTstamp)"/>
+			<with-param name="namePrefix" select="'end.'"/>
+		</call-template>
+	</template>
+	
+	<template match="key('contentChronology','synchronous')">
     <param name="synch" select="(0,1)" as="xs:integer*"/>
     
     <copy>
@@ -76,6 +126,7 @@
       <apply-templates select="@*|node()"/>
     </copy>
   </template>
+	
   
   <!-- QUESTION: This is basically identical to template "write-duration" from addDurations.xsl 
        Generalize this template? -->
