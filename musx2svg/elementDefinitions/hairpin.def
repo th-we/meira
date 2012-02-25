@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<elementDefinition
+  xmlns="NS:DEF"
+  xmlns:svg="http://www.w3.org/2000/svg"
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+  xmlns:g="NS:GET">
+
+<element name="hairpin">
+  <properties>
+  	<elementReference name="start" lacuna=".."/>
+  	<elementReference name="end" lacuna="g:start(.)"/>
+  	
+    <coordinate name="x" orientation="x" anchor="g:x1(.)" lacuna="0"/>
+    <coordinate name="y" orientation="y" anchor="g:y(..)" lacuna="0"/>
+    
+    <coordinate name="x1" orientation="x" anchor="g:x(g:start(.))" lacuna="0"/>
+    <coordinate name="x2" orientation="x" anchor="g:x(g:end(.))" lacuna="0"/>
+    <coordinate name="y1" orientation="y" anchor="g:y(.)" lacuna="0"/>
+    <coordinate name="y2" orientation="y" anchor="g:y(.)" lacuna="0"/>
+    
+    <scaleFactor name="size" anchor="g:size(..)" lacuna="1"/>
+  	
+  	<scaleFactor name="startSpread" anchor="g:size(..)" lacuna="0"/>
+  	<scaleFactor name="endSpread" anchor="g:size(..)" lacuna="0"/>
+    
+  </properties>
+  
+  <draw svg:fill="none" svg:stroke="currentColor">
+  	<xsl:variable name="x1" select="g:x1(.)"/>
+  	<xsl:variable name="x2" select="g:x2(.)"/>
+  	<xsl:variable name="y1" select="g:y1(.)"/>
+  	<xsl:variable name="y2" select="g:y2(.)"/>
+  	<xsl:variable name="halfStartSpread" select="g:startSpread(.) div 2"/>
+  	<xsl:variable name="halfEndSpread" select="g:endSpread(.) div 2"/>
+  	
+  	<svg:line x1="{$x1}" y1="{$y1 + $halfStartSpread}" x2="{$x2}" y2="{$y2 + $halfEndSpread}"/> 
+  	<svg:line x1="{$x1}" y1="{$y1 - $halfStartSpread}" x2="{$x2}" y2="{$y2 - $halfEndSpread}"/> 
+  </draw>
+
+</element>
+  
+</elementDefinition>
