@@ -227,35 +227,35 @@
       </metadata>
       <path d='M196 173c101 0 195 -74 195 -173s-94 -173 -195 -173s-196 74 -196 173s95 173 196 173zM196 24l96 84c-28 18 -61 28 -96 28s-69 -10 -97 -28zM168 0l-97 85c-22 -24 -35 -54 -35 -85s13 -61 35 -85zM223 0l98 -85c22 24 34 54 34 85s-12 61 -34 85zM196 -24l-97 -84 c28 -18 62 -28 97 -28s68 10 96 28z'/>
     </g>
-    <g id='rest.quadruplewhole' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='rest.long' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='rests.M2' unicode='' horiz-adv-x='1.125'/>
         <bbox left='0' top='-1.875' width='1.125' height='3.75' right='1.125' bottom='1.875' xmlns=''/>
       </metadata>
       <path d='M140 -250h-130c-6 0 -10 4 -10 10v480c0 6 4 10 10 10h130c6 0 10 -4 10 -10v-480c0 -6 -4 -10 -10 -10z'/>
     </g>
-    <g id='rest.dblwhole' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='rest.breve' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='rests.M1' unicode='' horiz-adv-x='1.125'/>
         <bbox left='0' top='-1.875' width='1.125' height='1.875' right='1.125' bottom='0' xmlns=''/>
       </metadata>
       <path d='M140 0h-130c-6 0 -10 4 -10 10v230c0 6 4 10 10 10h130c6 0 10 -4 10 -10v-230c0 -6 -4 -10 -10 -10z'/>
     </g>
-    <g id='rest.whole' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='rest.1' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='rests.0' unicode='' horiz-adv-x='2.82'/>
         <bbox left='0' top='0' width='2.8125' height='1.171875' right='2.8125' bottom='1.171875' xmlns=''/>
       </metadata>
       <path d='M365 -156h-355c-6 0 -10 4 -10 10v136c0 6 4 10 10 10h355c6 0 10 -4 10 -10v-136c0 -6 -4 -10 -10 -10z'/>
     </g>
-    <g id='rest.half' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='rest.2' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='rests.1o' unicode='' horiz-adv-x='2.82'/>
         <bbox left='-1.171875' top='-1.171875' width='5.15625' height='1.359375' right='3.984375' bottom='0.1875' xmlns=''/>
       </metadata>
       <path d='M506 -25h-637c-14 0 -25 11 -25 25s11 25 25 25h131v121c0 6 4 10 10 10h355c6 0 10 -4 10 -10v-121h131c14 0 25 -11 25 -25s-11 -25 -25 -25z'/>
     </g>
-    <g id='rest.quarter' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='rest.4' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='rests.2' unicode='' horiz-adv-x='1.785'/>
         <bbox left='-0.171875' top='-2.96875' width='1.99609375' height='5.3671875' right='1.82421875' bottom='2.3984375' xmlns=''/>
