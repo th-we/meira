@@ -20,8 +20,10 @@
   <includeDefinition href="stem.def"/>
   <includeDefinition href="dots.def"/>
   <includeDefinition href="BoundingBox.def"/>
-  <includeDefinition href="beam.def"/>
-  
+	<includeDefinition href="beam.def"/>
+	<includeDefinition href="hairpin.def"/>
+	<includeDefinition href="symbolText.def"/>
+	
   <draw/>
 
 </element>
