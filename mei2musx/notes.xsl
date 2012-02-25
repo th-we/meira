@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<xsl:stylesheet version="1.0" 
+<xsl:stylesheet version="2.0" 
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
     xmlns:mei="http://www.music-encoding.org/ns/mei"
     xmlns:svg="http://www.w3.org/2000/svg"
@@ -35,13 +35,18 @@
     <xsl:variable name="numericClefPitch">
       <!-- Find the staffdef/scoredef/clefchange element that provides the clef currently "in action" -->
       <!-- TODO: in preprocessing, convert all clef attributes to elements to make matching easier and "safer"? -->
-      <xsl:apply-templates mode="get-numeric-clef-pitch" select="
-          (
-            ancestor-or-self::mei:*/
-            preceding-sibling::mei:*/
-            descendant-or-self::mei:*[self::mei:clef or @clef.shape]
-            [ancestor-or-self::mei:*[@n = $staffN and (self::mei:staff or self::mei:staffDef)]]
-          )[last()]"/>
+    	<xsl:apply-templates mode="get-numeric-clef-pitch" select="
+    		(
+    		preceding::mei:*[self::mei:clef or @clef.shape]
+    		[ancestor-or-self::mei:*[@n = $staffN and (self::mei:staff or self::mei:staffDef)]]
+    		)[last()]"/>
+    	<!--<xsl:apply-templates mode="get-numeric-clef-pitch" select="
+    		(
+    		ancestor-or-self::mei:*/
+    		preceding-sibling::mei:*/
+    		descendant-or-self::mei:*[self::mei:clef or @clef.shape]
+    		[ancestor-or-self::mei:*[@n = $staffN and (self::mei:staff or self::mei:staffDef)]]
+    		)[last()]"/>-->
     </xsl:variable>
     <xsl:variable name="oct" select="(preceding-sibling::mei:note/@oct|@oct)[last()]"/>
     <xsl:variable name="pname" select="(preceding-sibling::mei:note/@pname|@pname)[last()]"/>
@@ -124,12 +129,18 @@
   <xsl:template match="mei:note|mei:chord" mode="add-stem">
     <stem>
       <xsl:apply-templates select="." mode="add-beam-attributes"/>
+      <xsl:apply-templates select="@stem.dir" mode="add-direction"/>
       <xsl:apply-templates select="." mode="add-flags"/>
     </stem>
   </xsl:template>
   <!-- Prevent stems on whole notes
        TODO: Implement handling for non-numeric @dur values. -->
   <xsl:template match="mei:*[self::mei:note/@dur=1 or self::mei:chord/descendant-or-self::mei:*/@dur=1]" mode="add-stem"/>
+	<xsl:template match="@stem.dir" mode="add-direction">
+		<xsl:attribute name="direction">
+			<xsl:value-of select="if (.='up') then -1 else 1"/>
+		</xsl:attribute>
+	</xsl:template>
   
   <xsl:template match="mei:*[ancestor::mei:beam or ancestor::mei:fTrem]" mode="add-flags" priority="1"/>
   <!-- This is easier and maybe faster than recursively counting how many times one has to divide by two 
@@ -164,17 +175,15 @@
   <xsl:template match="mei:*" mode="add-beam-attributes" priority="-1"/>
   
   <xsl:template match="mei:rest">
-    <rest>
-      <xsl:attribute name="symbol">
-        <xsl:apply-templates select="." mode="get-symbol"/>
-      </xsl:attribute>
+    <!-- TODO: Position rest according to layer/voice -->
+    <rest symbol="rest.{@dur}" y="S4">
       <xsl:apply-templates select="." mode="copy-id"/>
       <xsl:apply-templates select="@synch:id|*"/>
     </rest>
   </xsl:template>
   
   <xsl:template match="mei:mRest">
-    <rest symbol="rest.whole" y="S-6">
+    <rest symbol="rest.1" y="S-6">
       <xsl:apply-templates select="." mode="copy-id"/>
       <xsl:apply-templates select="@synch:id|*"/>
     </rest>
@@ -184,31 +193,4 @@
     <dots number="{string()}"/>
   </xsl:template>
 
-  <xsl:template match="mei:rest[@dur=1]" mode="get-symbol">
-    <xsl:value-of select="'rest.whole'"/>
-  </xsl:template>
-  <xsl:template match="mei:rest[@dur=2]" mode="get-symbol">
-    <xsl:value-of select="'rest.half'"/>
-  </xsl:template>
-  <xsl:template match="mei:rest[@dur=4]" mode="get-symbol">
-    <xsl:value-of select="'rest.quarter'"/>
-  </xsl:template>
-  <xsl:template match="mei:rest[@dur=8]" mode="get-symbol">
-    <xsl:value-of select="'rest.eighth'"/>
-  </xsl:template>
-  <xsl:template match="mei:rest[@dur=16]" mode="get-symbol">
-    <xsl:value-of select="'rest.sixteenth'"/>
-  </xsl:template>
-  <xsl:template match="mei:rest[@dur=32]" mode="get-symbol">
-    <xsl:value-of select="'rest.thirtysecond'"/>
-  </xsl:template>
-  <xsl:template match="mei:rest[@dur=64]" mode="get-symbol">
-    <xsl:value-of select="'rest.sixtyfourth'"/>
-  </xsl:template>
-  <xsl:template match="mei:rest[@dur=128]" mode="get-symbol">
-    <xsl:value-of select="'rest.hundredtwentyeighth'"/>
-  </xsl:template>
-  <xsl:template match="mei:rest" mode="get-symbol" priority="-1">
-    <xsl:message terminate="yes">Can't derive symbol from @dur="<xsl:value-of select="@dur"/>" of rest <xsl:value-of select="@xml:id"/></xsl:message>
-  </xsl:template>
 </xsl:stylesheet>
