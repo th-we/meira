@@ -8,8 +8,11 @@
 
 <element name="page">
   <properties>
+  	<!-- Specialty of <page>: By default it references itself as end -->
+  	<elementReference name="end" lacuna="."/> 
+  	
     <coordinate name="x1" orientation="x" anchor="0" lacuna="0" />
-    <coordinate name="x2" orientation="x" anchor="0" lacuna="0" />
+  	<coordinate name="x2" orientation="x" anchor="g:x(g:end(.))" lacuna="0" />
     <coordinate name="y" orientation="y" anchor="0" lacuna="0" />
     
     <coordinate name="x" orientation="x" anchor="0" lacuna="0" />
