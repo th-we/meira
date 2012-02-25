@@ -42,64 +42,26 @@
       <musxHead>
         <symbols xlink:href="symbols/symbols.svg"/>
       </musxHead>
-      <eventList>
-        <!-- Add a special event that we use for attaching the clef, key and time signatures to -->
-        <event xml:id="_t0" x="0"/>
-        <!--<xsl:apply-templates select="//mei:scoreDef[1]/mei:timeline[last()]/mei:when" mode="add-events"/>-->
-                                                          <!-- Only match one element with this synch value (first one returned by key('synchValue'..)) -->
-        <xsl:for-each-group select="//mei:*[@synch:*]" group-by="@synch:rounded">
-          <!-- Question: Is "number()" required here? -->
-          <xsl:sort select="number(@synch:rounded)"/>
-          <xsl:call-template name="write-event"/>
-        </xsl:for-each-group>
-        <!-- Add event for last barline -->
-        <xsl:for-each select="//mei:measure[last()]">
-          <xsl:call-template name="write-event">
-            <xsl:with-param name="id" select="@synch:end.id"/>
-            <xsl:with-param name="synch:rounded" select="@synch:end.rounded"/>
-          </xsl:call-template>
-        </xsl:for-each>
-      </eventList>
+    	<eventList>
+    		<!-- Add a special event that we use for attaching the clef, key and time signatures to -->
+    		<event xml:id="_t0" x="0" synchTime="0"/>
+    		<!--<xsl:apply-templates select="//mei:scoreDef[1]/mei:timeline[last()]/mei:when" mode="add-events"/>-->
+    		<!-- Only match one element with this synch value (first one returned by key('synchValue'..)) -->
+    		<xsl:for-each-group select="//@synch:rounded|//@synch:end.rounded" group-by=".">
+    			<xsl:sort select="number(.)"/>
+    			<xsl:variable name="synchIdAttributeLocalName" select="concat(substring-before(local-name(),'rounded'),'id')"/>
+    			<!-- This ("200 * .") is *VERY BAD* proportional spacing, just to have some spacing info. 
+              TODO: Implement separate, elaborate spacing algorithm. -->
+    			<event x="{200 * .}" synchTime="{.}">
+    				<xsl:attribute name="xml:id">
+    					<xsl:value-of select="../@synch:*[local-name()=$synchIdAttributeLocalName]"/>
+    				</xsl:attribute>
+    			</event>
+    		</xsl:for-each-group>
+    	</eventList>    	
       <xsl:apply-templates select="//mei:scoreDef[1]"/>
     </musx>
   </xsl:template>
-  
-  <xsl:template name="write-event">
-    <xsl:param name="id" select="@synch:id[1]"/>
-    <xsl:param name="synch:rounded" select="@synch:rounded[1]"/>
-    <!-- This is *VERY BAD* proportional spacing, just to have some spacing info. 
-      TODO: Implement separate, elaborate spacing algorithm. -->
-    <event x="{200 * $synch:rounded}">
-      <xsl:attribute name="xml:id">
-        <xsl:value-of select="$id"/>
-      </xsl:attribute>
-    </event>
-  </xsl:template>
-  
-<!-- Superceded by new @synch* attributes
-  <xsl:template match="mei:when" mode="add-events">
-    <event>
-      <xsl:attribute name="x">
-        <xsl:value-of select="'p'"/>
-        <xsl:apply-templates select="." mode="get-event-position"/>
-      </xsl:attribute>
-      <xsl:apply-templates select="." mode="copy-id"/>
-    </event>
-  </xsl:template>-->
-  
-  <!-- Superceded by new @synch* attributes
-    <xsl:template match="mei:when" mode="get-event-position">
-    <xsl:variable name="floatTimestamp" select="substring-before(@absolute,'/') div substring-after(@absolute,'/')"/>
-    <!-\- Calculate the x position of an event using the parameters supplied to this stylesheet -\->
-    <xsl:value-of select="
-    $spacePerQuarter * (
-    $equidistantProportionalBalance * count(preceding-sibling::mei:when)
-    + (1 - $equidistantProportionalBalance) * $floatTimestamp * 4
-    ) 
-    + $barlineSpace * count((preceding-sibling::mei:when|self::mei:when)[@data])
-    + $clefSpace + $keysignatureSpace + $timesignatureSpace
-    "/>
-    </xsl:template>-->
   
   <xsl:template match="*" mode="copy-id">
     <xsl:attribute name="xml:id">
@@ -114,16 +76,10 @@
     </xsl:attribute>
   </xsl:template>
   
+  <!-- TODO: Don't repeat this for every scoreDef. It creates multiple pages that cover each other -->
   <xsl:template match="mei:scoreDef">
-    <page y2="{(count(//mei:staffDef[not(contains($excludeStaffsList,concat(' ',@n,' ')))]) + 2) * $staffDistance}">
-      <xsl:attribute name="x2">
-        <!-- TODO: Adapt this for the new approach without mei:timeline and with @synch*
-        <xsl:variable name="printAreaWidth"> 
-          <xsl:apply-templates select="mei:timeline/mei:when[last()]" mode="get-event-position"/>
-        </xsl:variable>
-        <xsl:value-of select="$printAreaWidth + 2 * $margin"/> -->
-        <xsl:value-of select="//mei:measure[last()]/@synch:end.rounded * $spacePerQuarter + 2 * $margin"/>
-      </xsl:attribute>
+    <page y2="{(count(//mei:staffDef[not(contains($excludeStaffsList,concat(' ',@n,' ')))]) + 2) * $staffDistance}" 
+    	    x2="p{2*$margin}" end="{//@synch:end.id[number(../@synch:end.rounded)=max(//@synch:end.rounded)]}">
       <!-- Currently, everything is put into a single line of music, i.e no system breaks. -->
       <!-- Firefox doesn't support accessing @xml:id, for some reason, therefore the strange workaround -->
       <system start="_t0" end="{//mei:measure[last()]/@synch:end.id}" 
@@ -236,4 +192,22 @@
       <xsl:apply-templates/>
     </group>
   </xsl:template>
- </xsl:stylesheet>
+	
+	<xsl:template match="mei:hairpin">
+		<!-- TODO: Proper y positioning (as well for mei:dynam, see below) -->
+		<hairpin start="{@synch:id}" end="{@synch:end.id}" y="S{if(@place='above') then '-5' else '14'}">
+			<xsl:variable name="opening" select="if(@opening) then @opening * 2 else 4"/>
+			<xsl:attribute name="{if(@form = 'cres') then 'endSpread' else 'startSpread'}">
+				<xsl:value-of select="concat('s',$opening)"/>
+			</xsl:attribute>
+		</hairpin>
+	</xsl:template>
+	
+	<xsl:template match="mei:dynam">
+		<!-- TODO: Proper y positioning (as well for mei:hairpin, see above) -->
+		<symbolText start="{@synch:id}" class="dynam" y="S{if(@place='above') then '-5' else '14'}">
+			<xsl:apply-templates/>
+		</symbolText>
+	</xsl:template>
+	
+</xsl:stylesheet>
