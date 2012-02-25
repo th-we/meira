@@ -36,12 +36,12 @@
     
     <!-- p Unit: relative to default anchor position, in page units -->
     <xsl:template mode="get_{@name}" match="key('{g:createKeyName(@name,$elementNames)}','p')">
-      <xsl:variable name="page" select="ancestor::musx:page" as="node()"/>
+      <xsl:variable name="page" select="ancestor-or-self::musx:page" as="node()"/>
       <xsl:copy-of select="({@anchor}) + g:size($page) * number(substring(@{@name},2))"/>
     </xsl:template>
     <!-- P Unit: relative to page position, in page units -->
     <xsl:template mode="get_{@name}" match="key('{g:createKeyName(@name,$elementNames)}','P')">
-      <xsl:variable name="page" select="ancestor::musx:page" as="node()"/>
+      <xsl:variable name="page" select="ancestor-or-self::musx:page" as="node()"/>
        <!--                g:{@orientation}($page) evaluates to g:x($page) or g:y($page) -->
       <xsl:copy-of select="g:{@orientation}($page) + g:size($page) * number(substring(@{@name},2))"/>
     </xsl:template>
