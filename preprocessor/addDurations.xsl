@@ -36,7 +36,7 @@
           <!-- QUESTION: Does it make sense to add "cast as xs:integer" here, or is this done anyway 
                          because of the type expected by the template parameter? -->
           <with-param name="duration" select="($longestChild/@duration:numerator cast as xs:integer,
-                                               $longestChild/@duration:denominator cast as xs:integer)"/>
+                                               $longestChild/@duration:denominator cast as xs:integer)" as="xs:integer*"/>
         </call-template>
       </if>
       <apply-templates select="@*"/>
@@ -115,7 +115,7 @@
         <with-param name="duration" select="frac:completelyReduce(
                                               $rawNumerator * $tupletNumerator * (2 * $augmentationDenominator - 1), 
                                               $rawDenominator * $tupletDenominator * $augmentationDenominator
-                                            )"/>
+                                            )" as="xs:integer*"/>
       </call-template>
       <apply-templates select="@*|node()"/>
     </copy>
@@ -125,14 +125,36 @@
 			ERROR: @dur required on <value-of select="local-name()"/> element <value-of select="@xml:id"/>
 		</message>
 	</template>
+	<template match="mei:*[(self::mei:mRest or self::mei:mSpace) and not(@dur)]" priority="3">
+		<variable name="staffN" select="ancestor::mei:staff/@n"/>
+		<variable name="timeSignatureDef" select="
+			preceding::mei:*[
+			  (
+			    (
+			      local-name() = 'staffDef' and @n = $staffN
+			    ) 
+			    or 
+			    (
+			      local-name() = 'scoreDef' and .//mei:staffDef[@n = $staffN]
+			    )
+			  ) 
+			  and 
+			  @meter.count and @meter.unit
+			][1]"/>
+		<copy>
+			<call-template name="write-duration">
+				<with-param name="duration" select="frac:completelyReduce($timeSignatureDef/@meter.count,$timeSignatureDef/@meter.unit)" as="xs:integer*"/>
+			</call-template>
+		</copy>
+	</template>
 		
   <template match="@dur" mode="get-raw-numerator" priority="-1">
     <value-of select="1"/>
   </template>
-  <template match="@dur[string()='brevis']" mode="get-raw-numerator">
+  <template match="@dur[string()=('brevis','breve')]" mode="get-raw-numerator">
     <value-of select="2"/>
   </template>
-  <template match="@dur[string()='longa']" mode="get-raw-numerator">
+  <template match="@dur[string()=('longa','long')]" mode="get-raw-numerator">
     <value-of select="4"/>
   </template>
   <template match="@dur[string()='maxima']" mode="get-raw-numerator">
@@ -154,7 +176,7 @@
   <template match="@dur[string()='minima']" mode="get-raw-denominator">
     <value-of select="2"/>
   </template>
-  <template match="@dur[string()='semibrevis' or string()='brevis' or string()='longa' or string()='maxima']" mode="get-raw-denominator">
+  <template match="@dur[string()=('semibrevis','brevis','breve','longa','long','maxima')]" mode="get-raw-denominator">
     <value-of select="1"/>
   </template>
   
@@ -204,7 +226,8 @@
   <!-- QUESTION: This is basically identical to template "write-synch" from addSynchronicity.xsl 
     Generalize this template? -->
   <template name="write-duration">
-    <param name="duration"  as="xs:integer*"/>
+    <!-- parameter duration is required to be a "fraction" (a two-element sequence) -->
+  	<param name="duration" as="xs:integer*"/>
     <attribute name="numerator" namespace="NS:DURATION">
       <value-of select="$duration[1]"/>
     </attribute>
@@ -238,7 +261,7 @@
       </when>
       <otherwise>
         <call-template name="write-duration">
-          <with-param name="duration" select="$duration"/>
+          <with-param name="duration" select="$duration" as="xs:integer*"/>
         </call-template>
       </otherwise>
     </choose>
