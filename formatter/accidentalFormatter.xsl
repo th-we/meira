@@ -1,9 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<stylesheet version="2.0"
-    xmlns="http://www.w3.org/1999/XSL/Transform"
-    xmlns:xs="http://www.w3.org/2001/XMLSchema"
-    xmlns:update="NS:UPDATE"
-	  xmlns:musx="NS:MUSX">
+<?xml version="1.0"?>
+<stylesheet xmlns="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:update="NS:UPDATE" xmlns:musx="NS:MUSX" version="2.0">
   <import href="update.xsl"/>
 
   <!-- TODO: - Arrange accidentals in "C-Shape" (see Gieseking)
@@ -13,14 +9,14 @@
 	<!-- Is accidental origin currently on the left or the right of the symbol? -->
   <param name="distanceFromNotes" select="2.5"/>
 
-  <template match="/">
+  <template mode="accidentalFormatter" match="/">
     <variable name="updateTree">
       <document>
         <for-each select="//musx:staff">
           <for-each-group select=".//musx:note[musx:accidental]" group-by="ancestor-or-self::*/@start">
             <call-template name="arrange-accidentals">
               <with-param name="notes" as="element()*">
-                <perform-sort select="current-group()" >
+                <perform-sort select="current-group()">
                   <!-- @y is expected to be of the form "S-4", "S3" etc. (i.e. leading S unit) -->
                   <sort select="number(substring(@y,2))"/>
                 </perform-sort>
@@ -69,8 +65,7 @@
     <sequence select="$notes[1]"/>
     
     <!-- select all notes that are farther than a sixth (i.e. farther than 5 steps) away from first note -->
-    <variable name="furtherNotesPotentiallyInThisColumn" 
-        select="$notes[number(substring(@y,2)) gt $topNoteY + 5]" as="element()*"/>
+    <variable name="furtherNotesPotentiallyInThisColumn" select="$notes[number(substring(@y,2)) gt $topNoteY + 5]" as="element()*"/>
     <!-- recurse -->
     <if test="$furtherNotesPotentiallyInThisColumn">
       <call-template name="arrange-column">

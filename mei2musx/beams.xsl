@@ -1,9 +1,5 @@
 <?xml version="1.0"?>
-<xsl:stylesheet version="1.0" 
-    xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
-    xmlns:mei="http://www.music-encoding.org/ns/mei"
-    xmlns:svg="http://www.w3.org/2000/svg"
-    xmlns="NS:MUSX">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:mei="http://www.music-encoding.org/ns/mei" xmlns:svg="http://www.w3.org/2000/svg" xmlns="NS:MUSX" version="1.0">
   
   <!-- TODO: How should alternatives inside beams be handled?  Currently, only a flat sequence of notes/chords is handled -->
   
@@ -44,9 +40,8 @@
     <xsl:value-of select="substring-before($durList,' ')"/>
   </xsl:template>
   
-  <xsl:template match="mei:beam">
-    <beam start="{concat(.//mei:*[self::mei:note[not(ancestor::mei:chord)] or self::mei:chord][1]/@xml:id, '_stem')}" 
-            end="{concat(.//mei:*[self::mei:note[not(ancestor::mei:chord)] or self::mei:chord][last()]/@xml:id, '_stem')}">
+  <xsl:template mode="mei2musx" match="mei:beam">
+    <beam start="{concat(.//mei:*[self::mei:note[not(ancestor::mei:chord)] or self::mei:chord][1]/@xml:id, '_stem')}" end="{concat(.//mei:*[self::mei:note[not(ancestor::mei:chord)] or self::mei:chord][last()]/@xml:id, '_stem')}">
       <!-- $minimumDur is the numerically smallest @dur attribut, i.e. the *biggest* time value;
            if there are durations 8, 16, 32, 32, then 8 is the minimum dur -->
       <xsl:variable name="minimumDur">
@@ -60,12 +55,11 @@
         </xsl:apply-templates>
       </xsl:attribute>
       <xsl:apply-templates select="." mode="copy-id"/>
-      <xsl:apply-templates mode="add-subbeams"
-            select="*[self::mei:note or self::mei:chord][@dur &gt; $minimumDur]">
+      <xsl:apply-templates mode="add-subbeams" select="*[self::mei:note or self::mei:chord][@dur &gt; $minimumDur]">
         <xsl:with-param name="alreadyDrawnDur" select="$minimumDur"/>
       </xsl:apply-templates>
     </beam>
-    <xsl:apply-templates/>
+    <xsl:apply-templates mode="mei2musx"/>
   </xsl:template>
   
   <!-- TODO: The matching/selection mechanism for subbeams should be improved.  As can be seen in 
@@ -73,33 +67,14 @@
        are directly superimposed over other subbeams, therefore the visual result is correct. -->
   <!-- This template matches all notes that don't have an immediate preceding note/chord that is equally long or shorter. 
        At a note/chord that satisfies this condition, a new subbeam must start. -->
-  <xsl:template mode="add-subbeams"
-    match="*[
-               (self::mei:note or self::mei:chord) 
-               and 
-               not( self::*/@dur &lt;= preceding-sibling::mei:*[self::mei:note or self::mei:chord][1]/@dur) 
-            ]" >
+  <xsl:template mode="add-subbeams" match="*[                (self::mei:note or self::mei:chord)                 and                 not( self::*/@dur &lt;= preceding-sibling::mei:*[self::mei:note or self::mei:chord][1]/@dur)              ]">
     <xsl:param name="alreadyDrawnDur"/>
     <xsl:variable name="dur" select="@dur"/>
     <xsl:variable name="startId" select="@xml:id"/>
     <!-- Find last note that is a) shorter than the already drawn beam implies and b) isn't separated from the current
          note by a note for which the already drawn beams are already sufficient. This is the endpoint of the subbeam --> 
-    <xsl:variable name="endId" select="
-          (
-            following-sibling::*
-            [@dur &gt; $alreadyDrawnDur]
-            [not(
-              preceding-sibling::*
-              [@dur &lt;= $alreadyDrawnDur]
-              [preceding-sibling::*/@xml:id = $startId]
-            )]
-            | self::*
-          )[last()]/@xml:id"/>
-    <xsl:variable name="notesUnderSubbeam" 
-        select="self::*|key('id',$endId)|
-                following-sibling::*[
-                  following-sibling::*/@xml:id=$endId 
-                ]"/>
+    <xsl:variable name="endId" select="           (             following-sibling::*             [@dur &gt; $alreadyDrawnDur]             [not(               preceding-sibling::*               [@dur &lt;= $alreadyDrawnDur]               [preceding-sibling::*/@xml:id = $startId]             )]             | self::*           )[last()]/@xml:id"/>
+    <xsl:variable name="notesUnderSubbeam" select="self::*|key('id',$endId)|                 following-sibling::*[                   following-sibling::*/@xml:id=$endId                  ]"/>
     <xsl:variable name="minimumDur">
       <xsl:call-template name="get-minimum-dur">
         <xsl:with-param name="notes" select="$notesUnderSubbeam"/>
@@ -129,17 +104,14 @@
   </xsl:template>
 
   <!-- TODO: implement ftrems for whole notes (without stems) -->
-  <xsl:template match="mei:fTrem">
+  <xsl:template mode="mei2musx" match="mei:fTrem">
     <xsl:variable name="numberOfBeams">
       <xsl:apply-templates mode="get-number-of-beams" select="(.//mei:note|.//mei:chord)[@dur][1]"/>
     </xsl:variable>
-    <beam 
-        start="{.//*[self::mei:note or self::mei:chord][1]/@xml:id}"
-        end="{.//*[self::mei:note or self::mei:chord][last()]/@xml:id}"
-        number="{$numberOfBeams}">
+    <beam start="{.//*[self::mei:note or self::mei:chord][1]/@xml:id}" end="{.//*[self::mei:note or self::mei:chord][last()]/@xml:id}" number="{$numberOfBeams}">
       <xsl:apply-templates select="." mode="copy-id"/>
       <subbeam x1="s2" x2="s-2" number="{@slash - $numberOfBeams}"/>
     </beam>
-    <xsl:apply-templates/>
+    <xsl:apply-templates mode="mei2musx"/>
   </xsl:template>
 </xsl:stylesheet>

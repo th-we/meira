@@ -1,53 +1,42 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<stylesheet version="2.0" 
-    xmlns="http://www.w3.org/1999/XSL/Transform"
-    xmlns:mei="http://www.music-encoding.org/ns/mei"
-    xmlns:duration="NS:DURATION"
-    xmlns:frac="NS:FRAC"
-    xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<?xml version="1.0"?>
+<stylesheet xmlns="http://www.w3.org/1999/XSL/Transform" xmlns:mei="http://www.music-encoding.org/ns/mei" xmlns:duration="NS:DURATION" xmlns:frac="NS:FRAC" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="2.0">
 
   <import href="fraction.xsl"/>
   <import href="contentChronologyKeys.xsl"/>
 	
 	<!--  !!! We want to @dur added to ftrem/btrem during preprocessing, which is non-conformant with the specs !!! -->
                                     	<!-- QUESTION: Is this the complete list of "events" that take up time?                  Why can't I use boolean(@dur) -->
-	<key name="timeConsumingElements" match="mei:note|mei:rest|mei:chord|mei:ftrem|mei:btrem|mei:space|mei:halfmRpt|mei:mRest|mei:mSpace" use="if (@dur)
-		                                                                                                                                         then 'withDur'
-		                                                                                                                                         else 'withoutDur'"/>
+	<key name="timeConsumingElements" match="mei:note|mei:rest|mei:chord|mei:ftrem|mei:btrem|mei:space|mei:halfmRpt|mei:mRest|mei:mSpace" use="if (@dur)                                                                                                                                            then 'withDur'                                                                                                                                            else 'withoutDur'"/>
   
-  <template match="@*|node()">
+  <template mode="addDurations" match="@*|node()">
     <copy>
-      <apply-templates select="@*|node()"/>
+      <apply-templates mode="addDurations" select="@*|node()"/>
     </copy>
   </template>
 
   <!-- QUESTION: What to do with elements that don't contribute to the duration of the parent element, but still have a duration (like beamSpan)? -->
 
-  <template name="process-elements-with-synchronous-content"
-      match="key('contentChronology','synchronous')">
+  <template mode="addDurations" name="process-elements-with-synchronous-content" match="key('contentChronology','synchronous')">
     <variable name="children" as="node()*">
-      <apply-templates select="node()"/>
+      <apply-templates mode="addDurations" select="node()"/>
     </variable>
-    <variable name="longestChild" as="element()?"
-        select="$children[@duration:rounded = max($children/@duration:rounded)][1]"/>
+    <variable name="longestChild" as="element()?" select="$children[@duration:rounded = max($children/@duration:rounded)][1]"/>
     <copy>
       <if test="$longestChild">
         <call-template name="write-duration">
           <!-- QUESTION: Does it make sense to add "cast as xs:integer" here, or is this done anyway 
                          because of the type expected by the template parameter? -->
-          <with-param name="duration" select="($longestChild/@duration:numerator cast as xs:integer,
-                                               $longestChild/@duration:denominator cast as xs:integer)" as="xs:integer*"/>
+          <with-param name="duration" select="($longestChild/@duration:numerator cast as xs:integer,                                                $longestChild/@duration:denominator cast as xs:integer)" as="xs:integer*"/>
         </call-template>
       </if>
-      <apply-templates select="@*"/>
+      <apply-templates mode="addDurations" select="@*"/>
       <copy-of select="$children"/>
     </copy>
   </template>
   
-  <template name="process-elements-with-sequential-content" 
-      match="key('contentChronology','sequential')">
+  <template mode="addDurations" name="process-elements-with-sequential-content" match="key('contentChronology','sequential')">
     <variable name="children" as="node()*">
-      <apply-templates select="node()"/>
+      <apply-templates mode="addDurations" select="node()"/>
     </variable>
     <variable name="childrenWithDuration" select="$children[@duration:*]" as="element()*"/>
     <copy>
@@ -56,12 +45,12 @@
           <with-param name="elements" select="$childrenWithDuration"/>
         </call-template>
       </if>
-      <apply-templates select="@*"/>
+      <apply-templates mode="addDurations" select="@*"/>
       <copy-of select="$children"/>
     </copy>
   </template>
   
-  <template match="key('contentChronology','seeGrandparent')">
+  <template mode="addDurations" match="key('contentChronology','seeGrandparent')">
     <choose>
       <when test="../.. = key('contentChronology','sequential')">
         <call-template name="process-elements-with-sequential-content"/>
@@ -78,7 +67,7 @@
   </template>
   
   <!-- QUESTION: This almost the same as the template above. Is there a nice way to have a super-template that is called by both of them? -->
-  <template match="key('contentChronology','seeParent')">
+  <template mode="addDurations" match="key('contentChronology','seeParent')">
     <choose>
       <when test=".. = key('contentChronology','sequential')">
         <call-template name="process-elements-with-sequential-content"/>
@@ -94,7 +83,7 @@
     </choose>
   </template>
   
-	<template match="key('timeConsumingElements','withDur')" priority="2">
+	<template mode="addDurations" match="key('timeConsumingElements','withDur')" priority="2">
     <variable name="rawNumerator" as="xs:integer">
       <apply-templates mode="get-raw-numerator" select="@dur"/>
     </variable>
@@ -112,35 +101,19 @@
     </variable>
     <copy>
       <call-template name="write-duration">
-        <with-param name="duration" select="frac:completelyReduce(
-                                              $rawNumerator * $tupletNumerator * (2 * $augmentationDenominator - 1), 
-                                              $rawDenominator * $tupletDenominator * $augmentationDenominator
-                                            )" as="xs:integer*"/>
+        <with-param name="duration" select="frac:completelyReduce(                                               $rawNumerator * $tupletNumerator * (2 * $augmentationDenominator - 1),                                                $rawDenominator * $tupletDenominator * $augmentationDenominator                                             )" as="xs:integer*"/>
       </call-template>
-      <apply-templates select="@*|node()"/>
+      <apply-templates mode="addDurations" select="@*|node()"/>
     </copy>
   </template>
-	<template match="key('timeConsumingElements','withoutDur')" priority="2">
+	<template mode="addDurations" match="key('timeConsumingElements','withoutDur')" priority="2">
 		<message terminate="yes">
 			ERROR: @dur required on <value-of select="local-name()"/> element <value-of select="@xml:id"/>
 		</message>
 	</template>
-	<template match="mei:*[(self::mei:mRest or self::mei:mSpace) and not(@dur)]" priority="3">
+	<template mode="addDurations" match="mei:*[(self::mei:mRest or self::mei:mSpace) and not(@dur)]" priority="3">
 		<variable name="staffN" select="ancestor::mei:staff/@n"/>
-		<variable name="timeSignatureDef" select="
-			preceding::mei:*[
-			  (
-			    (
-			      local-name() = 'staffDef' and @n = $staffN
-			    ) 
-			    or 
-			    (
-			      local-name() = 'scoreDef' and .//mei:staffDef[@n = $staffN]
-			    )
-			  ) 
-			  and 
-			  @meter.count and @meter.unit
-			][1]"/>
+		<variable name="timeSignatureDef" select="    preceding::mei:*[      (        (          local-name() = 'staffDef' and @n = $staffN        )         or         (          local-name() = 'scoreDef' and .//mei:staffDef[@n = $staffN]        )      )       and       @meter.count and @meter.unit    ][1]"/>
 		<copy>
 			<call-template name="write-duration">
 				<with-param name="duration" select="frac:completelyReduce($timeSignatureDef/@meter.count,$timeSignatureDef/@meter.unit)" as="xs:integer*"/>
@@ -214,10 +187,10 @@
   <template match="mei:*" mode="get-tuplet-denominator" priority="-1">
     <value-of select="1"/>
   </template>
-  <template match="mei:*[ancestor::mei:tuplet]">
+  <template mode="addDurations" match="mei:*[ancestor::mei:tuplet]">
     <value-of select="ancestor::mei:tuplet[last()]/@numbase"/>
   </template>
-  <template match="mei:*[ancestor::mei:tuplet][not(@numbase)]" priority="1">
+  <template mode="addDurations" match="mei:*[ancestor::mei:tuplet][not(@numbase)]" priority="1">
     <message terminate="yes">
       ERROR: @numbase required on tuplet <value-of select="@xml:id"/>
     </message>
@@ -253,10 +226,7 @@
         <!-- recurse -->
         <call-template name="write-summed-up-duration">
           <with-param name="elements" select="$elements except $elements[1]"/>
-          <with-param name="duration" select="frac:add(
-                                                $duration,
-                                                $elementDuration
-                                              )"/>
+          <with-param name="duration" select="frac:add(                                                 $duration,                                                 $elementDuration                                               )"/>
         </call-template>
       </when>
       <otherwise>

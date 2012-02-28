@@ -24,7 +24,8 @@
     <xsl:stylesheet version="2.0"  exclude-result-prefixes="xs def g musx svg">
       <xsl:output indent="yes"/>
       
-      <xsl:variable name="symbolURIroot" select="/musx:musx/musx:musxHead/musx:symbols/@xlink:href"/>
+      <!-- If we're calling this from a wrapper XSLT, then the root node isn't <musx> but <mei>.  In this case, we default to 'symbopls/symbols.svg' -->
+      <xsl:variable name="symbolURIroot" select="if (/musx:musx) then /musx:musx/musx:musxHead/musx:symbols/@xlink:href else 'symbols/symbols.svg'"/>
       
       <call-template name="add-getter-functions-and-templates">
         <with-param name="properties" as="node()*">

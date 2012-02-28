@@ -1,9 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<stylesheet version="2.0"
-    xmlns="http://www.w3.org/1999/XSL/Transform"
-    xmlns:xs="http://www.w3.org/2001/XMLSchema"
-    xmlns:update="NS:UPDATE"
-	  xmlns:musx="NS:MUSX">
+<?xml version="1.0"?>
+<stylesheet xmlns="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:update="NS:UPDATE" xmlns:musx="NS:MUSX" version="2.0">
 
 <param name="spacingBase" select="1"/>
 <param name="referenceNote.duration" select=".25"/>
@@ -41,9 +37,7 @@
 	<param name="termIndex" as="xs:integer"/>
 	<!-- the higher $termIndex, the more terms are being calculated, the higher the accuracy -->
 
-	<sequence select="if($termIndex &gt;= 0)
-		                then musx:polynomialTerm($b,$x,$termIndex) + musx:power($b,$x,$termIndex - 1)
-		                else 0"/>
+	<sequence select="if($termIndex &gt;= 0)                   then musx:polynomialTerm($b,$x,$termIndex) + musx:power($b,$x,$termIndex - 1)                   else 0"/>
 </function>
 	
 <function name="musx:polynomialTerm" as="xs:double">
@@ -52,27 +46,25 @@
 	<param name="x" as="xs:double"/>
 	<param name="j" as="xs:integer"/>
 	
-	<sequence select="if($j &gt;= 1)
-		                then ($b - 1)*($x + 1 - $j) div $j * musx:polynomialTerm($b,$x,$j - 1) 
-		                else 1"/> 
+	<sequence select="if($j &gt;= 1)                   then ($b - 1)*($x + 1 - $j) div $j * musx:polynomialTerm($b,$x,$j - 1)                    else 1"/> 
 </function>
 
-<template match="node()|@*">
+<template mode="spacing" match="node()|@*">
 	<copy>
-		<apply-templates select="node()|@*"/>
+		<apply-templates mode="spacing" select="node()|@*"/>
 	</copy>
 </template>
 	
-<template match="musx:eventList">
+<template mode="spacing" match="musx:eventList">
 	<copy>
-		<apply-templates select="musx:event[1]"/>
+		<apply-templates mode="spacing" select="musx:event[1]"/>
 	</copy>
 </template>
 	
-<template match="musx:event">
+<template mode="spacing" match="musx:event">
 	<param name="x" select="0"/><!-- as="xs:double"/>-->
 	<copy>
-		<apply-templates select="node()|@*"/>
+		<apply-templates mode="spacing" select="node()|@*"/>
 		<attribute name="x">
 			<value-of select="$x"/>
 		</attribute>
@@ -90,7 +82,7 @@
 	<if test="$nextEvent">
 		<!-- This must be in an "if" because otherwise processor complains about parameter x being an empty sequence,
 		     even though the template is not called -->
-		<apply-templates select="$nextEvent">
+		<apply-templates mode="spacing" select="$nextEvent">
 			<with-param name="x" select="$x + musx:space($nextEvent/@synchTime - @synchTime)"/>
 		</apply-templates>
 	</if>

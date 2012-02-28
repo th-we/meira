@@ -1,33 +1,28 @@
 <?xml version="1.0"?>
-<xsl:stylesheet version="2.0" 
-    xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
-    xmlns:mei="http://www.music-encoding.org/ns/mei"
-    xmlns:svg="http://www.w3.org/2000/svg"
-    xmlns="NS:MUSX"
-    xmlns:synch="NS:SYNCH">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:mei="http://www.music-encoding.org/ns/mei" xmlns:svg="http://www.w3.org/2000/svg" xmlns="NS:MUSX" xmlns:synch="NS:SYNCH" version="2.0">
   
-  <xsl:template match="mei:note">
+  <xsl:template mode="mei2musx" match="mei:note">
     <note>
       <xsl:apply-templates select="." mode="copy-id"/>
       <xsl:apply-templates select="." mode="add-y-attribute"/>
-      <xsl:apply-templates select="@synch:id|*"/>
+      <xsl:apply-templates mode="mei2musx" select="@synch:id|*"/>
       <!-- If neither this note nor an ancestor has an @dur, throw root element into the select
            to have something to match the template for the fallback notehead -->
       <xsl:apply-templates select="(ancestor-or-self::mei:*[@dur]|/mei:*)[last()]" mode="add-head"/>
       <xsl:apply-templates select="self::*[not(parent::mei:chord)]" mode="add-stem"/>
-      <xsl:apply-templates select="@accid|@artic|@dots"/>
+      <xsl:apply-templates mode="mei2musx" select="@accid|@artic|@dots"/>
     </note>
   </xsl:template>
   
-  <xsl:template match="mei:accid">
+  <xsl:template mode="mei2musx" match="mei:accid">
     <accidental symbol="accidental.{@accid}"/>
   </xsl:template>
   
-  <xsl:template match="@artic">
+  <xsl:template mode="mei2musx" match="@artic">
     <articulation symbol="articulation.{string()}"/>
   </xsl:template>
-  <xsl:template match="mei:artic">
-    <xsl:apply-templates select="@artic"/>
+  <xsl:template mode="mei2musx" match="mei:artic">
+    <xsl:apply-templates mode="mei2musx" select="@artic"/>
   </xsl:template>
   
   <xsl:template match="mei:note" mode="add-y-attribute">
@@ -35,11 +30,7 @@
     <xsl:variable name="numericClefPitch">
       <!-- Find the staffdef/scoredef/clefchange element that provides the clef currently "in action" -->
       <!-- TODO: in preprocessing, convert all clef attributes to elements to make matching easier and "safer"? -->
-    	<xsl:apply-templates mode="get-numeric-clef-pitch" select="
-    		(
-    		preceding::mei:*[self::mei:clef or @clef.shape]
-    		[ancestor-or-self::mei:*[@n = $staffN and (self::mei:staff or self::mei:staffDef)]]
-    		)[last()]"/>
+    	<xsl:apply-templates mode="get-numeric-clef-pitch" select="       (       preceding::mei:*[self::mei:clef or @clef.shape]       [ancestor-or-self::mei:*[@n = $staffN and (self::mei:staff or self::mei:staffDef)]]       )[last()]"/>
     	<!--<xsl:apply-templates mode="get-numeric-clef-pitch" select="
     		(
     		ancestor-or-self::mei:*/
@@ -52,9 +43,7 @@
     <xsl:variable name="pname" select="(preceding-sibling::mei:note/@pname|@pname)[last()]"/>
     <xsl:attribute name="y">
       <!-- string-length(substring-before('cdefgab',$pname)) returns 0 for $pname='c', 1 for 'd' etc. -->
-      <xsl:value-of select="concat(
-          'S',
-          -(7*$oct + string-length(substring-before('cdefgab',$pname)) - $numericClefPitch - 8))"/>
+      <xsl:value-of select="concat(           'S',           -(7*$oct + string-length(substring-before('cdefgab',$pname)) - $numericClefPitch - 8))"/>
          <!-- TODO: template mode get-numeric-clef-pitch returns a numeric pitch value for the bottommost
                     staff line, but we calculate from the top one (therefore "- 8" in the above calculation) -->
     </xsl:attribute>
@@ -68,8 +57,7 @@
   <!-- "numeric clef pitch" is the numeric pitch value of the bottommost staff line. -->
   <xsl:template mode="get-numeric-clef-pitch" match="mei:*[@line or @clef.line]">
     <xsl:variable name="rawNumericClefPitch">
-      <xsl:apply-templates mode="get-raw-numeric-clef-pitch"
-          select="(@clef.shape|@shape)[last()]"/>
+      <xsl:apply-templates mode="get-raw-numeric-clef-pitch" select="(@clef.shape|@shape)[last()]"/>
     </xsl:variable>
     <!-- TODO: Implement octaveDisplacement; what does the syntax say?
     <xsl:variable name="octaveDisplacement">
@@ -119,9 +107,9 @@
     <head symbol="notehead.quarter"/>
   </xsl:template>
   
-  <xsl:template match="mei:chord">
+  <xsl:template mode="mei2musx" match="mei:chord">
     <chord>
-      <xsl:apply-templates select="@synch:id|*"/>
+      <xsl:apply-templates mode="mei2musx" select="@synch:id|*"/>
       <xsl:apply-templates select="." mode="add-stem"/>
     </chord>
   </xsl:template>
@@ -174,22 +162,22 @@
   </xsl:template>
   <xsl:template match="mei:*" mode="add-beam-attributes" priority="-1"/>
   
-  <xsl:template match="mei:rest">
+  <xsl:template mode="mei2musx" match="mei:rest">
     <!-- TODO: Position rest according to layer/voice -->
     <rest symbol="rest.{@dur}" y="S4">
       <xsl:apply-templates select="." mode="copy-id"/>
-      <xsl:apply-templates select="@synch:id|*"/>
+      <xsl:apply-templates mode="mei2musx" select="@synch:id|*"/>
     </rest>
   </xsl:template>
   
-  <xsl:template match="mei:mRest">
+  <xsl:template mode="mei2musx" match="mei:mRest">
     <rest symbol="rest.1" y="S-6">
       <xsl:apply-templates select="." mode="copy-id"/>
-      <xsl:apply-templates select="@synch:id|*"/>
+      <xsl:apply-templates mode="mei2musx" select="@synch:id|*"/>
     </rest>
   </xsl:template>
   
-  <xsl:template match="@dots">
+  <xsl:template mode="mei2musx" match="@dots">
     <dots number="{string()}"/>
   </xsl:template>
 
