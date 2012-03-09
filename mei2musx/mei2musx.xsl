@@ -30,11 +30,15 @@
   <xsl:param name="startMeasure" select="//mei:measure[1]/@n"/>
   <xsl:param name="endMeasure" select="//mei:measure[last()]/@n"/>
   
+  
+  <xsl:template match="/" priority="-10">
+  	<xsl:apply-templates select="." mode="mei2musx"/>
+  </xsl:template>
  
   <xsl:template mode="mei2musx" match="/mei:mei">
     <musx>
       <musxHead>
-        <symbols xlink:href="symbols/symbols.svg"/>
+        <libDirectory xlink:href="lib"/>
       </musxHead>
     	<eventList>
     		<!-- Add a special event that we use for attaching the clef, key and time signatures to -->
@@ -53,7 +57,7 @@
     			</event>
     		</xsl:for-each-group>
     	</eventList>    	
-      <xsl:apply-templates mode="mei2musx" select="//mei:scoreDef[1]"/>
+      <xsl:apply-templates mode="mei2musx" select="(//mei:scoreDef)[1]"/>
     </musx>
   </xsl:template>
   
@@ -75,7 +79,7 @@
     <page y2="{(count(//mei:staffDef[not(contains($excludeStaffsList,concat(' ',@n,' ')))]) + 2) * $staffDistance}" x2="p{2*$margin}" end="{//@synch:end.id[number(../@synch:end.rounded)=max(//@synch:end.rounded)]}">
       <!-- Currently, everything is put into a single line of music, i.e no system breaks. -->
       <!-- Firefox doesn't support accessing @xml:id, for some reason, therefore the strange workaround -->
-      <system start="_t0" end="{//mei:measure[last()]/@synch:end.id}" size="{$size}" svg:transform="translate({$margin},{$margin})">
+      <system start="_t0" end="{(//mei:measure)[last()]/@synch:end.id}" size="{$size}" svg:transform="translate({$margin},{$margin})">
         <barline/><!-- System barline -->
         <xsl:apply-templates mode="add-staffs" select="mei:staffGrp|mei:staffDef"/>
       </system>
@@ -91,7 +95,10 @@
   <xsl:template match="mei:staffDef" mode="add-staffs">
     <!-- As <staffdef>s may occur grouped in <staffgrp>s, a simple 
          count(preceding-sibling::mei:staffDef) doesn't do the job. -->
-    <staff y="p{$staffDistance * (             count(                 preceding-sibling::mei:staffDef|ancestor::mei:staffGrp/preceding-sibling::mei:*/descendant-or-self::mei:staffDef             )              + 1)}" start="_t0">  
+    <staff y="p{$staffDistance * (
+	    	 count(
+	    	   preceding-sibling::mei:staffDef|ancestor::mei:staffGrp/preceding-sibling::mei:*/descendant-or-self::mei:staffDef             
+	    	 ) + 1)}" start="_t0">
       <!-- Display staff label -->
       <svg y="S6" x="s-2">
         <svg:text font-size="4" text-anchor="end">
