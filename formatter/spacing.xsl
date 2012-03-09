@@ -88,6 +88,10 @@
 	</if>
 </template>
 
+<template match="/" priority="-10">
+	<apply-templates select="." mode="spacing"/>
+</template>
+
 <!-- This is only for testing -->
 <!--<template match="/">
 	<variable name="degree" select="5"/>
