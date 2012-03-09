@@ -1,7 +1,19 @@
-<?xml version="1.0"?>
-<stylesheet xmlns:musx="NS:MUSX" xmlns:xsl-ns="http://www.w3.org/1999/XSL/Transform" xmlns="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:def="NS:DEF" xmlns:g="NS:GET" version="2.0" exclude-result-prefixes="xs def g musx svg">
-   <output indent="yes"/>
-   <variable name="symbolURIroot" select="if (/musx:musx) then /musx:musx/musx:musxHead/musx:symbols/@xlink:href else 'symbols/symbols.svg'"/>
+<?xml version="1.0" encoding="UTF-8"?>
+
+<stylesheet xmlns:musx="NS:MUSX" xmlns:xsl-ns="http://www.w3.org/1999/XSL/Transform"
+            xmlns="http://www.w3.org/1999/XSL/Transform"
+            xmlns:xs="http://www.w3.org/2001/XMLSchema"
+            xmlns:svg="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+            xmlns:def="NS:DEF"
+            xmlns:g="NS:GET"
+            version="2.0"
+            exclude-result-prefixes="xs def g musx svg">
+   <param name="libDirectory"
+          select="if (/musx:musx) then /musx:musx/musx:musxHead/musx:libDirectory/@xlink:href else 'lib'"
+          as="xs:string"/>
+   <param name="musicFont" select="'musicSymbols'" as="xs:string"/>
+   <param name="symbolFile" select="'symbols.svg'" as="xs:string"/>
    <function name="g:end" as="node()*">
       <param name="elements" as="node()*"/>
       <variable name="result" as="node()*">
@@ -577,22 +589,31 @@
       <variable name="staff" select="ancestor::musx:staff[last()]" as="node()"/>
       <copy-of select="(0) + (g:size($staff) * number(substring(@x1,2)))"/>
    </template>
-   <key name="get_x2_page_system_staff_staffGroup_group_hairpin" use="substring(@x2,1,1)" match="musx:page|musx:system|musx:staff|musx:staffGroup|musx:group|musx:hairpin"/>
-   <template mode="get_x2" match="musx:page|musx:system|musx:staff|musx:staffGroup|musx:group|musx:hairpin" priority="-2">
+   <key name="get_x2_page_system_staff_staffGroup_group_hairpin"
+        use="substring(@x2,1,1)"
+        match="musx:page|musx:system|musx:staff|musx:staffGroup|musx:group|musx:hairpin"/>
+   <template mode="get_x2"
+             match="musx:page|musx:system|musx:staff|musx:staffGroup|musx:group|musx:hairpin"
+             priority="-2">
       <copy-of select="(g:x(g:end(.))) + (0)"/>
    </template>
-   <template mode="get_x2" match="musx:page[@x2]|musx:system[@x2]|musx:staff[@x2]|musx:staffGroup[@x2]|musx:group[@x2]|musx:hairpin[@x2]" priority="-1">
+   <template mode="get_x2"
+             match="musx:page[@x2]|musx:system[@x2]|musx:staff[@x2]|musx:staffGroup[@x2]|musx:group[@x2]|musx:hairpin[@x2]"
+             priority="-1">
       <copy-of select="number(@x2)"/>
    </template>
-   <template mode="get_x2" match="key('get_x2_page_system_staff_staffGroup_group_hairpin','p')">
+   <template mode="get_x2"
+             match="key('get_x2_page_system_staff_staffGroup_group_hairpin','p')">
       <variable name="page" select="ancestor-or-self::musx:page" as="node()"/>
       <copy-of select="(g:x(g:end(.))) + g:size($page) * number(substring(@x2,2))"/>
    </template>
-   <template mode="get_x2" match="key('get_x2_page_system_staff_staffGroup_group_hairpin','P')">
+   <template mode="get_x2"
+             match="key('get_x2_page_system_staff_staffGroup_group_hairpin','P')">
       <variable name="page" select="ancestor-or-self::musx:page" as="node()"/>
       <copy-of select="g:x($page) + g:size($page) * number(substring(@x2,2))"/>
    </template>
-   <template mode="get_x2" match="key('get_x2_page_system_staff_staffGroup_group_hairpin','s')">
+   <template mode="get_x2"
+             match="key('get_x2_page_system_staff_staffGroup_group_hairpin','s')">
       <variable name="staff" select="ancestor::musx:staff[last()]" as="node()"/>
       <copy-of select="(g:x(g:end(.))) + (g:size($staff) * number(substring(@x2,2)))"/>
    </template>
@@ -711,10 +732,13 @@
       <variable name="staff" select="ancestor::musx:staff" as="node()"/>
       <copy-of select="g:size($staff) * number(substring(@size,2))"/>
    </template>
-   <template mode="get_start" match="musx:system|musx:svg|musx:clef|musx:rest|musx:barline|musx:note|musx:chord|musx:beam|musx:hairpin|musx:symbolText" priority="-1">
+   <template mode="get_start"
+             match="musx:system|musx:svg|musx:clef|musx:rest|musx:barline|musx:note|musx:chord|musx:beam|musx:hairpin|musx:symbolText"
+             priority="-1">
       <sequence select=".."/>
    </template>
-   <template mode="get_start" match="musx:system[@start]|musx:svg[@start]|musx:clef[@start]|musx:rest[@start]|musx:barline[@start]|musx:note[@start]|musx:chord[@start]|musx:beam[@start]|musx:hairpin[@start]|musx:symbolText[@start]">
+   <template mode="get_start"
+             match="musx:system[@start]|musx:svg[@start]|musx:clef[@start]|musx:rest[@start]|musx:barline[@start]|musx:note[@start]|musx:chord[@start]|musx:beam[@start]|musx:hairpin[@start]|musx:symbolText[@start]">
       <sequence select="id(@start)"/>
    </template>
    <template mode="get_end" match="musx:system|musx:beam" priority="-1">
@@ -723,11 +747,16 @@
    <template mode="get_end" match="musx:system[@end]|musx:beam[@end]">
       <sequence select="id(@end)"/>
    </template>
-   <key name="get_x1_system_staff_staffGroup_group_hairpin" use="substring(@x1,1,1)" match="musx:system|musx:staff|musx:staffGroup|musx:group|musx:hairpin"/>
-   <template mode="get_x1" match="musx:system|musx:staff|musx:staffGroup|musx:group|musx:hairpin" priority="-2">
+   <key name="get_x1_system_staff_staffGroup_group_hairpin" use="substring(@x1,1,1)"
+        match="musx:system|musx:staff|musx:staffGroup|musx:group|musx:hairpin"/>
+   <template mode="get_x1"
+             match="musx:system|musx:staff|musx:staffGroup|musx:group|musx:hairpin"
+             priority="-2">
       <copy-of select="(g:x(g:start(.))) + (0)"/>
    </template>
-   <template mode="get_x1" match="musx:system[@x1]|musx:staff[@x1]|musx:staffGroup[@x1]|musx:group[@x1]|musx:hairpin[@x1]" priority="-1">
+   <template mode="get_x1"
+             match="musx:system[@x1]|musx:staff[@x1]|musx:staffGroup[@x1]|musx:group[@x1]|musx:hairpin[@x1]"
+             priority="-1">
       <copy-of select="number(@x1)"/>
    </template>
    <template mode="get_x1" match="key('get_x1_system_staff_staffGroup_group_hairpin','p')">
@@ -742,131 +771,184 @@
       <variable name="staff" select="ancestor::musx:staff[last()]" as="node()"/>
       <copy-of select="(g:x(g:start(.))) + (g:size($staff) * number(substring(@x1,2)))"/>
    </template>
-   <key name="get_y_system_staff_staffGroup_svg_clef_group_note_head_accidental_hairpin_symbolText" use="substring(@y,1,1)" match="musx:system|musx:staff|musx:staffGroup|musx:svg|musx:clef|musx:group|musx:note|musx:head|musx:accidental|musx:hairpin|musx:symbolText"/>
-   <template mode="get_y" match="musx:system|musx:staff|musx:staffGroup|musx:svg|musx:clef|musx:group|musx:note|musx:head|musx:accidental|musx:hairpin|musx:symbolText" priority="-2">
+   <key name="get_y_system_staff_staffGroup_svg_clef_group_note_head_accidental_hairpin_symbolText"
+        use="substring(@y,1,1)"
+        match="musx:system|musx:staff|musx:staffGroup|musx:svg|musx:clef|musx:group|musx:note|musx:head|musx:accidental|musx:hairpin|musx:symbolText"/>
+   <template mode="get_y"
+             match="musx:system|musx:staff|musx:staffGroup|musx:svg|musx:clef|musx:group|musx:note|musx:head|musx:accidental|musx:hairpin|musx:symbolText"
+             priority="-2">
       <copy-of select="(g:y(..)) + (0)"/>
    </template>
-   <template mode="get_y" match="musx:system[@y]|musx:staff[@y]|musx:staffGroup[@y]|musx:svg[@y]|musx:clef[@y]|musx:group[@y]|musx:note[@y]|musx:head[@y]|musx:accidental[@y]|musx:hairpin[@y]|musx:symbolText[@y]" priority="-1">
+   <template mode="get_y"
+             match="musx:system[@y]|musx:staff[@y]|musx:staffGroup[@y]|musx:svg[@y]|musx:clef[@y]|musx:group[@y]|musx:note[@y]|musx:head[@y]|musx:accidental[@y]|musx:hairpin[@y]|musx:symbolText[@y]"
+             priority="-1">
       <copy-of select="number(@y)"/>
    </template>
-   <template mode="get_y" match="key('get_y_system_staff_staffGroup_svg_clef_group_note_head_accidental_hairpin_symbolText','p')">
+   <template mode="get_y"
+             match="key('get_y_system_staff_staffGroup_svg_clef_group_note_head_accidental_hairpin_symbolText','p')">
       <variable name="page" select="ancestor-or-self::musx:page" as="node()"/>
       <copy-of select="(g:y(..)) + g:size($page) * number(substring(@y,2))"/>
    </template>
-   <template mode="get_y" match="key('get_y_system_staff_staffGroup_svg_clef_group_note_head_accidental_hairpin_symbolText','P')">
+   <template mode="get_y"
+             match="key('get_y_system_staff_staffGroup_svg_clef_group_note_head_accidental_hairpin_symbolText','P')">
       <variable name="page" select="ancestor-or-self::musx:page" as="node()"/>
       <copy-of select="g:y($page) + g:size($page) * number(substring(@y,2))"/>
    </template>
-   <template mode="get_y" match="key('get_y_system_staff_staffGroup_svg_clef_group_note_head_accidental_hairpin_symbolText','s')">
+   <template mode="get_y"
+             match="key('get_y_system_staff_staffGroup_svg_clef_group_note_head_accidental_hairpin_symbolText','s')">
       <variable name="staff" select="ancestor::musx:staff[last()]" as="node()"/>
       <copy-of select="(g:y(..)) + (g:size($staff) * number(substring(@y,2)))"/>
    </template>
-   <template mode="get_y" match="key('get_y_system_staff_staffGroup_svg_clef_group_note_head_accidental_hairpin_symbolText','S')">
+   <template mode="get_y"
+             match="key('get_y_system_staff_staffGroup_svg_clef_group_note_head_accidental_hairpin_symbolText','S')">
       <variable name="staff" select="ancestor::musx:staff[last()]" as="node()"/>
       <copy-of select="(g:y1($staff)) +            (g:size($staff) * number(substring(@y,2)))"/>
    </template>
-   <template mode="get_y" match="key('get_y_system_staff_staffGroup_svg_clef_group_note_head_accidental_hairpin_symbolText','L')">
+   <template mode="get_y"
+             match="key('get_y_system_staff_staffGroup_svg_clef_group_note_head_accidental_hairpin_symbolText','L')">
       <variable name="staff" select="ancestor::musx:staff[last()]" as="node()"/>
       <copy-of select="(g:y2($staff)) -            + 2 * g:size($staff) * (number(substring(@y,2)) - 1)"/>
    </template>
-   <key name="get_x_system_staff_staffGroup_group_beam_subbeam_hairpin" use="substring(@x,1,1)" match="musx:system|musx:staff|musx:staffGroup|musx:group|musx:beam|musx:subbeam|musx:hairpin"/>
-   <template mode="get_x" match="musx:system|musx:staff|musx:staffGroup|musx:group|musx:beam|musx:subbeam|musx:hairpin" priority="-2">
+   <key name="get_x_system_staff_staffGroup_group_beam_subbeam_hairpin"
+        use="substring(@x,1,1)"
+        match="musx:system|musx:staff|musx:staffGroup|musx:group|musx:beam|musx:subbeam|musx:hairpin"/>
+   <template mode="get_x"
+             match="musx:system|musx:staff|musx:staffGroup|musx:group|musx:beam|musx:subbeam|musx:hairpin"
+             priority="-2">
       <copy-of select="(g:x1(.)) + (0)"/>
    </template>
-   <template mode="get_x" match="musx:system[@x]|musx:staff[@x]|musx:staffGroup[@x]|musx:group[@x]|musx:beam[@x]|musx:subbeam[@x]|musx:hairpin[@x]" priority="-1">
+   <template mode="get_x"
+             match="musx:system[@x]|musx:staff[@x]|musx:staffGroup[@x]|musx:group[@x]|musx:beam[@x]|musx:subbeam[@x]|musx:hairpin[@x]"
+             priority="-1">
       <copy-of select="number(@x)"/>
    </template>
-   <template mode="get_x" match="key('get_x_system_staff_staffGroup_group_beam_subbeam_hairpin','p')">
+   <template mode="get_x"
+             match="key('get_x_system_staff_staffGroup_group_beam_subbeam_hairpin','p')">
       <variable name="page" select="ancestor-or-self::musx:page" as="node()"/>
       <copy-of select="(g:x1(.)) + g:size($page) * number(substring(@x,2))"/>
    </template>
-   <template mode="get_x" match="key('get_x_system_staff_staffGroup_group_beam_subbeam_hairpin','P')">
+   <template mode="get_x"
+             match="key('get_x_system_staff_staffGroup_group_beam_subbeam_hairpin','P')">
       <variable name="page" select="ancestor-or-self::musx:page" as="node()"/>
       <copy-of select="g:x($page) + g:size($page) * number(substring(@x,2))"/>
    </template>
-   <template mode="get_x" match="key('get_x_system_staff_staffGroup_group_beam_subbeam_hairpin','s')">
+   <template mode="get_x"
+             match="key('get_x_system_staff_staffGroup_group_beam_subbeam_hairpin','s')">
       <variable name="staff" select="ancestor::musx:staff[last()]" as="node()"/>
       <copy-of select="(g:x1(.)) + (g:size($staff) * number(substring(@x,2)))"/>
    </template>
-   <key name="get_y1_system_staff_staffGroup_svg_clef_transposeNumber_rest_group_note_head_accidental_flags_dots_beam_hairpin_symbolText" use="substring(@y1,1,1)" match="musx:system|musx:staff|musx:staffGroup|musx:svg|musx:clef|musx:transposeNumber|musx:rest|musx:group|musx:note|musx:head|musx:accidental|musx:flags|musx:dots|musx:beam|musx:hairpin|musx:symbolText"/>
-   <template mode="get_y1" match="musx:system|musx:staff|musx:staffGroup|musx:svg|musx:clef|musx:transposeNumber|musx:rest|musx:group|musx:note|musx:head|musx:accidental|musx:flags|musx:dots|musx:beam|musx:hairpin|musx:symbolText" priority="-2">
+   <key name="get_y1_system_staff_staffGroup_svg_clef_transposeNumber_rest_group_note_head_accidental_flags_dots_beam_hairpin_symbolText"
+        use="substring(@y1,1,1)"
+        match="musx:system|musx:staff|musx:staffGroup|musx:svg|musx:clef|musx:transposeNumber|musx:rest|musx:group|musx:note|musx:head|musx:accidental|musx:flags|musx:dots|musx:beam|musx:hairpin|musx:symbolText"/>
+   <template mode="get_y1"
+             match="musx:system|musx:staff|musx:staffGroup|musx:svg|musx:clef|musx:transposeNumber|musx:rest|musx:group|musx:note|musx:head|musx:accidental|musx:flags|musx:dots|musx:beam|musx:hairpin|musx:symbolText"
+             priority="-2">
       <copy-of select="(g:y(.)) + (0)"/>
    </template>
-   <template mode="get_y1" match="musx:system[@y1]|musx:staff[@y1]|musx:staffGroup[@y1]|musx:svg[@y1]|musx:clef[@y1]|musx:transposeNumber[@y1]|musx:rest[@y1]|musx:group[@y1]|musx:note[@y1]|musx:head[@y1]|musx:accidental[@y1]|musx:flags[@y1]|musx:dots[@y1]|musx:beam[@y1]|musx:hairpin[@y1]|musx:symbolText[@y1]" priority="-1">
+   <template mode="get_y1"
+             match="musx:system[@y1]|musx:staff[@y1]|musx:staffGroup[@y1]|musx:svg[@y1]|musx:clef[@y1]|musx:transposeNumber[@y1]|musx:rest[@y1]|musx:group[@y1]|musx:note[@y1]|musx:head[@y1]|musx:accidental[@y1]|musx:flags[@y1]|musx:dots[@y1]|musx:beam[@y1]|musx:hairpin[@y1]|musx:symbolText[@y1]"
+             priority="-1">
       <copy-of select="number(@y1)"/>
    </template>
-   <template mode="get_y1" match="key('get_y1_system_staff_staffGroup_svg_clef_transposeNumber_rest_group_note_head_accidental_flags_dots_beam_hairpin_symbolText','p')">
+   <template mode="get_y1"
+             match="key('get_y1_system_staff_staffGroup_svg_clef_transposeNumber_rest_group_note_head_accidental_flags_dots_beam_hairpin_symbolText','p')">
       <variable name="page" select="ancestor-or-self::musx:page" as="node()"/>
       <copy-of select="(g:y(.)) + g:size($page) * number(substring(@y1,2))"/>
    </template>
-   <template mode="get_y1" match="key('get_y1_system_staff_staffGroup_svg_clef_transposeNumber_rest_group_note_head_accidental_flags_dots_beam_hairpin_symbolText','P')">
+   <template mode="get_y1"
+             match="key('get_y1_system_staff_staffGroup_svg_clef_transposeNumber_rest_group_note_head_accidental_flags_dots_beam_hairpin_symbolText','P')">
       <variable name="page" select="ancestor-or-self::musx:page" as="node()"/>
       <copy-of select="g:y($page) + g:size($page) * number(substring(@y1,2))"/>
    </template>
-   <template mode="get_y1" match="key('get_y1_system_staff_staffGroup_svg_clef_transposeNumber_rest_group_note_head_accidental_flags_dots_beam_hairpin_symbolText','s')">
+   <template mode="get_y1"
+             match="key('get_y1_system_staff_staffGroup_svg_clef_transposeNumber_rest_group_note_head_accidental_flags_dots_beam_hairpin_symbolText','s')">
       <variable name="staff" select="ancestor::musx:staff[last()]" as="node()"/>
       <copy-of select="(g:y(.)) + (g:size($staff) * number(substring(@y1,2)))"/>
    </template>
-   <template mode="get_y1" match="key('get_y1_system_staff_staffGroup_svg_clef_transposeNumber_rest_group_note_head_accidental_flags_dots_beam_hairpin_symbolText','S')">
+   <template mode="get_y1"
+             match="key('get_y1_system_staff_staffGroup_svg_clef_transposeNumber_rest_group_note_head_accidental_flags_dots_beam_hairpin_symbolText','S')">
       <variable name="staff" select="ancestor::musx:staff[last()]" as="node()"/>
       <copy-of select="(g:y1($staff)) +            (g:size($staff) * number(substring(@y1,2)))"/>
    </template>
-   <template mode="get_y1" match="key('get_y1_system_staff_staffGroup_svg_clef_transposeNumber_rest_group_note_head_accidental_flags_dots_beam_hairpin_symbolText','L')">
+   <template mode="get_y1"
+             match="key('get_y1_system_staff_staffGroup_svg_clef_transposeNumber_rest_group_note_head_accidental_flags_dots_beam_hairpin_symbolText','L')">
       <variable name="staff" select="ancestor::musx:staff[last()]" as="node()"/>
       <copy-of select="(g:y2($staff)) -            + 2 * g:size($staff) * (number(substring(@y1,2)) - 1)"/>
    </template>
-   <key name="get_y2_system_staffGroup_svg_clef_transposeNumber_rest_group_note_head_accidental_flags_dots_beam_hairpin_symbolText" use="substring(@y2,1,1)" match="musx:system|musx:staffGroup|musx:svg|musx:clef|musx:transposeNumber|musx:rest|musx:group|musx:note|musx:head|musx:accidental|musx:flags|musx:dots|musx:beam|musx:hairpin|musx:symbolText"/>
-   <template mode="get_y2" match="musx:system|musx:staffGroup|musx:svg|musx:clef|musx:transposeNumber|musx:rest|musx:group|musx:note|musx:head|musx:accidental|musx:flags|musx:dots|musx:beam|musx:hairpin|musx:symbolText" priority="-2">
+   <key name="get_y2_system_staffGroup_svg_clef_transposeNumber_rest_group_note_head_accidental_flags_dots_beam_hairpin_symbolText"
+        use="substring(@y2,1,1)"
+        match="musx:system|musx:staffGroup|musx:svg|musx:clef|musx:transposeNumber|musx:rest|musx:group|musx:note|musx:head|musx:accidental|musx:flags|musx:dots|musx:beam|musx:hairpin|musx:symbolText"/>
+   <template mode="get_y2"
+             match="musx:system|musx:staffGroup|musx:svg|musx:clef|musx:transposeNumber|musx:rest|musx:group|musx:note|musx:head|musx:accidental|musx:flags|musx:dots|musx:beam|musx:hairpin|musx:symbolText"
+             priority="-2">
       <copy-of select="(g:y(.)) + (0)"/>
    </template>
-   <template mode="get_y2" match="musx:system[@y2]|musx:staffGroup[@y2]|musx:svg[@y2]|musx:clef[@y2]|musx:transposeNumber[@y2]|musx:rest[@y2]|musx:group[@y2]|musx:note[@y2]|musx:head[@y2]|musx:accidental[@y2]|musx:flags[@y2]|musx:dots[@y2]|musx:beam[@y2]|musx:hairpin[@y2]|musx:symbolText[@y2]" priority="-1">
+   <template mode="get_y2"
+             match="musx:system[@y2]|musx:staffGroup[@y2]|musx:svg[@y2]|musx:clef[@y2]|musx:transposeNumber[@y2]|musx:rest[@y2]|musx:group[@y2]|musx:note[@y2]|musx:head[@y2]|musx:accidental[@y2]|musx:flags[@y2]|musx:dots[@y2]|musx:beam[@y2]|musx:hairpin[@y2]|musx:symbolText[@y2]"
+             priority="-1">
       <copy-of select="number(@y2)"/>
    </template>
-   <template mode="get_y2" match="key('get_y2_system_staffGroup_svg_clef_transposeNumber_rest_group_note_head_accidental_flags_dots_beam_hairpin_symbolText','p')">
+   <template mode="get_y2"
+             match="key('get_y2_system_staffGroup_svg_clef_transposeNumber_rest_group_note_head_accidental_flags_dots_beam_hairpin_symbolText','p')">
       <variable name="page" select="ancestor-or-self::musx:page" as="node()"/>
       <copy-of select="(g:y(.)) + g:size($page) * number(substring(@y2,2))"/>
    </template>
-   <template mode="get_y2" match="key('get_y2_system_staffGroup_svg_clef_transposeNumber_rest_group_note_head_accidental_flags_dots_beam_hairpin_symbolText','P')">
+   <template mode="get_y2"
+             match="key('get_y2_system_staffGroup_svg_clef_transposeNumber_rest_group_note_head_accidental_flags_dots_beam_hairpin_symbolText','P')">
       <variable name="page" select="ancestor-or-self::musx:page" as="node()"/>
       <copy-of select="g:y($page) + g:size($page) * number(substring(@y2,2))"/>
    </template>
-   <template mode="get_y2" match="key('get_y2_system_staffGroup_svg_clef_transposeNumber_rest_group_note_head_accidental_flags_dots_beam_hairpin_symbolText','s')">
+   <template mode="get_y2"
+             match="key('get_y2_system_staffGroup_svg_clef_transposeNumber_rest_group_note_head_accidental_flags_dots_beam_hairpin_symbolText','s')">
       <variable name="staff" select="ancestor::musx:staff[last()]" as="node()"/>
       <copy-of select="(g:y(.)) + (g:size($staff) * number(substring(@y2,2)))"/>
    </template>
-   <template mode="get_y2" match="key('get_y2_system_staffGroup_svg_clef_transposeNumber_rest_group_note_head_accidental_flags_dots_beam_hairpin_symbolText','S')">
+   <template mode="get_y2"
+             match="key('get_y2_system_staffGroup_svg_clef_transposeNumber_rest_group_note_head_accidental_flags_dots_beam_hairpin_symbolText','S')">
       <variable name="staff" select="ancestor::musx:staff[last()]" as="node()"/>
       <copy-of select="(g:y1($staff)) +            (g:size($staff) * number(substring(@y2,2)))"/>
    </template>
-   <template mode="get_y2" match="key('get_y2_system_staffGroup_svg_clef_transposeNumber_rest_group_note_head_accidental_flags_dots_beam_hairpin_symbolText','L')">
+   <template mode="get_y2"
+             match="key('get_y2_system_staffGroup_svg_clef_transposeNumber_rest_group_note_head_accidental_flags_dots_beam_hairpin_symbolText','L')">
       <variable name="staff" select="ancestor::musx:staff[last()]" as="node()"/>
       <copy-of select="(g:y2($staff)) -            + 2 * g:size($staff) * (number(substring(@y2,2)) - 1)"/>
    </template>
-   <key name="get_size_system_staff_staffGroup_svg_clef_rest_group_staffBracket_barline_note_head_accidental_chord_stem_flags_dots_beam_subbeam_hairpin_symbolText" use="substring(@size,1,1)" match="musx:system|musx:staff|musx:staffGroup|musx:svg|musx:clef|musx:rest|musx:group|musx:staffBracket|musx:barline|musx:note|musx:head|musx:accidental|musx:chord|musx:stem|musx:flags|musx:dots|musx:beam|musx:subbeam|musx:hairpin|musx:symbolText"/>
-   <template mode="get_size" priority="-2" match="musx:system|musx:staff|musx:staffGroup|musx:svg|musx:clef|musx:rest|musx:group|musx:staffBracket|musx:barline|musx:note|musx:head|musx:accidental|musx:chord|musx:stem|musx:flags|musx:dots|musx:beam|musx:subbeam|musx:hairpin|musx:symbolText">
+   <key name="get_size_system_staff_staffGroup_svg_clef_rest_group_staffBracket_barline_note_head_accidental_chord_stem_flags_dots_beam_subbeam_hairpin_symbolText"
+        use="substring(@size,1,1)"
+        match="musx:system|musx:staff|musx:staffGroup|musx:svg|musx:clef|musx:rest|musx:group|musx:staffBracket|musx:barline|musx:note|musx:head|musx:accidental|musx:chord|musx:stem|musx:flags|musx:dots|musx:beam|musx:subbeam|musx:hairpin|musx:symbolText"/>
+   <template mode="get_size" priority="-2"
+             match="musx:system|musx:staff|musx:staffGroup|musx:svg|musx:clef|musx:rest|musx:group|musx:staffBracket|musx:barline|musx:note|musx:head|musx:accidental|musx:chord|musx:stem|musx:flags|musx:dots|musx:beam|musx:subbeam|musx:hairpin|musx:symbolText">
       <copy-of select="(g:size(..)) * (1)"/>
    </template>
-   <template mode="get_size" match="musx:system[@size]|musx:staff[@size]|musx:staffGroup[@size]|musx:svg[@size]|musx:clef[@size]|musx:rest[@size]|musx:group[@size]|musx:staffBracket[@size]|musx:barline[@size]|musx:note[@size]|musx:head[@size]|musx:accidental[@size]|musx:chord[@size]|musx:stem[@size]|musx:flags[@size]|musx:dots[@size]|musx:beam[@size]|musx:subbeam[@size]|musx:hairpin[@size]|musx:symbolText[@size]" priority="-1">
+   <template mode="get_size"
+             match="musx:system[@size]|musx:staff[@size]|musx:staffGroup[@size]|musx:svg[@size]|musx:clef[@size]|musx:rest[@size]|musx:group[@size]|musx:staffBracket[@size]|musx:barline[@size]|musx:note[@size]|musx:head[@size]|musx:accidental[@size]|musx:chord[@size]|musx:stem[@size]|musx:flags[@size]|musx:dots[@size]|musx:beam[@size]|musx:subbeam[@size]|musx:hairpin[@size]|musx:symbolText[@size]"
+             priority="-1">
       <copy-of select="number(@size)"/>
    </template>
-   <template mode="get_size" match="key('get_size_system_staff_staffGroup_svg_clef_rest_group_staffBracket_barline_note_head_accidental_chord_stem_flags_dots_beam_subbeam_hairpin_symbolText','p')">
+   <template mode="get_size"
+             match="key('get_size_system_staff_staffGroup_svg_clef_rest_group_staffBracket_barline_note_head_accidental_chord_stem_flags_dots_beam_subbeam_hairpin_symbolText','p')">
       <variable name="page" select="ancestor::musx:page" as="node()"/>
       <copy-of select="g:size($page) * number(substring(@size,2))"/>
    </template>
-   <template mode="get_size" match="key('get_size_system_staff_staffGroup_svg_clef_rest_group_staffBracket_barline_note_head_accidental_chord_stem_flags_dots_beam_subbeam_hairpin_symbolText','s')">
+   <template mode="get_size"
+             match="key('get_size_system_staff_staffGroup_svg_clef_rest_group_staffBracket_barline_note_head_accidental_chord_stem_flags_dots_beam_subbeam_hairpin_symbolText','s')">
       <variable name="staff" select="ancestor::musx:staff" as="node()"/>
       <copy-of select="g:size($staff) * number(substring(@size,2))"/>
    </template>
-   <template mode="get_start" match="musx:staff|musx:staffGroup|musx:group|musx:subbeam" priority="-1">
+   <template mode="get_start" match="musx:staff|musx:staffGroup|musx:group|musx:subbeam"
+             priority="-1">
       <sequence select="g:start(..)"/>
    </template>
-   <template mode="get_start" match="musx:staff[@start]|musx:staffGroup[@start]|musx:group[@start]|musx:subbeam[@start]">
+   <template mode="get_start"
+             match="musx:staff[@start]|musx:staffGroup[@start]|musx:group[@start]|musx:subbeam[@start]">
       <sequence select="id(@start)"/>
    </template>
-   <template mode="get_end" match="musx:staff|musx:staffGroup|musx:group|musx:subbeam" priority="-1">
+   <template mode="get_end" match="musx:staff|musx:staffGroup|musx:group|musx:subbeam"
+             priority="-1">
       <sequence select="g:end(..)"/>
    </template>
-   <template mode="get_end" match="musx:staff[@end]|musx:staffGroup[@end]|musx:group[@end]|musx:subbeam[@end]">
+   <template mode="get_end"
+             match="musx:staff[@end]|musx:staffGroup[@end]|musx:group[@end]|musx:subbeam[@end]">
       <sequence select="id(@end)"/>
    </template>
    <key name="get_y2_staff" use="substring(@y2,1,1)" match="musx:staff"/>
@@ -902,71 +984,98 @@
    <template mode="get_lines" match="musx:staff[@lines]">
       <copy-of select="@lines cast as xs:integer"/>
    </template>
-   <key name="get_x_svg_clef_rest_barline_note_chord_symbolText" use="substring(@x,1,1)" match="musx:svg|musx:clef|musx:rest|musx:barline|musx:note|musx:chord|musx:symbolText"/>
-   <template mode="get_x" match="musx:svg|musx:clef|musx:rest|musx:barline|musx:note|musx:chord|musx:symbolText" priority="-2">
+   <key name="get_x_svg_clef_rest_barline_note_chord_symbolText"
+        use="substring(@x,1,1)"
+        match="musx:svg|musx:clef|musx:rest|musx:barline|musx:note|musx:chord|musx:symbolText"/>
+   <template mode="get_x"
+             match="musx:svg|musx:clef|musx:rest|musx:barline|musx:note|musx:chord|musx:symbolText"
+             priority="-2">
       <copy-of select="(g:x(g:start(.))) + (0)"/>
    </template>
-   <template mode="get_x" match="musx:svg[@x]|musx:clef[@x]|musx:rest[@x]|musx:barline[@x]|musx:note[@x]|musx:chord[@x]|musx:symbolText[@x]" priority="-1">
+   <template mode="get_x"
+             match="musx:svg[@x]|musx:clef[@x]|musx:rest[@x]|musx:barline[@x]|musx:note[@x]|musx:chord[@x]|musx:symbolText[@x]"
+             priority="-1">
       <copy-of select="number(@x)"/>
    </template>
-   <template mode="get_x" match="key('get_x_svg_clef_rest_barline_note_chord_symbolText','p')">
+   <template mode="get_x"
+             match="key('get_x_svg_clef_rest_barline_note_chord_symbolText','p')">
       <variable name="page" select="ancestor-or-self::musx:page" as="node()"/>
       <copy-of select="(g:x(g:start(.))) + g:size($page) * number(substring(@x,2))"/>
    </template>
-   <template mode="get_x" match="key('get_x_svg_clef_rest_barline_note_chord_symbolText','P')">
+   <template mode="get_x"
+             match="key('get_x_svg_clef_rest_barline_note_chord_symbolText','P')">
       <variable name="page" select="ancestor-or-self::musx:page" as="node()"/>
       <copy-of select="g:x($page) + g:size($page) * number(substring(@x,2))"/>
    </template>
-   <template mode="get_x" match="key('get_x_svg_clef_rest_barline_note_chord_symbolText','s')">
+   <template mode="get_x"
+             match="key('get_x_svg_clef_rest_barline_note_chord_symbolText','s')">
       <variable name="staff" select="ancestor::musx:staff[last()]" as="node()"/>
       <copy-of select="(g:x(g:start(.))) + (g:size($staff) * number(substring(@x,2)))"/>
    </template>
-   <key name="get_x1_svg_clef_transposeNumber_rest_staffBracket_barline_note_head_accidental_chord_stem_flags" use="substring(@x1,1,1)" match="musx:svg|musx:clef|musx:transposeNumber|musx:rest|musx:staffBracket|musx:barline|musx:note|musx:head|musx:accidental|musx:chord|musx:stem|musx:flags"/>
-   <template mode="get_x1" match="musx:svg|musx:clef|musx:transposeNumber|musx:rest|musx:staffBracket|musx:barline|musx:note|musx:head|musx:accidental|musx:chord|musx:stem|musx:flags" priority="-2">
+   <key name="get_x1_svg_clef_transposeNumber_rest_staffBracket_barline_note_head_accidental_chord_stem_flags"
+        use="substring(@x1,1,1)"
+        match="musx:svg|musx:clef|musx:transposeNumber|musx:rest|musx:staffBracket|musx:barline|musx:note|musx:head|musx:accidental|musx:chord|musx:stem|musx:flags"/>
+   <template mode="get_x1"
+             match="musx:svg|musx:clef|musx:transposeNumber|musx:rest|musx:staffBracket|musx:barline|musx:note|musx:head|musx:accidental|musx:chord|musx:stem|musx:flags"
+             priority="-2">
       <copy-of select="(g:x(.)) + (0)"/>
    </template>
-   <template mode="get_x1" match="musx:svg[@x1]|musx:clef[@x1]|musx:transposeNumber[@x1]|musx:rest[@x1]|musx:staffBracket[@x1]|musx:barline[@x1]|musx:note[@x1]|musx:head[@x1]|musx:accidental[@x1]|musx:chord[@x1]|musx:stem[@x1]|musx:flags[@x1]" priority="-1">
+   <template mode="get_x1"
+             match="musx:svg[@x1]|musx:clef[@x1]|musx:transposeNumber[@x1]|musx:rest[@x1]|musx:staffBracket[@x1]|musx:barline[@x1]|musx:note[@x1]|musx:head[@x1]|musx:accidental[@x1]|musx:chord[@x1]|musx:stem[@x1]|musx:flags[@x1]"
+             priority="-1">
       <copy-of select="number(@x1)"/>
    </template>
-   <template mode="get_x1" match="key('get_x1_svg_clef_transposeNumber_rest_staffBracket_barline_note_head_accidental_chord_stem_flags','p')">
+   <template mode="get_x1"
+             match="key('get_x1_svg_clef_transposeNumber_rest_staffBracket_barline_note_head_accidental_chord_stem_flags','p')">
       <variable name="page" select="ancestor-or-self::musx:page" as="node()"/>
       <copy-of select="(g:x(.)) + g:size($page) * number(substring(@x1,2))"/>
    </template>
-   <template mode="get_x1" match="key('get_x1_svg_clef_transposeNumber_rest_staffBracket_barline_note_head_accidental_chord_stem_flags','P')">
+   <template mode="get_x1"
+             match="key('get_x1_svg_clef_transposeNumber_rest_staffBracket_barline_note_head_accidental_chord_stem_flags','P')">
       <variable name="page" select="ancestor-or-self::musx:page" as="node()"/>
       <copy-of select="g:x($page) + g:size($page) * number(substring(@x1,2))"/>
    </template>
-   <template mode="get_x1" match="key('get_x1_svg_clef_transposeNumber_rest_staffBracket_barline_note_head_accidental_chord_stem_flags','s')">
+   <template mode="get_x1"
+             match="key('get_x1_svg_clef_transposeNumber_rest_staffBracket_barline_note_head_accidental_chord_stem_flags','s')">
       <variable name="staff" select="ancestor::musx:staff[last()]" as="node()"/>
       <copy-of select="(g:x(.)) + (g:size($staff) * number(substring(@x1,2)))"/>
    </template>
-   <key name="get_x2_svg_clef_transposeNumber_staffBracket_barline_note_head_accidental_chord_stem_flags" use="substring(@x2,1,1)" match="musx:svg|musx:clef|musx:transposeNumber|musx:staffBracket|musx:barline|musx:note|musx:head|musx:accidental|musx:chord|musx:stem|musx:flags"/>
-   <template mode="get_x2" match="musx:svg|musx:clef|musx:transposeNumber|musx:staffBracket|musx:barline|musx:note|musx:head|musx:accidental|musx:chord|musx:stem|musx:flags" priority="-2">
+   <key name="get_x2_svg_clef_transposeNumber_staffBracket_barline_note_head_accidental_chord_stem_flags"
+        use="substring(@x2,1,1)"
+        match="musx:svg|musx:clef|musx:transposeNumber|musx:staffBracket|musx:barline|musx:note|musx:head|musx:accidental|musx:chord|musx:stem|musx:flags"/>
+   <template mode="get_x2"
+             match="musx:svg|musx:clef|musx:transposeNumber|musx:staffBracket|musx:barline|musx:note|musx:head|musx:accidental|musx:chord|musx:stem|musx:flags"
+             priority="-2">
       <copy-of select="(g:x(.)) + (0)"/>
    </template>
-   <template mode="get_x2" match="musx:svg[@x2]|musx:clef[@x2]|musx:transposeNumber[@x2]|musx:staffBracket[@x2]|musx:barline[@x2]|musx:note[@x2]|musx:head[@x2]|musx:accidental[@x2]|musx:chord[@x2]|musx:stem[@x2]|musx:flags[@x2]" priority="-1">
+   <template mode="get_x2"
+             match="musx:svg[@x2]|musx:clef[@x2]|musx:transposeNumber[@x2]|musx:staffBracket[@x2]|musx:barline[@x2]|musx:note[@x2]|musx:head[@x2]|musx:accidental[@x2]|musx:chord[@x2]|musx:stem[@x2]|musx:flags[@x2]"
+             priority="-1">
       <copy-of select="number(@x2)"/>
    </template>
-   <template mode="get_x2" match="key('get_x2_svg_clef_transposeNumber_staffBracket_barline_note_head_accidental_chord_stem_flags','p')">
+   <template mode="get_x2"
+             match="key('get_x2_svg_clef_transposeNumber_staffBracket_barline_note_head_accidental_chord_stem_flags','p')">
       <variable name="page" select="ancestor-or-self::musx:page" as="node()"/>
       <copy-of select="(g:x(.)) + g:size($page) * number(substring(@x2,2))"/>
    </template>
-   <template mode="get_x2" match="key('get_x2_svg_clef_transposeNumber_staffBracket_barline_note_head_accidental_chord_stem_flags','P')">
+   <template mode="get_x2"
+             match="key('get_x2_svg_clef_transposeNumber_staffBracket_barline_note_head_accidental_chord_stem_flags','P')">
       <variable name="page" select="ancestor-or-self::musx:page" as="node()"/>
       <copy-of select="g:x($page) + g:size($page) * number(substring(@x2,2))"/>
    </template>
-   <template mode="get_x2" match="key('get_x2_svg_clef_transposeNumber_staffBracket_barline_note_head_accidental_chord_stem_flags','s')">
+   <template mode="get_x2"
+             match="key('get_x2_svg_clef_transposeNumber_staffBracket_barline_note_head_accidental_chord_stem_flags','s')">
       <variable name="staff" select="ancestor::musx:staff[last()]" as="node()"/>
       <copy-of select="(g:x(.)) + (g:size($staff) * number(substring(@x2,2)))"/>
    </template>
    <template mode="get_symbol" match="musx:clef" priority="-1">
-      <value-of select="concat($symbolURIroot,'#','clef.G')"/>
+      <value-of select="concat($libDirectory,'/',$symbolFile,'#','clef.G')"/>
    </template>
    <template mode="get_symbol" match="musx:clef[contains(@symbol,'.')]" priority="2">
-      <sequence select="concat($symbolURIroot,'#',@symbol)"/>
+      <sequence select="concat($libDirectory,'/',$symbolFile,'#',@symbol)"/>
    </template>
    <template mode="get_symbol" match="musx:clef[@symbol]">
-      <sequence select="concat($symbolURIroot,'#',local-name(),'.',@symbol)"/>
+      <sequence select="concat($libDirectory,'/',$symbolFile,'#',local-name(),'.',@symbol)"/>
    </template>
    <template mode="get_OwnBoundingBox" match="musx:clef" priority="-1">
       <variable name="symbolBBox" select="g:svgSymbolBoundingBox(g:symbol(.))" as="node()*"/>
@@ -974,14 +1083,22 @@
          <variable name="size" select="g:size(.)"/>
          <variable name="x" select="g:x(.)"/>
          <variable name="y" select="g:y(.)"/>
-         <musx:BoundingBox left="{  $x + $size*number($symbolBBox/@left)}" right="{ $x + $size*number($symbolBBox/@right)}" top="{   $y + $size*number($symbolBBox/@top)}" bottom="{$y + $size*number($symbolBBox/@bottom)}"/>
+         <musx:BoundingBox left="{  $x + $size*number($symbolBBox/@left)}"
+                           right="{ $x + $size*number($symbolBBox/@right)}"
+                           top="{   $y + $size*number($symbolBBox/@top)}"
+                           bottom="{$y + $size*number($symbolBBox/@bottom)}"/>
       </if>
    </template>
-   <key name="get_x_transposeNumber_staffBracket_flags_dots" use="substring(@x,1,1)" match="musx:transposeNumber|musx:staffBracket|musx:flags|musx:dots"/>
-   <template mode="get_x" match="musx:transposeNumber|musx:staffBracket|musx:flags|musx:dots" priority="-2">
+   <key name="get_x_transposeNumber_staffBracket_flags_dots" use="substring(@x,1,1)"
+        match="musx:transposeNumber|musx:staffBracket|musx:flags|musx:dots"/>
+   <template mode="get_x"
+             match="musx:transposeNumber|musx:staffBracket|musx:flags|musx:dots"
+             priority="-2">
       <copy-of select="(g:x(..)) + (0)"/>
    </template>
-   <template mode="get_x" match="musx:transposeNumber[@x]|musx:staffBracket[@x]|musx:flags[@x]|musx:dots[@x]" priority="-1">
+   <template mode="get_x"
+             match="musx:transposeNumber[@x]|musx:staffBracket[@x]|musx:flags[@x]|musx:dots[@x]"
+             priority="-1">
       <copy-of select="number(@x)"/>
    </template>
    <template mode="get_x" match="key('get_x_transposeNumber_staffBracket_flags_dots','p')">
@@ -996,7 +1113,8 @@
       <variable name="staff" select="ancestor::musx:staff[last()]" as="node()"/>
       <copy-of select="(g:x(..)) + (g:size($staff) * number(substring(@x,2)))"/>
    </template>
-   <key name="get_y_transposeNumber" use="substring(@y,1,1)" match="musx:transposeNumber"/>
+   <key name="get_y_transposeNumber" use="substring(@y,1,1)"
+        match="musx:transposeNumber"/>
    <template mode="get_y" match="musx:transposeNumber" priority="-2">
       <copy-of select="(       if(g:placement(.)='above')         then g:OwnBoundingBox(..)//@top         else g:OwnBoundingBox(..)//@bottom + g:size(.)       ) + (0)"/>
    </template>
@@ -1029,7 +1147,8 @@
    <template mode="get_placement" match="musx:transposeNumber[@placement]">
       <copy-of select="@placement cast as xs:string"/>
    </template>
-   <key name="get_size_transposeNumber" use="substring(@size,1,1)" match="musx:transposeNumber"/>
+   <key name="get_size_transposeNumber" use="substring(@size,1,1)"
+        match="musx:transposeNumber"/>
    <template mode="get_size" priority="-2" match="musx:transposeNumber">
       <copy-of select="(g:size(..)) * (4)"/>
    </template>
@@ -1096,7 +1215,8 @@
       <variable name="staff" select="ancestor::musx:staff[last()]" as="node()"/>
       <copy-of select="(g:x(g:end(.))) + (g:size($staff) * number(substring(@x2,2)))"/>
    </template>
-   <key name="get_width_rest_head" use="substring(@width,1,1)" match="musx:rest|musx:head"/>
+   <key name="get_width_rest_head" use="substring(@width,1,1)"
+        match="musx:rest|musx:head"/>
    <template mode="get_width" priority="-2" match="musx:rest|musx:head">
       <copy-of select="(g:size(.)) * (number(g:svgSymbolBoundingBox(g:symbol(.))//@right))"/>
    </template>
@@ -1124,13 +1244,15 @@
       <copy-of select="@step cast as xs:double"/>
    </template>
    <template mode="get_symbol" match="musx:rest|musx:accidental" priority="-1">
-      <value-of select="concat($symbolURIroot,'#','')"/>
+      <value-of select="concat($libDirectory,'/',$symbolFile,'#','')"/>
    </template>
-   <template mode="get_symbol" match="musx:rest[contains(@symbol,'.')]|musx:accidental[contains(@symbol,'.')]" priority="2">
-      <sequence select="concat($symbolURIroot,'#',@symbol)"/>
+   <template mode="get_symbol"
+             match="musx:rest[contains(@symbol,'.')]|musx:accidental[contains(@symbol,'.')]"
+             priority="2">
+      <sequence select="concat($libDirectory,'/',$symbolFile,'#',@symbol)"/>
    </template>
    <template mode="get_symbol" match="musx:rest[@symbol]|musx:accidental[@symbol]">
-      <sequence select="concat($symbolURIroot,'#',local-name(),'.',@symbol)"/>
+      <sequence select="concat($libDirectory,'/',$symbolFile,'#',local-name(),'.',@symbol)"/>
    </template>
    <template mode="get_OwnBoundingBox" match="musx:rest|musx:accidental" priority="-1">
       <variable name="symbolBBox" select="g:svgSymbolBoundingBox(g:symbol(.))" as="node()*"/>
@@ -1138,22 +1260,28 @@
          <variable name="size" select="g:size(.)"/>
          <variable name="x" select="g:x(.)"/>
          <variable name="y" select="g:y(.)"/>
-         <musx:BoundingBox left="{  $x + $size*number($symbolBBox/@left)}" right="{ $x + $size*number($symbolBBox/@right)}" top="{   $y + $size*number($symbolBBox/@top)}" bottom="{$y + $size*number($symbolBBox/@bottom)}"/>
+         <musx:BoundingBox left="{  $x + $size*number($symbolBBox/@left)}"
+                           right="{ $x + $size*number($symbolBBox/@right)}"
+                           top="{   $y + $size*number($symbolBBox/@top)}"
+                           bottom="{$y + $size*number($symbolBBox/@bottom)}"/>
       </if>
    </template>
    <template mode="get_topStaff" match="musx:staffBracket|musx:barline" priority="-1">
       <sequence select="       (         for $staff in (ancestor::musx:staff|ancestor::musx:staffGroup|ancestor::musx:system)[last()]/descendant-or-self::musx:staff         return if (g:y($staff) &gt; g:y((ancestor::musx:staff|ancestor::musx:staffGroup|ancestor::musx:system)[last()]/descendant-or-self::musx:staff))           then ()           else $staff       )[1]"/>
    </template>
-   <template mode="get_topStaff" match="musx:staffBracket[@topStaff]|musx:barline[@topStaff]">
+   <template mode="get_topStaff"
+             match="musx:staffBracket[@topStaff]|musx:barline[@topStaff]">
       <sequence select="id(@topStaff)"/>
    </template>
    <template mode="get_bottomStaff" match="musx:staffBracket|musx:barline" priority="-1">
       <sequence select="       (         for $staff in (ancestor::musx:staff|ancestor::musx:staffGroup|ancestor::musx:system)[last()]/descendant-or-self::musx:staff         return if (g:y($staff) &lt; g:y((ancestor::musx:staff|ancestor::musx:staffGroup|ancestor::musx:system)[last()]/descendant-or-self::musx:staff))           then ()           else $staff       )[1]"/>
    </template>
-   <template mode="get_bottomStaff" match="musx:staffBracket[@bottomStaff]|musx:barline[@bottomStaff]">
+   <template mode="get_bottomStaff"
+             match="musx:staffBracket[@bottomStaff]|musx:barline[@bottomStaff]">
       <sequence select="id(@bottomStaff)"/>
    </template>
-   <key name="get_y1_staffBracket_barline" use="substring(@y1,1,1)" match="musx:staffBracket|musx:barline"/>
+   <key name="get_y1_staffBracket_barline" use="substring(@y1,1,1)"
+        match="musx:staffBracket|musx:barline"/>
    <template mode="get_y1" match="musx:staffBracket|musx:barline" priority="-2">
       <copy-of select="(g:y1(g:topStaff(.))) + (0)"/>
    </template>
@@ -1180,7 +1308,8 @@
       <variable name="staff" select="ancestor::musx:staff[last()]" as="node()"/>
       <copy-of select="(g:y2($staff)) -            + 2 * g:size($staff) * (number(substring(@y1,2)) - 1)"/>
    </template>
-   <key name="get_y2_staffBracket_barline" use="substring(@y2,1,1)" match="musx:staffBracket|musx:barline"/>
+   <key name="get_y2_staffBracket_barline" use="substring(@y2,1,1)"
+        match="musx:staffBracket|musx:barline"/>
    <template mode="get_y2" match="musx:staffBracket|musx:barline" priority="-2">
       <copy-of select="(g:y2(g:bottomStaff(.))) + (0)"/>
    </template>
@@ -1207,11 +1336,16 @@
       <variable name="staff" select="ancestor::musx:staff[last()]" as="node()"/>
       <copy-of select="(g:y2($staff)) -            + 2 * g:size($staff) * (number(substring(@y2,2)) - 1)"/>
    </template>
-   <key name="get_y_staffBracket_barline_chord_stem_subbeam" use="substring(@y,1,1)" match="musx:staffBracket|musx:barline|musx:chord|musx:stem|musx:subbeam"/>
-   <template mode="get_y" match="musx:staffBracket|musx:barline|musx:chord|musx:stem|musx:subbeam" priority="-2">
+   <key name="get_y_staffBracket_barline_chord_stem_subbeam" use="substring(@y,1,1)"
+        match="musx:staffBracket|musx:barline|musx:chord|musx:stem|musx:subbeam"/>
+   <template mode="get_y"
+             match="musx:staffBracket|musx:barline|musx:chord|musx:stem|musx:subbeam"
+             priority="-2">
       <copy-of select="(g:y1(.)) + (0)"/>
    </template>
-   <template mode="get_y" match="musx:staffBracket[@y]|musx:barline[@y]|musx:chord[@y]|musx:stem[@y]|musx:subbeam[@y]" priority="-1">
+   <template mode="get_y"
+             match="musx:staffBracket[@y]|musx:barline[@y]|musx:chord[@y]|musx:stem[@y]|musx:subbeam[@y]"
+             priority="-1">
       <copy-of select="number(@y)"/>
    </template>
    <template mode="get_y" match="key('get_y_staffBracket_barline_chord_stem_subbeam','p')">
@@ -1235,13 +1369,14 @@
       <copy-of select="(g:y2($staff)) -            + 2 * g:size($staff) * (number(substring(@y,2)) - 1)"/>
    </template>
    <template mode="get_brackettip" match="musx:staffBracket" priority="-1">
-      <value-of select="concat($symbolURIroot,'#','brackettip')"/>
+      <value-of select="concat($libDirectory,'/',$symbolFile,'#','brackettip')"/>
    </template>
-   <template mode="get_brackettip" match="musx:staffBracket[contains(@brackettip,'.')]" priority="2">
-      <sequence select="concat($symbolURIroot,'#',@brackettip)"/>
+   <template mode="get_brackettip" match="musx:staffBracket[contains(@brackettip,'.')]"
+             priority="2">
+      <sequence select="concat($libDirectory,'/',$symbolFile,'#',@brackettip)"/>
    </template>
    <template mode="get_brackettip" match="musx:staffBracket[@brackettip]">
-      <sequence select="concat($symbolURIroot,'#',local-name(),'.',@brackettip)"/>
+      <sequence select="concat($libDirectory,'/',$symbolFile,'#',local-name(),'.',@brackettip)"/>
    </template>
    <template mode="get_OwnBoundingBox" match="musx:staffBracket" priority="-1">
       <variable name="symbolBBox" select="g:svgSymbolBoundingBox(g:brackettip(.))" as="node()*"/>
@@ -1249,10 +1384,14 @@
          <variable name="size" select="g:size(.)"/>
          <variable name="x" select="g:x(.)"/>
          <variable name="y" select="g:y(.)"/>
-         <musx:BoundingBox left="{  $x + $size*number($symbolBBox/@left)}" right="{ $x + $size*number($symbolBBox/@right)}" top="{   $y + $size*number($symbolBBox/@top)}" bottom="{$y + $size*number($symbolBBox/@bottom)}"/>
+         <musx:BoundingBox left="{  $x + $size*number($symbolBBox/@left)}"
+                           right="{ $x + $size*number($symbolBBox/@right)}"
+                           top="{   $y + $size*number($symbolBBox/@top)}"
+                           bottom="{$y + $size*number($symbolBBox/@bottom)}"/>
       </if>
    </template>
-   <key name="get_lineOffset_barline" use="substring(@lineOffset,1,1)" match="musx:barline"/>
+   <key name="get_lineOffset_barline" use="substring(@lineOffset,1,1)"
+        match="musx:barline"/>
    <template mode="get_lineOffset" priority="-2" match="musx:barline">
       <copy-of select="(g:size(.)) * (1)"/>
    </template>
@@ -1267,7 +1406,8 @@
       <variable name="staff" select="ancestor::musx:staff" as="node()"/>
       <copy-of select="g:size($staff) * number(substring(@lineOffset,2))"/>
    </template>
-   <key name="get_dotOffset_barline" use="substring(@dotOffset,1,1)" match="musx:barline"/>
+   <key name="get_dotOffset_barline" use="substring(@dotOffset,1,1)"
+        match="musx:barline"/>
    <template mode="get_dotOffset" priority="-2" match="musx:barline">
       <copy-of select="(g:size(.)) * (1.25)"/>
    </template>
@@ -1282,7 +1422,8 @@
       <variable name="staff" select="ancestor::musx:staff" as="node()"/>
       <copy-of select="g:size($staff) * number(substring(@dotOffset,2))"/>
    </template>
-   <key name="get_dotRadius_barline" use="substring(@dotRadius,1,1)" match="musx:barline"/>
+   <key name="get_dotRadius_barline" use="substring(@dotRadius,1,1)"
+        match="musx:barline"/>
    <template mode="get_dotRadius" priority="-2" match="musx:barline">
       <copy-of select="(1) * (.4)"/>
    </template>
@@ -1297,7 +1438,8 @@
       <variable name="staff" select="ancestor::musx:staff" as="node()"/>
       <copy-of select="g:size($staff) * number(substring(@dotRadius,2))"/>
    </template>
-   <key name="get_lineWidth_barline" use="substring(@lineWidth,1,1)" match="musx:barline"/>
+   <key name="get_lineWidth_barline" use="substring(@lineWidth,1,1)"
+        match="musx:barline"/>
    <template mode="get_lineWidth" priority="-2" match="musx:barline">
       <copy-of select="(g:size(.)) * (.25)"/>
    </template>
@@ -1312,7 +1454,8 @@
       <variable name="staff" select="ancestor::musx:staff" as="node()"/>
       <copy-of select="g:size($staff) * number(substring(@lineWidth,2))"/>
    </template>
-   <key name="get_boldLineWidth_barline" use="substring(@boldLineWidth,1,1)" match="musx:barline"/>
+   <key name="get_boldLineWidth_barline" use="substring(@boldLineWidth,1,1)"
+        match="musx:barline"/>
    <template mode="get_boldLineWidth" priority="-2" match="musx:barline">
       <copy-of select="(g:size(.)) * (1)"/>
    </template>
@@ -1339,7 +1482,8 @@
    <template mode="get_ledgerLines.direction" match="musx:note[@ledgerLines.direction]">
       <copy-of select="@ledgerLines.direction cast as xs:integer"/>
    </template>
-   <key name="get_ledgerLines.y1_note" use="substring(@ledgerLines.y1,1,1)" match="musx:note"/>
+   <key name="get_ledgerLines.y1_note" use="substring(@ledgerLines.y1,1,1)"
+        match="musx:note"/>
    <template mode="get_ledgerLines.y1" match="musx:note" priority="-2">
       <copy-of select="(       for $staff in ancestor::musx:staff[last()] return         if (g:ledgerLines.direction(.) &lt; 0)         then g:y1($staff) - 2*g:size($staff)         else g:y2($staff) + 2*g:size($staff)) + (0)"/>
    </template>
@@ -1366,7 +1510,8 @@
       <variable name="staff" select="ancestor::musx:staff[last()]" as="node()"/>
       <copy-of select="(g:y2($staff)) -            + 2 * g:size($staff) * (number(substring(@ledgerLines.y1,2)) - 1)"/>
    </template>
-   <key name="get_ledgerLines.y2_note" use="substring(@ledgerLines.y2,1,1)" match="musx:note"/>
+   <key name="get_ledgerLines.y2_note" use="substring(@ledgerLines.y2,1,1)"
+        match="musx:note"/>
    <template mode="get_ledgerLines.y2" match="musx:note" priority="-2">
       <copy-of select="(g:y(.)) + (0)"/>
    </template>
@@ -1399,18 +1544,23 @@
    <template mode="get_ledgerLines.draw" match="musx:note[@ledgerLines.draw]">
       <copy-of select="if (@ledgerLines.draw = 'false')                            then false()                            else true()"/>
    </template>
-   <key name="get_ledgerLines.protrusion_note" use="substring(@ledgerLines.protrusion,1,1)" match="musx:note"/>
+   <key name="get_ledgerLines.protrusion_note"
+        use="substring(@ledgerLines.protrusion,1,1)"
+        match="musx:note"/>
    <template mode="get_ledgerLines.protrusion" priority="-2" match="musx:note">
       <copy-of select="(g:size(..)) * (.75)"/>
    </template>
-   <template mode="get_ledgerLines.protrusion" match="musx:note[@ledgerLines.protrusion]" priority="-1">
+   <template mode="get_ledgerLines.protrusion" match="musx:note[@ledgerLines.protrusion]"
+             priority="-1">
       <copy-of select="number(@ledgerLines.protrusion)"/>
    </template>
-   <template mode="get_ledgerLines.protrusion" match="key('get_ledgerLines.protrusion_note','p')">
+   <template mode="get_ledgerLines.protrusion"
+             match="key('get_ledgerLines.protrusion_note','p')">
       <variable name="page" select="ancestor::musx:page" as="node()"/>
       <copy-of select="g:size($page) * number(substring(@ledgerLines.protrusion,2))"/>
    </template>
-   <template mode="get_ledgerLines.protrusion" match="key('get_ledgerLines.protrusion_note','s')">
+   <template mode="get_ledgerLines.protrusion"
+             match="key('get_ledgerLines.protrusion_note','s')">
       <variable name="staff" select="ancestor::musx:staff" as="node()"/>
       <copy-of select="g:size($staff) * number(substring(@ledgerLines.protrusion,2))"/>
    </template>
@@ -1452,13 +1602,13 @@
       <copy-of select="@flip cast as xs:integer"/>
    </template>
    <template mode="get_symbol" match="musx:head" priority="-1">
-      <value-of select="concat($symbolURIroot,'#','notehead.quarter')"/>
+      <value-of select="concat($libDirectory,'/',$symbolFile,'#','notehead.quarter')"/>
    </template>
    <template mode="get_symbol" match="musx:head[contains(@symbol,'.')]" priority="2">
-      <sequence select="concat($symbolURIroot,'#',@symbol)"/>
+      <sequence select="concat($libDirectory,'/',$symbolFile,'#',@symbol)"/>
    </template>
    <template mode="get_symbol" match="musx:head[@symbol]">
-      <sequence select="concat($symbolURIroot,'#',local-name(),'.',@symbol)"/>
+      <sequence select="concat($libDirectory,'/',$symbolFile,'#',local-name(),'.',@symbol)"/>
    </template>
    <template mode="get_OwnBoundingBox" match="musx:head" priority="-1">
       <variable name="symbolBBox" select="g:svgSymbolBoundingBox(g:symbol(.))" as="node()*"/>
@@ -1466,7 +1616,10 @@
          <variable name="size" select="g:size(.)"/>
          <variable name="x" select="g:x(.)"/>
          <variable name="y" select="g:y(.)"/>
-         <musx:BoundingBox left="{  $x + $size*number($symbolBBox/@left)}" right="{ $x + $size*number($symbolBBox/@right)}" top="{   $y + $size*number($symbolBBox/@top)}" bottom="{$y + $size*number($symbolBBox/@bottom)}"/>
+         <musx:BoundingBox left="{  $x + $size*number($symbolBBox/@left)}"
+                           right="{ $x + $size*number($symbolBBox/@right)}"
+                           top="{   $y + $size*number($symbolBBox/@top)}"
+                           bottom="{$y + $size*number($symbolBBox/@bottom)}"/>
       </if>
    </template>
    <key name="get_x_accidental" use="substring(@x,1,1)" match="musx:accidental"/>
@@ -1681,23 +1834,26 @@
    <template mode="get_direction" match="musx:flags|musx:dots|musx:subbeam" priority="-1">
       <copy-of select="g:direction(..)"/>
    </template>
-   <template mode="get_direction" match="musx:flags[@direction]|musx:dots[@direction]|musx:subbeam[@direction]">
+   <template mode="get_direction"
+             match="musx:flags[@direction]|musx:dots[@direction]|musx:subbeam[@direction]">
       <copy-of select="@direction cast as xs:integer"/>
    </template>
-   <template mode="get_number" match="musx:flags|musx:dots|musx:beam|musx:subbeam" priority="-1">
+   <template mode="get_number" match="musx:flags|musx:dots|musx:beam|musx:subbeam"
+             priority="-1">
       <copy-of select="1"/>
    </template>
-   <template mode="get_number" match="musx:flags[@number]|musx:dots[@number]|musx:beam[@number]|musx:subbeam[@number]">
+   <template mode="get_number"
+             match="musx:flags[@number]|musx:dots[@number]|musx:beam[@number]|musx:subbeam[@number]">
       <copy-of select="@number cast as xs:integer"/>
    </template>
    <template mode="get_symbol" match="musx:flags" priority="-1">
-      <value-of select="concat($symbolURIroot,'#',concat('flags.',g:direction(.)*g:number(.)))"/>
+      <value-of select="concat($libDirectory,'/',$symbolFile,'#',concat('flags.',g:direction(.)*g:number(.)))"/>
    </template>
    <template mode="get_symbol" match="musx:flags[contains(@symbol,'.')]" priority="2">
-      <sequence select="concat($symbolURIroot,'#',@symbol)"/>
+      <sequence select="concat($libDirectory,'/',$symbolFile,'#',@symbol)"/>
    </template>
    <template mode="get_symbol" match="musx:flags[@symbol]">
-      <sequence select="concat($symbolURIroot,'#',local-name(),'.',@symbol)"/>
+      <sequence select="concat($libDirectory,'/',$symbolFile,'#',local-name(),'.',@symbol)"/>
    </template>
    <template mode="get_OwnBoundingBox" match="musx:flags" priority="-1">
       <variable name="symbolBBox" select="g:svgSymbolBoundingBox(g:symbol(.))" as="node()*"/>
@@ -1705,7 +1861,10 @@
          <variable name="size" select="g:size(.)"/>
          <variable name="x" select="g:x(.)"/>
          <variable name="y" select="g:y(.)"/>
-         <musx:BoundingBox left="{  $x + $size*number($symbolBBox/@left)}" right="{ $x + $size*number($symbolBBox/@right)}" top="{   $y + $size*number($symbolBBox/@top)}" bottom="{$y + $size*number($symbolBBox/@bottom)}"/>
+         <musx:BoundingBox left="{  $x + $size*number($symbolBBox/@left)}"
+                           right="{ $x + $size*number($symbolBBox/@right)}"
+                           top="{   $y + $size*number($symbolBBox/@top)}"
+                           bottom="{$y + $size*number($symbolBBox/@bottom)}"/>
       </if>
    </template>
    <key name="get_y_dots" use="substring(@y,1,1)" match="musx:dots"/>
@@ -1818,7 +1977,8 @@
       <variable name="staff" select="ancestor::musx:staff" as="node()"/>
       <copy-of select="g:size($staff) * number(substring(@radius,2))"/>
    </template>
-   <key name="get_x1_beam_subbeam" use="substring(@x1,1,1)" match="musx:beam|musx:subbeam"/>
+   <key name="get_x1_beam_subbeam" use="substring(@x1,1,1)"
+        match="musx:beam|musx:subbeam"/>
    <template mode="get_x1" match="musx:beam|musx:subbeam" priority="-2">
       <copy-of select="(g:x((g:start(.)//musx:stem, g:start(.))[1])) + (0)"/>
    </template>
@@ -1837,7 +1997,8 @@
       <variable name="staff" select="ancestor::musx:staff[last()]" as="node()"/>
       <copy-of select="(g:x((g:start(.)//musx:stem, g:start(.))[1])) + (g:size($staff) * number(substring(@x1,2)))"/>
    </template>
-   <key name="get_x2_beam_subbeam" use="substring(@x2,1,1)" match="musx:beam|musx:subbeam"/>
+   <key name="get_x2_beam_subbeam" use="substring(@x2,1,1)"
+        match="musx:beam|musx:subbeam"/>
    <template mode="get_x2" match="musx:beam|musx:subbeam" priority="-2">
       <copy-of select="(g:x((g:end(.)//musx:stem, g:end(.))[1])) + (0)"/>
    </template>
@@ -2003,7 +2164,8 @@
       <variable name="staff" select="ancestor::musx:staff" as="node()"/>
       <copy-of select="g:size($staff) * number(substring(@distance,2))"/>
    </template>
-   <key name="get_startSpread_hairpin" use="substring(@startSpread,1,1)" match="musx:hairpin"/>
+   <key name="get_startSpread_hairpin" use="substring(@startSpread,1,1)"
+        match="musx:hairpin"/>
    <template mode="get_startSpread" priority="-2" match="musx:hairpin">
       <copy-of select="(g:size(..)) * (0)"/>
    </template>
@@ -2018,7 +2180,8 @@
       <variable name="staff" select="ancestor::musx:staff" as="node()"/>
       <copy-of select="g:size($staff) * number(substring(@startSpread,2))"/>
    </template>
-   <key name="get_endSpread_hairpin" use="substring(@endSpread,1,1)" match="musx:hairpin"/>
+   <key name="get_endSpread_hairpin" use="substring(@endSpread,1,1)"
+        match="musx:hairpin"/>
    <template mode="get_endSpread" priority="-2" match="musx:hairpin">
       <copy-of select="(g:size(..)) * (0)"/>
    </template>
@@ -2098,7 +2261,12 @@
             <value-of select="normalize-space(concat('page ',@class))"/>
          </attribute>
          <apply-templates select="@*" mode="copy-svg-and-id-attributes"/>
-         <svg:rect xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" stroke="black" fill="#fffffc" x="{g:x1(.)}" width="{g:x2(.) - g:x1(.)}" y="{g:y1(.)}" height="{g:y2(.) - g:y1(.)}"/>
+         <svg:rect xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" stroke="black"
+                   fill="#fffffc"
+                   x="{g:x1(.)}"
+                   width="{g:x2(.) - g:x1(.)}"
+                   y="{g:y1(.)}"
+                   height="{g:y2(.) - g:y1(.)}"/>
          <apply-templates mode="draw"/>
       </svg:g>
    </template>
@@ -2111,7 +2279,8 @@
          <apply-templates mode="draw"/>
       </svg:g>
    </template>
-   <xsl:template xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="addStaffLines">
+   <xsl:template xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                 name="addStaffLines">
       <xsl:param name="yPosition" select="g:y1(.)"/>
     
                                    <!--   + g:size(.) to avoid missing staff lines due to roundoff errors -->
@@ -2123,7 +2292,10 @@
       </xsl:if>
   </xsl:template>
    <template match="musx:staff" mode="get_OwnBoundingBox" priority="1">
-      <BoundingBox xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" left="{g:x1(.)}" right="{g:x2(.)}" top="{g:y1(.)}" bottom="{g:y2(.)}"/>
+      <BoundingBox xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" left="{g:x1(.)}"
+                   right="{g:x2(.)}"
+                   top="{g:y1(.)}"
+                   bottom="{g:y2(.)}"/>
    </template>
    <template match="musx:staff" mode="draw">
       <svg:g>
@@ -2131,7 +2303,8 @@
             <value-of select="normalize-space(concat('staff ',@class))"/>
          </attribute>
          <apply-templates select="@*" mode="copy-svg-and-id-attributes"/>
-         <svg:g xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" class="stafflines" stroke="currentColor">
+         <svg:g xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" class="stafflines"
+                stroke="currentColor">
             <xsl:call-template name="addStaffLines"/>
          </svg:g>
          <apply-templates mode="draw"/>
@@ -2146,7 +2319,8 @@
          <apply-templates mode="draw"/>
       </svg:g>
    </template>
-   <xsl:template xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" match="svg:*" mode="draw">
+   <xsl:template xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" match="svg:*"
+                 mode="draw">
       <xsl:copy-of select="."/>
   </xsl:template>
    <template match="musx:svg" mode="draw">
@@ -2164,7 +2338,9 @@
             <value-of select="normalize-space(concat('clef ',@class))"/>
          </attribute>
          <apply-templates select="@*" mode="copy-svg-and-id-attributes"/>
-         <svg:use xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" transform="translate({g:x(.)},{g:y(.)}) scale({g:size(.)})" xlink:href="{g:symbol(.)}"/>
+         <svg:use xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                  transform="translate({g:x(.)},{g:y(.)}) scale({g:size(.)})"
+                  xlink:href="{g:symbol(.)}"/>
          <apply-templates mode="draw"/>
       </svg:g>
    </template>
@@ -2174,7 +2350,9 @@
             <value-of select="normalize-space(concat('transposeNumber ',@class))"/>
          </attribute>
          <apply-templates select="@*" mode="copy-svg-and-id-attributes"/>
-         <svg:text xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" transform="translate({g:x(.)},{g:y(.)}) scale({g:size(.)})" font-size="1">
+         <svg:text xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                   transform="translate({g:x(.)},{g:y(.)}) scale({g:size(.)})"
+                   font-size="1">
             <xsl:copy-of select="node()"/>
          </svg:text>
          <apply-templates mode="draw"/>
@@ -2186,7 +2364,9 @@
             <value-of select="normalize-space(concat('rest ',@class))"/>
          </attribute>
          <apply-templates select="@*" mode="copy-svg-and-id-attributes"/>
-         <svg:use xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" transform="translate({(g:x1(.) + g:x2(.)) div 2},{g:y(.)}) scale({g:size(.)})" xlink:href="{g:symbol(.)}"/>
+         <svg:use xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                  transform="translate({(g:x1(.) + g:x2(.)) div 2},{g:y(.)}) scale({g:size(.)})"
+                  xlink:href="{g:symbol(.)}"/>
          <apply-templates mode="draw"/>
       </svg:g>
    </template>
@@ -2205,13 +2385,25 @@
             <value-of select="normalize-space(concat('staffBracket ',@class))"/>
          </attribute>
          <apply-templates select="@*" mode="copy-svg-and-id-attributes"/>
-         <svg:line xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" x1="{g:x(.) - 1.5 * g:size(.)}" x2="{g:x(.) - 1.5 * g:size(.)}" y1="{g:y1(.) - 1.4 * g:size(.)}" y2="{g:y2(.) + 1.4 * g:size(.)}" stroke-width="{1.2 * g:size(.)}" fill="none" stroke="currentColor"/>
-         <svg:use xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xlink:href="{g:brackettip(.)}" transform="translate({g:x(.) - g:size(.)},{g:y2(.) + g:size(.)}) scale({g:size(.)},{- g:size(.)})"/>
-         <svg:use xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xlink:href="{g:brackettip(.)}" transform="translate({g:x(.) - g:size(.)},{g:y1(.) - g:size(.)}) scale({g:size(.)})"/>
+         <svg:line xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                   x1="{g:x(.) - 1.5 * g:size(.)}"
+                   x2="{g:x(.) - 1.5 * g:size(.)}"
+                   y1="{g:y1(.) - 1.4 * g:size(.)}"
+                   y2="{g:y2(.) + 1.4 * g:size(.)}"
+                   stroke-width="{1.2 * g:size(.)}"
+                   fill="none"
+                   stroke="currentColor"/>
+         <svg:use xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                  xlink:href="{g:brackettip(.)}"
+                  transform="translate({g:x(.) - g:size(.)},{g:y2(.) + g:size(.)}) scale({g:size(.)},{- g:size(.)})"/>
+         <svg:use xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                  xlink:href="{g:brackettip(.)}"
+                  transform="translate({g:x(.) - g:size(.)},{g:y1(.) - g:size(.)}) scale({g:size(.)})"/>
          <apply-templates mode="draw"/>
       </svg:g>
    </template>
-   <xsl:template xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="drawThinBarline">
+   <xsl:template xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                 name="drawThinBarline">
       <xsl:param name="offsetDirection" select="0" as="xs:integer*"/>
       <xsl:variable name="barlineElement" select="."/>
       <xsl:variable name="rawX" select="g:x(.)"/>
@@ -2263,28 +2455,46 @@
       </xsl:for-each>
   </xsl:template>
    <template match="musx:barline" mode="get_OwnBoundingBox" priority="1">
-      <xsl:variable xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="staffs" select="(ancestor::musx:staff|ancestor::musx:staffGroup|ancestor::musx:system)[last()]/descendant-or-self::musx:staff"/>
-      <xsl:variable xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="maxDotRadius" select="max(g:size($staffs))*g:dotRadius(.)"/>
-      <xsl:variable xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="distanceFromBoldLineToFarSideOfDots" select="g:lineOffset(.) - g:lineWidth(.) + g:dotOffset(.) + $maxDotRadius"/>
+      <xsl:variable xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="staffs"
+                    select="(ancestor::musx:staff|ancestor::musx:staffGroup|ancestor::musx:system)[last()]/descendant-or-self::musx:staff"/>
+      <xsl:variable xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                    name="maxDotRadius"
+                    select="max(g:size($staffs))*g:dotRadius(.)"/>
+      <xsl:variable xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                    name="distanceFromBoldLineToFarSideOfDots"
+                    select="g:lineOffset(.) - g:lineWidth(.) + g:dotOffset(.) + $maxDotRadius"/>
       <xsl:choose xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
          <xsl:when test="g:type(.)='normal'">
             <BoundingBox left="{g:x(.)}" right="{g:x(.)}" top="{g:y1(.)}" bottom="{g:y2(.)}"/>
          </xsl:when>
          <xsl:when test="g:type(.)='double'">
-            <BoundingBox left="{g:x(.) - g:lineOffset(.)}" right="{g:x(.)}" top="{g:y1(.)}" bottom="{g:y2(.)}"/>
+            <BoundingBox left="{g:x(.) - g:lineOffset(.)}" right="{g:x(.)}" top="{g:y1(.)}"
+                         bottom="{g:y2(.)}"/>
          </xsl:when>
          <xsl:when test="g:type(.)='end'">
-            <BoundingBox left="{g:x(.) - g:lineOffset(.) - g:boldLineWidth(.) + g:lineWidth(.)}" right="{g:x(.)}" top="{g:y1(.)}" bottom="{g:y2(.)}"/>
+            <BoundingBox left="{g:x(.) - g:lineOffset(.) - g:boldLineWidth(.) + g:lineWidth(.)}"
+                         right="{g:x(.)}"
+                         top="{g:y1(.)}"
+                         bottom="{g:y2(.)}"/>
          </xsl:when>
          <xsl:when test="g:type(.)='repeatEnd'">
-            <BoundingBox left="{g:x(.) - g:boldLineWidth(.) - $distanceFromBoldLineToFarSideOfDots}" right="{g:x(.)}" top="{g:y1(.)}" bottom="{g:y2(.)}"/>
+            <BoundingBox left="{g:x(.) - g:boldLineWidth(.) - $distanceFromBoldLineToFarSideOfDots}"
+                         right="{g:x(.)}"
+                         top="{g:y1(.)}"
+                         bottom="{g:y2(.)}"/>
          </xsl:when>
          <xsl:when test="g:type(.)='repeatStart'">
-            <BoundingBox left="{g:x(.)}" right="{g:x(.) + g:boldLineWidth(.) + $distanceFromBoldLineToFarSideOfDots}" top="{g:y1(.)}" bottom="{g:y2(.)}"/>
+            <BoundingBox left="{g:x(.)}"
+                         right="{g:x(.) + g:boldLineWidth(.) + $distanceFromBoldLineToFarSideOfDots}"
+                         top="{g:y1(.)}"
+                         bottom="{g:y2(.)}"/>
          </xsl:when>
          <xsl:when test="g:type(.)='repeatDouble'">
-            <xsl:variable name="distanceFromCenter" select=".5*g:boldLineWidth(.) + $distanceFromBoldLineToFarSideOfDots"/>
-            <BoundingBox left="{g:x(.) - $distanceFromCenter}" right="{g:x(.) + $distanceFromCenter}" top="{g:y1(.)}" bottom="{g:y2(.)}"/>
+            <xsl:variable name="distanceFromCenter"
+                          select=".5*g:boldLineWidth(.) + $distanceFromBoldLineToFarSideOfDots"/>
+            <BoundingBox left="{g:x(.) - $distanceFromCenter}" right="{g:x(.) + $distanceFromCenter}"
+                         top="{g:y1(.)}"
+                         bottom="{g:y2(.)}"/>
          </xsl:when>
          <xsl:otherwise>
             <xsl:message>
@@ -2309,15 +2519,19 @@
                </xsl:call-template>
             </xsl:when>
             <xsl:when test="g:type(.)=('end','repeatStart','repeatEnd')">
-               <xsl:variable name="offsetDirection" select="if (g:type(.)='repeatStart')                                                      then 1                                                      else -1"/>
-               <xsl:variable name="boldX" select="g:x(.) + $offsetDirection*.5*(g:boldLineWidth(.) - g:lineWidth(.))"/>
-               <svg:line x1="{$boldX}" x2="{$boldX}" y1="{g:y1(.)}" y2="{g:y2(.)}" stroke-width="{g:boldLineWidth(.)}"/>
+               <xsl:variable name="offsetDirection"
+                             select="if (g:type(.)='repeatStart')                                                      then 1                                                      else -1"/>
+               <xsl:variable name="boldX"
+                             select="g:x(.) + $offsetDirection*.5*(g:boldLineWidth(.) - g:lineWidth(.))"/>
+               <svg:line x1="{$boldX}" x2="{$boldX}" y1="{g:y1(.)}" y2="{g:y2(.)}"
+                         stroke-width="{g:boldLineWidth(.)}"/>
                <xsl:call-template name="drawThinBarline">
                   <xsl:with-param name="offsetDirection" select="$offsetDirection"/>
                </xsl:call-template>
             </xsl:when>
             <xsl:when test="g:type(.)='repeatDouble'">
-               <svg:line x1="{g:x(.)}" x2="{g:x(.)}" y1="{g:y1(.)}" y2="{g:y2(.)}" stroke-width="{g:boldLineWidth(.)}"/>
+               <svg:line x1="{g:x(.)}" x2="{g:x(.)}" y1="{g:y1(.)}" y2="{g:y2(.)}"
+                         stroke-width="{g:boldLineWidth(.)}"/>
                <xsl:call-template name="drawThinBarline">
                   <xsl:with-param name="offsetDirection" select="(-1,1)"/>
                </xsl:call-template>
@@ -2331,7 +2545,8 @@
          <apply-templates mode="draw"/>
       </svg:g>
    </template>
-   <xsl:template xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="addLedgerLines">
+   <xsl:template xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                 name="addLedgerLines">
     <!-- QUESTION: Allow shortened ledger lines after accidentals? (like Lilypond) -->
     <!-- $direction is set to -1 if head is above staff, else 1 -->
     <xsl:param name="direction" select="g:ledgerLines.direction(.)"/>
@@ -2356,9 +2571,11 @@
          </xsl:call-template>
       </xsl:if>
   </xsl:template>
-   <xsl:function xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="g:calculateDirection">
+   <xsl:function xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                 name="g:calculateDirection">
       <xsl:param name="element"/>
-      <xsl:variable name="notes" select="$element/(self::musx:note, self::musx:chord/musx:note, key('beamNotes',@xml:id))"/>
+      <xsl:variable name="notes"
+                    select="$element/(self::musx:note, self::musx:chord/musx:note, key('beamNotes',@xml:id))"/>
       <xsl:variable name="sortedSteps" as="xs:double*">
          <xsl:for-each select="g:step($notes)">
             <xsl:sort select="."/>
@@ -2369,12 +2586,16 @@
       <xsl:sequence select="         if (.5*($sortedSteps[last()] + $sortedSteps[1]) &gt; $staffCenter)         then -1         else 1"/>
   </xsl:function>
    <template match="musx:note" mode="get_OwnBoundingBox" priority="1">
-      <xsl:if xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" test="g:ledgerLines.draw(.)">
+      <xsl:if xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+              test="g:ledgerLines.draw(.)">
          <xsl:variable name="headBoundingBox" select="g:OwnBoundingBox(musx:head)"/>
          <xsl:variable name="protrusion" select="g:ledgerLines.protrusion(.)"/>
          <xsl:variable name="y1" select="g:ledgerLines.y1(.)"/>
          <xsl:variable name="headY" select="g:y(musx:head)"/>
-         <BoundingBox left="{number($headBoundingBox//@left) - $protrusion}" right="{number($headBoundingBox//@right) + $protrusion}" top="{min(($headY,$y1))}" bottom="{max(($headY,$y1))}"/>
+         <BoundingBox left="{number($headBoundingBox//@left) - $protrusion}"
+                      right="{number($headBoundingBox//@right) + $protrusion}"
+                      top="{min(($headY,$y1))}"
+                      bottom="{max(($headY,$y1))}"/>
       </xsl:if>
    </template>
    <template match="musx:note" mode="draw">
@@ -2383,7 +2604,9 @@
             <value-of select="normalize-space(concat('note ',@class))"/>
          </attribute>
          <apply-templates select="@*" mode="copy-svg-and-id-attributes"/>
-         <svg:g xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" class="ledgerlines" stroke="currentColor">
+         <svg:g xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                class="ledgerlines"
+                stroke="currentColor">
             <xsl:call-template name="addLedgerLines"/>
          </svg:g>
          <apply-templates mode="draw"/>
@@ -2395,7 +2618,9 @@
             <value-of select="normalize-space(concat('head ',@class))"/>
          </attribute>
          <apply-templates select="@*" mode="copy-svg-and-id-attributes"/>
-         <svg:use xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" transform="translate({g:x(.)},{g:y(.)}) scale({g:size(.)})" xlink:href="{g:symbol(.)}"/>
+         <svg:use xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                  transform="translate({g:x(.)},{g:y(.)}) scale({g:size(.)})"
+                  xlink:href="{g:symbol(.)}"/>
          <apply-templates mode="draw"/>
       </svg:g>
    </template>
@@ -2405,7 +2630,9 @@
             <value-of select="normalize-space(concat('accidental ',@class))"/>
          </attribute>
          <apply-templates select="@*" mode="copy-svg-and-id-attributes"/>
-         <svg:use xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" transform="translate({g:x(.)},{g:y(.)}) scale({g:size(.)})" xlink:href="{g:symbol(.)}"/>
+         <svg:use xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                  transform="translate({g:x(.)},{g:y(.)}) scale({g:size(.)})"
+                  xlink:href="{g:symbol(.)}"/>
          <apply-templates mode="draw"/>
       </svg:g>
    </template>
@@ -2419,7 +2646,10 @@
       </svg:g>
    </template>
    <template match="musx:stem" mode="get_OwnBoundingBox" priority="1">
-      <BoundingBox xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" left="{g:x(.)}" right="{g:x(.)}" top="{min((g:y1(.),g:y2(.)))}" bottom="{max((g:y1(.),g:y2(.)))}"/>
+      <BoundingBox xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" left="{g:x(.)}"
+                   right="{g:x(.)}"
+                   top="{min((g:y1(.),g:y2(.)))}"
+                   bottom="{max((g:y1(.),g:y2(.)))}"/>
    </template>
    <template match="musx:stem" mode="draw">
       <svg:g>
@@ -2427,7 +2657,11 @@
             <value-of select="normalize-space(concat('stem ',@class))"/>
          </attribute>
          <apply-templates select="@*" mode="copy-svg-and-id-attributes"/>
-         <svg:line xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" x1="{g:x1(.)}" x2="{g:x2(.)}" y1="{g:y1(.)}" y2="{g:y2(.)}" stroke="currentColor"/>
+         <svg:line xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" x1="{g:x1(.)}"
+                   x2="{g:x2(.)}"
+                   y1="{g:y1(.)}"
+                   y2="{g:y2(.)}"
+                   stroke="currentColor"/>
          <apply-templates mode="draw"/>
       </svg:g>
    </template>
@@ -2437,7 +2671,9 @@
             <value-of select="normalize-space(concat('flags ',@class))"/>
          </attribute>
          <apply-templates select="@*" mode="copy-svg-and-id-attributes"/>
-         <svg:use xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" transform="translate({g:x(.)},{g:y(.)}) scale({g:size(.)})" xlink:href="{g:symbol(.)}"/>
+         <svg:use xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                  transform="translate({g:x(.)},{g:y(.)}) scale({g:size(.)})"
+                  xlink:href="{g:symbol(.)}"/>
          <apply-templates mode="draw"/>
       </svg:g>
    </template>
@@ -2460,7 +2696,11 @@
       </xsl:if>
   </xsl:template>
    <template match="musx:dots" mode="get_OwnBoundingBox" priority="1">
-      <BoundingBox xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" left="{g:x1(.) - g:radius(.)}" right="{g:x2(.) + g:radius(.)}" top=" {g:y(.)  - g:radius(.)}" bottom="{g:y(.) + g:radius(.)}"/>
+      <BoundingBox xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                   left="{g:x1(.) - g:radius(.)}"
+                   right="{g:x2(.) + g:radius(.)}"
+                   top=" {g:y(.)  - g:radius(.)}"
+                   bottom="{g:y(.) + g:radius(.)}"/>
    </template>
    <template match="musx:dots" mode="draw">
       <svg:g>
@@ -2478,15 +2718,20 @@
             <value-of select="normalize-space(concat('BoundingBox ',@class))"/>
          </attribute>
          <apply-templates select="@*" mode="copy-svg-and-id-attributes"/>
-         <svg:polygon xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" class="bbox" points="{@left},{@top} {@left},{@bottom} {@right},{@bottom} {@right},{@top}"/>
+         <svg:polygon xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" class="bbox"
+                      points="{@left},{@top} {@left},{@bottom} {@right},{@bottom} {@right},{@top}"/>
          <apply-templates mode="draw"/>
       </svg:g>
    </template>
-   <xsl:function xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="g:beamYLacuna">
+   <xsl:function xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                 name="g:beamYLacuna">
       <xsl:param name="beam" as="node()"/>
       <xsl:variable name="direction" select="g:direction($beam)" as="xs:double"/>
-      <xsl:variable name="steps" select="g:step(key('beamNotes',$beam/@xml:id,$beam/ancestor::musx:musx))" as="xs:double*"/>
-      <xsl:variable name="centerStep" select="g:lines($beam/ancestor::musx:staff[last()]) - 1" as="xs:double"/>
+      <xsl:variable name="steps"
+                    select="g:step(key('beamNotes',$beam/@xml:id,$beam/ancestor::musx:musx))"
+                    as="xs:double*"/>
+      <xsl:variable name="centerStep" select="g:lines($beam/ancestor::musx:staff[last()]) - 1"
+                    as="xs:double"/>
       <xsl:variable name="staffSize" select="g:staffSize($beam)" as="xs:double"/>
       <xsl:variable name="stepsSortedInBeamDirection" as="xs:double*">
          <xsl:for-each select="$steps">
@@ -2494,15 +2739,24 @@
             <xsl:sequence select=". * $direction"/>
          </xsl:for-each>
       </xsl:variable>
-      <xsl:variable name="stepClosestToBeam" select="$stepsSortedInBeamDirection[last()] - $centerStep * $direction" as="xs:double"/>
-      <xsl:variable name="stepFurthestFromBeam" select="$stepsSortedInBeamDirection[1] - $centerStep * $direction" as="xs:double"/>
-      <xsl:variable name="beamHeightInSteps" select="((g:summedBeamNumber($beam) - 1) * g:distance($beam) + g:width($beam)) div $staffSize" as="xs:double"/>
+      <xsl:variable name="stepClosestToBeam"
+                    select="$stepsSortedInBeamDirection[last()] - $centerStep * $direction"
+                    as="xs:double"/>
+      <xsl:variable name="stepFurthestFromBeam"
+                    select="$stepsSortedInBeamDirection[1] - $centerStep * $direction"
+                    as="xs:double"/>
+      <xsl:variable name="beamHeightInSteps"
+                    select="((g:summedBeamNumber($beam) - 1) * g:distance($beam) + g:width($beam)) div $staffSize"
+                    as="xs:double"/>
     
-      <xsl:variable name="beamStepsFromCenter" select="         max((           0,            $stepClosestToBeam + 4 + $beamHeightInSteps,            $stepFurthestFromBeam + 7         ))" as="xs:double"/>
+      <xsl:variable name="beamStepsFromCenter"
+                    select="         max((           0,            $stepClosestToBeam + 4 + $beamHeightInSteps,            $stepFurthestFromBeam + 7         ))"
+                    as="xs:double"/>
       <xsl:sequence select="($direction * $beamStepsFromCenter + $centerStep) * $staffSize"/>
 
   </xsl:function>
-   <xsl:function xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="g:summedBeamNumber">
+   <xsl:function xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                 name="g:summedBeamNumber">
       <xsl:param name="beam" as="node()*"/>
       <xsl:for-each select="$beam">
          <xsl:sequence select="max((g:summedBeamNumber(musx:subbeam), 0)) + g:number(.)"/>
@@ -2534,7 +2788,9 @@
       </xsl:otherwise>
       </xsl:choose>
   </xsl:function>
-   <xsl:key xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="beamNotes" match="musx:note" use="musx:stem/@beam"/>
+   <xsl:key xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="beamNotes"
+            match="musx:note"
+            use="musx:stem/@beam"/>
    <xsl:template xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="drawBeam">
       <xsl:param name="number" select="g:number(.)"/>
       <xsl:param name="direction" select="g:direction(.)"/>
@@ -2561,23 +2817,29 @@
       </xsl:if>
     
   </xsl:template>
-   <xsl:template xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="beamBoundingBox">
-      <xsl:variable name="beamHeight" select="(g:summedBeamNumber(.) - 1) * g:distance(.) + g:width(.)"/>
+   <xsl:template xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                 name="beamBoundingBox">
+      <xsl:variable name="beamHeight"
+                    select="(g:summedBeamNumber(.) - 1) * g:distance(.) + g:width(.)"/>
       <xsl:variable name="yValues" select="(g:y1(.),g:y2(.))"/>
       <xsl:choose>
          <xsl:when test="g:direction(.)=1">
-            <BoundingBox left="{g:x1(.)}" right="{g:x2(.)}" top="{min($yValues) - $beamHeight}" bottom="{max($yValues)}"/>
+            <BoundingBox left="{g:x1(.)}" right="{g:x2(.)}" top="{min($yValues) - $beamHeight}"
+                         bottom="{max($yValues)}"/>
          </xsl:when>
          <xsl:otherwise>
-            <BoundingBox left="{g:x1(.)}" right="{g:x2(.)}" top="{min($yValues)}" bottom="{max($yValues) + $beamHeight}"/>
+            <BoundingBox left="{g:x1(.)}" right="{g:x2(.)}" top="{min($yValues)}"
+                         bottom="{max($yValues) + $beamHeight}"/>
          </xsl:otherwise> 
       </xsl:choose>
   </xsl:template>
    <template match="musx:beam" mode="get_OwnBoundingBox" priority="1">
-      <xsl:call-template xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="beamBoundingBox"/>
+      <xsl:call-template xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                         name="beamBoundingBox"/>
    </template>
    <template match="musx:subbeam" mode="get_OwnBoundingBox" priority="1">
-      <xsl:call-template xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="beamBoundingBox"/>
+      <xsl:call-template xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                         name="beamBoundingBox"/>
    </template>
    <template match="musx:beam" mode="draw">
       <svg:g>
@@ -2605,35 +2867,58 @@
             <value-of select="normalize-space(concat('hairpin ',@class))"/>
          </attribute>
          <apply-templates select="@*" mode="copy-svg-and-id-attributes"/>
-         <xsl:variable xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="x1" select="g:x1(.)"/>
-         <xsl:variable xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="x2" select="g:x2(.)"/>
-         <xsl:variable xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="y1" select="g:y1(.)"/>
-         <xsl:variable xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="y2" select="g:y2(.)"/>
-         <xsl:variable xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="halfStartSpread" select="g:startSpread(.) div 2"/>
-         <xsl:variable xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="halfEndSpread" select="g:endSpread(.) div 2"/>
-         <svg:line xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" x1="{$x1}" y1="{$y1 + $halfStartSpread}" x2="{$x2}" y2="{$y2 + $halfEndSpread}"/>
-         <svg:line xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" x1="{$x1}" y1="{$y1 - $halfStartSpread}" x2="{$x2}" y2="{$y2 - $halfEndSpread}"/>
+         <xsl:variable xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="x1"
+                       select="g:x1(.)"/>
+         <xsl:variable xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="x2"
+                       select="g:x2(.)"/>
+         <xsl:variable xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="y1"
+                       select="g:y1(.)"/>
+         <xsl:variable xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="y2"
+                       select="g:y2(.)"/>
+         <xsl:variable xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                       name="halfStartSpread"
+                       select="g:startSpread(.) div 2"/>
+         <xsl:variable xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                       name="halfEndSpread"
+                       select="g:endSpread(.) div 2"/>
+         <svg:line xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" x1="{$x1}"
+                   y1="{$y1 + $halfStartSpread}"
+                   x2="{$x2}"
+                   y2="{$y2 + $halfEndSpread}"/>
+         <svg:line xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" x1="{$x1}"
+                   y1="{$y1 - $halfStartSpread}"
+                   x2="{$x2}"
+                   y2="{$y2 - $halfEndSpread}"/>
          <apply-templates mode="draw"/>
       </svg:g>
    </template>
-   <xsl:key xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="unicode-glyph" match="svg:glyph" use="string-to-codepoints(@unicode)"/>
-   <xsl:function xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="def:getGlyphWidth" as="xs:double*">
+   <xsl:key xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+            name="unicode-glyph"
+            match="svg:glyph"
+            use="string-to-codepoints(@unicode)"/>
+   <xsl:function xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                 name="def:getGlyphWidth"
+                 as="xs:double*">
 			   <xsl:param name="string" as="xs:string"/>
 			   <xsl:for-each select="string-to-codepoints($string)">
 				<!-- TODO: Modify this so that document() can also take the URI of a file with other font metadata -->
-				<xsl:sequence select="number(key('unicode-glyph',.,document($symbolURIroot))/@horiz-adv-x)"/>
+				<xsl:sequence select="number(key('unicode-glyph',.,document(concat($libDirectory,'/',$symbolFile)))/@horiz-adv-x)"/>
 			   </xsl:for-each>
 		</xsl:function>
-   <xsl:function xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="def:drawSymbols" as="node()*">
+   <xsl:function xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                 name="def:drawSymbols"
+                 as="node()*">
 			   <xsl:param name="string" as="xs:string"/>
 			   <xsl:param name="x" as="xs:double"/>
 			
 			   <xsl:variable name="char" select="substring($string,1,1)"/>
 			
-			   <xsl:variable name="symbolName" select="       if($char='.') then 'period'       else if($char='+') then 'plus'       else $char" as="xs:string"/>
+			   <xsl:variable name="symbolName"
+                    select="       if($char='.') then 'period'       else if($char='+') then 'plus'       else $char"
+                    as="xs:string"/>
 			
 			   <xsl:if test="string-length($string) gt 0">
-				     <svg:use xlink:href="{$symbolURIroot}#ascii.{$symbolName}" x="{$x}"/>
+				     <svg:use xlink:href="{$libDirectory}/{$symbolFile}#ascii.{$symbolName}" x="{$x}"/>
 				     <xsl:sequence select="def:drawSymbols(substring($string,2),$x + def:getGlyphWidth($char))"/>
 			   </xsl:if>
 		</xsl:function>
@@ -2643,7 +2928,8 @@
             <value-of select="normalize-space(concat('symbolText ',@class))"/>
          </attribute>
          <apply-templates select="@*" mode="copy-svg-and-id-attributes"/>
-         <xsl:sequence xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" select="def:drawSymbols(text(), 0)"/>
+         <xsl:sequence xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                       select="def:drawSymbols(text(), 0)"/>
          <apply-templates mode="draw"/>
       </svg:g>
    </template>
@@ -2668,7 +2954,10 @@
    <template match="svg:*" mode="generate-defs">
       <copy-of select="."/>
    </template>
-   <template mode="musx2svg" match="/musx:musx">
+   <template match="/" priority="-10">
+      <apply-templates select="." mode="musx2svg"/>
+   </template>
+   <template match="/musx:musx" mode="musx2svg">
       <svg:svg width="{g:x2(//musx:page[1])}" height="{g:y2(//musx:page[1])}">
          <apply-templates select="musx:musxHead[*]" mode="generate-defs"/>
          <apply-templates mode="draw"/>
@@ -2691,7 +2980,9 @@
          <copy-of select="@*"/>
          <copy-of select="$children"/>
          <if test="$allBoundingBoxes">
-            <musx:BoundingBox left="{min($allBoundingBoxes//@left)}" right="{max($allBoundingBoxes//@right)}" top="{min($allBoundingBoxes//@top)}" bottom="{max($allBoundingBoxes//@bottom)}"/>
+            <musx:BoundingBox left="{min($allBoundingBoxes//@left)}" right="{max($allBoundingBoxes//@right)}"
+                              top="{min($allBoundingBoxes//@top)}"
+                              bottom="{max($allBoundingBoxes//@bottom)}"/>
          </if>
       </copy>
    </template>
@@ -2717,6 +3008,7 @@
       <variable name="musxWithBoundingBoxes">
          <apply-templates select="." mode="add-bounding-boxes"/>
       </variable>
-      <apply-templates mode="musx2svg" select="$musxWithBoundingBoxes/musx:musx"/>
+      <apply-templates select="$musxWithBoundingBoxes/musx:musx" mode="musx2svg"/>
    </template>
 </stylesheet>
+
