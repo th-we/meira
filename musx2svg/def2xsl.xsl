@@ -9,6 +9,8 @@
   xmlns:def="NS:DEF"
   xmlns:g="NS:GET"
   xmlns:musx="NS:MUSX">
+	
+	<!-- QUESTION: Use xpath-default-namespaee="NS:MUSX"? -->
   
   <import href="propertyTypes/propertyTypesLoader.xsl"/>
   <import href="shared/matchingHelper.xsl"/>
@@ -22,10 +24,16 @@
   
   <template match="/def:elementDefinition/def:element[@name='musx']">
     <xsl:stylesheet version="2.0"  exclude-result-prefixes="xs def g musx svg">
-      <xsl:output indent="yes"/>
-      
-      <!-- If we're calling this from a wrapper XSLT, then the root node isn't <musx> but <mei>.  In this case, we default to 'symbopls/symbols.svg' -->
-      <xsl:variable name="symbolURIroot" select="if (/musx:musx) then /musx:musx/musx:musxHead/musx:symbols/@xlink:href else 'symbols/symbols.svg'"/>
+      <!--<xsl:output indent="yes"/>-->
+
+    	<!-- The libDirectory can be specified in the musx file (/musx/musxHead/libDirectory/@xlink:href).
+    		   If we're calling this from a wrapper XSLT, then there is no such
+    		
+    		If we're calling this from a wrapper XSLT, then the root node isn't <musx> but <mei>. 
+           The wrapper XSLT can provide required to -->
+    	<xsl:param name="libDirectory" select="if (/musx:musx) then /musx:musx/musx:musxHead/musx:libDirectory/@xlink:href else 'lib'" as="xs:string"/>
+    	<xsl:param name="musicFont" select="'musicSymbols'" as="xs:string"/>
+    	<xsl:param name="symbolFile" select="'symbols.svg'" as="xs:string"/>
       
       <call-template name="add-getter-functions-and-templates">
         <with-param name="properties" as="node()*">
@@ -72,8 +80,13 @@
         <xsl:copy-of select="."/>
       </xsl:template>
       
+      
+      <xsl:template match="/" priority="-10">
+      	<xsl:apply-templates select="." mode="musx2svg"/>
+      </xsl:template>
+      
       <!-- Main template for converting to SVG -->
-      <xsl:template match="/musx:musx">
+      <xsl:template match="/musx:musx" mode="musx2svg">
         <svg:svg width="{{g:x2(//musx:page[1])}}" height="{{g:y2(//musx:page[1])}}">
           <xsl:apply-templates select="musx:musxHead[*]" mode="generate-defs"/>
           <xsl:apply-templates mode="draw"/>
@@ -145,7 +158,7 @@
         <xsl:variable name="musxWithBoundingBoxes">
           <xsl:apply-templates select="." mode="add-bounding-boxes"/>
         </xsl:variable>
-        <xsl:apply-templates select="$musxWithBoundingBoxes/musx:musx"/>
+        <xsl:apply-templates select="$musxWithBoundingBoxes/musx:musx" mode="musx2svg"/>
       </xsl:template>
       
     </xsl:stylesheet>
