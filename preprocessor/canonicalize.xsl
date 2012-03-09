@@ -37,6 +37,8 @@
   <!-- Have @dur on all notes and chords -->
   <xsl:template mode="canonicalize" match="mei:chord">
     <mei:chord>
+    	<!-- TODO: Which attribute takes precedence, the one already existing, or the one thats written by 
+    		   copy-of? -->
       <xsl:apply-templates mode="canonicalize" select="@*"/>
       <xsl:copy-of select="(@dur|descendant::mei:note/@dur)[1]"/>
       <xsl:apply-templates mode="canonicalize"/>
@@ -49,7 +51,7 @@
   </xsl:template>
   
   <xsl:template mode="canonicalize" match="@key.sig"/>
-  <xsl:template match="@key.sig" mode="turn-attributes-into-element">
+  <xsl:template match="@key.sig[. != '0']" mode="turn-attributes-into-element">
     <!-- @key.sig is of the form "mixed|0|[1-7][f|s]" -->
     <mei:keySig n="{substring(string(),1,1)}" accid="{substring(string(),2,1)}"/>
     <!-- TODO:
@@ -62,7 +64,9 @@
 	<xsl:template match="@accid" mode="turn-attributes-into-element">
 		<mei:accid accid="{.}"/>
 	</xsl:template>
-  
-  <xsl:template match="@*" mode="turn-attributes-into-element"/>
+	
+	<!-- QUESTION: Is there an attribute version of <dynam> that we need to canonicalize? -->
+	
+	<xsl:template match="@*" mode="turn-attributes-into-element"/>
 
 </xsl:stylesheet>
