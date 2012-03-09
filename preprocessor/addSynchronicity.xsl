@@ -6,6 +6,9 @@
 	
 	<param name="floatToFractionPrecision" select="100" as="xs:integer"/>
   
+  <template match="/">
+  	<apply-templates select="." mode="addSynchronicity"/>
+  </template>
   
   <template mode="addSynchronicity" match="/">
   	<variable name="meiWithSynch">
@@ -49,7 +52,7 @@
 	<template match="@dur[contains(.,'m+')]" mode="add-tstamp-synch">
 		<copy-of select="."/>
 		<variable name="endMeasureOffset" select="substring-before(.,'m') cast as xs:integer" as="xs:integer"/>
-		<variable name="endMeasure" select="(ancestor::mei:measure/(.|following-sibling::mei:measure))[$endMeasureOffset + 1]" as="node()"/>
+		<variable name="endMeasure" select="(following::mei:measure)[$endMeasureOffset + 1]" as="node()"/>
 		<variable name="endMeasureSynch" select="synch:getMeasureSynch($endMeasure)" as="xs:integer*"/>
 		<variable name="endTstamp" select="synch:getFractionalPart(substring-after(.,'m+'))" as="xs:integer*"/>
 		<call-template name="write-synch">
