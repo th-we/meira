@@ -9,6 +9,10 @@
 	<!-- Is accidental origin currently on the left or the right of the symbol? -->
   <param name="distanceFromNotes" select="2.5"/>
 
+  <template match="/" priority="-10">
+  	<apply-templates select="." mode="accidentalFormatter"/>
+  </template>
+
   <template mode="accidentalFormatter" match="/">
     <variable name="updateTree">
       <document>
