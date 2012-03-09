@@ -37,7 +37,7 @@
 			<xsl:param name="string" as="xs:string"/>
 			<xsl:for-each select="string-to-codepoints($string)">
 				<!-- TODO: Modify this so that document() can also take the URI of a file with other font metadata -->
-				<xsl:sequence select="number(key('unicode-glyph',.,document($symbolURIroot))/@horiz-adv-x)"/>
+				<xsl:sequence select="number(key('unicode-glyph',.,document(concat($libDirectory,'/',$symbolFile)))/@horiz-adv-x)"/>
 			</xsl:for-each>
 		</xsl:function>
 		
@@ -53,7 +53,7 @@
 				  else $char" as="xs:string"/>
 			
 			<xsl:if test="string-length($string) gt 0">
-				<svg:use xlink:href="{$symbolURIroot}#ascii.{$symbolName}" x="{$x}"/>
+				<svg:use xlink:href="{$libDirectory}/{$symbolFile}#ascii.{$symbolName}" x="{$x}"/>
 				<xsl:sequence select="def:drawSymbols(substring($string,2),$x + def:getGlyphWidth($char))"/>
 			</xsl:if>
 		</xsl:function> 
