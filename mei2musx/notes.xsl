@@ -96,10 +96,10 @@
   </xsl:template>
   
   <!-- TODO: Noteheads for mensural @dur attributes (currently quarter is fallback for everything) -->
-  <xsl:template match="mei:*[@dur=1]" mode="add-head" priority="1">
+  <xsl:template match="mei:*[@dur='1']" mode="add-head" priority="1">
     <head symbol="notehead.whole"/>
   </xsl:template>
-  <xsl:template match="mei:*[@dur=2]" mode="add-head" priority="1">
+  <xsl:template match="mei:*[@dur='2']" mode="add-head" priority="1">
     <head symbol="notehead.half"/>
   </xsl:template>
   <!-- Notehead for all other durations and as fallback if there's no @dur-->
@@ -123,7 +123,7 @@
   </xsl:template>
   <!-- Prevent stems on whole notes
        TODO: Implement handling for non-numeric @dur values. -->
-  <xsl:template match="mei:*[self::mei:note/@dur=1 or self::mei:chord/descendant-or-self::mei:*/@dur=1]" mode="add-stem"/>
+  <xsl:template match="mei:*[self::mei:note/@dur='1' or self::mei:chord/descendant-or-self::mei:*/@dur='1']" mode="add-stem"/>
 	<xsl:template match="@stem.dir" mode="add-direction">
 		<xsl:attribute name="direction">
 			<xsl:value-of select="if (.='up') then -1 else 1"/>
@@ -134,19 +134,19 @@
   <!-- This is easier and maybe faster than recursively counting how many times one has to divide by two 
        until the value is 4. (This approach is taken in beam.xsl where the number of beams is calculated
        based on a parameter, not by matching a dur attribute) -->
-  <xsl:template match="mei:*[@dur=8]" mode="add-flags">
+  <xsl:template match="mei:*[@dur='8']" mode="add-flags">
     <flags number="1"/>
   </xsl:template>
-  <xsl:template match="mei:*[@dur=16]" mode="add-flags">
+  <xsl:template match="mei:*[@dur='16']" mode="add-flags">
     <flags number="2"/>
   </xsl:template>
-  <xsl:template match="mei:*[@dur=32]" mode="add-flags">
+  <xsl:template match="mei:*[@dur='32']" mode="add-flags">
     <flags number="3"/>
   </xsl:template>
-  <xsl:template match="mei:*[@dur=64]" mode="add-flags">
+  <xsl:template match="mei:*[@dur='64']" mode="add-flags">
     <flags number="4"/>
   </xsl:template>
-  <xsl:template match="mei:*[@dur=128]" mode="add-flags">
+  <xsl:template match="mei:*[@dur='128']" mode="add-flags">
     <flags number="5"/>
   </xsl:template>
   <xsl:template match="mei:*" mode="add-flags" priority="-1"/>
