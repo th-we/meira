@@ -5,7 +5,7 @@
      
      TODO: Add kerning information, e.g. for mp
 -->
-<symbolmap svgfont="emmentaler-20.svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svg="http://www.w3.org/2000/svg">
+<symbolmap svgfont="emmentaler-20.svg" emAdjust="7.5" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svg="http://www.w3.org/2000/svg">
   <!-- clefs -->
   <symbol musx="clef.G" glyph-name="clefs.G"/>
   <symbol musx="clef.F" glyph-name="clefs.F"/>
@@ -53,13 +53,11 @@
   <symbol musx="notehead.cross" glyph-name=""/>
  
   <!-- rests -->
-  <!-- Non-MEI naming -->
-  <!-- QUESTION: More consistent naming? -->
-  <symbol musx="rest.quadruplewhole" glyph-name="rests.M2"/>
-  <symbol musx="rest.dblwhole" glyph-name="rests.M1"/>
-  <symbol musx="rest.whole" glyph-name="rests.0"/>
-  <symbol musx="rest.half" glyph-name="rests.1o"/>
-  <symbol musx="rest.quarter" glyph-name="rests.2"/>
+  <symbol musx="rest.long" glyph-name="rests.M2"/>
+  <symbol musx="rest.breve" glyph-name="rests.M1"/>
+  <symbol musx="rest.1" glyph-name="rests.0" transform="translate(0,-2)"/>
+  <symbol musx="rest.2" glyph-name="rests.1o"/>
+  <symbol musx="rest.4" glyph-name="rests.2"/>
   <symbol musx="rest.8" glyph-name="rests.3"/>
   <symbol musx="rest.16" glyph-name="rests.4"/>
   <symbol musx="rest.32" glyph-name="rests.5"/>
