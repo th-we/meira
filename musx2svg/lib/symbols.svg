@@ -1,695 +1,698 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns='http://www.w3.org/2000/svg' xmlns:svg='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' version='1.1' width='100%' height='100%'>
   <defs class='symbols'>
     <metadata>
-      <font horiz-adv-x='1.5'/>
+      <font horiz-adv-x='1.5'>
+        <font-face font-family='Emmentaler' font-weight='400' font-stretch='normal' units-per-em='NaN' panose-1='2 0 5 3 0 0 0 0 0 0' ascent='800' descent='-200' x-height='267' bbox='-516 -1574 800 1324' underline-thickness='50' underline-position='-100' unicode-range='U+0020-E27C'/>
+      </font>
     </metadata>
-    <g id='clef.G' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='clef.G' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='clefs.G' unicode='' horiz-adv-x='4.8225'/>
         <bbox left='0' top='-9.3671875' width='4.78515625' height='14.28125' right='4.78515625' bottom='4.9140625' xmlns=''/>
       </metadata>
       <path d='M239 563c-37 113 -68 223 -68 366c0 121 52 236 142 316c3 3 6 4 10 4s7 -1 10 -4c82 -82 155 -254 155 -370c0 -152 -85 -274 -178 -393c24 -73 47 -146 68 -220c159 -1 260 -131 260 -265c0 -72 -29 -145 -95 -200c-23 -19 -49 -33 -77 -42c1 -19 1 -40 1 -59 c0 -40 -2 -78 -5 -118c-11 -122 -89 -233 -205 -233c-115 0 -212 86 -212 199c0 58 53 104 112 104c54 0 95 -48 95 -104c0 -52 -43 -95 -95 -95c-10 0 -20 2 -30 6c28 -41 76 -68 130 -68c94 0 154 95 163 196c3 38 5 76 5 114c0 16 0 31 -1 47c-24 -4 -49 -7 -74 -7 c-194 0 -350 160 -350 355c0 184 126 326 239 471zM464 -203c64 25 109 96 109 164c0 89 -64 177 -167 192c27 -109 50 -235 58 -356zM422 -214c-8 126 -32 256 -60 369c-86 -5 -134 -61 -134 -122c0 -46 27 -94 88 -125c5 -5 8 -11 8 -16c0 -11 -10 -22 -22 -22 c-3 0 -5 1 -8 2c-90 39 -131 115 -131 189c0 91 62 180 171 198c-17 61 -36 122 -56 183c-103 -131 -206 -262 -206 -429c0 -129 142 -233 278 -233c24 0 49 2 72 6zM377 1104c-96 -61 -155 -169 -155 -283c0 -25 4 -50 9 -75c10 -48 24 -95 39 -142c80 106 146 217 146 351 c0 65 -7 92 -39 149z'/>
     </g>
-    <g id='clef.F' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='clef.F' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='clefs.F' unicode='' horiz-adv-x='5.047499999999999'/>
         <bbox left='-0.09765625' top='-1.97265625' width='5.0390625' height='5.8203125' right='4.94140625' bottom='3.84765625' xmlns=''/>
       </metadata>
       <path d='M557 -125c0 28 23 51 51 51s51 -23 51 -51s-23 -51 -51 -51s-51 23 -51 51zM557 125c0 28 23 51 51 51s51 -23 51 -51s-23 -51 -51 -51s-51 23 -51 51zM232 263c172 0 293 -88 293 -251c0 -263 -263 -414 -516 -521c-3 -3 -6 -4 -9 -4c-7 0 -13 6 -13 13c0 3 1 6 4 9 c202 118 412 265 412 493c0 120 -63 235 -171 235c-74 0 -129 -54 -154 -126c11 5 22 8 34 8c55 0 100 -45 100 -100c0 -58 -44 -106 -100 -106c-60 0 -112 47 -112 106c0 133 102 244 232 244z'/>
     </g>
-    <g id='clef.GG' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='clef.GG' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <bbox left='0' top='-0.03515625' width='0.06640625' height='0.10546875' right='0.06640625' bottom='0.0703125' xmlns=''/>
       </metadata>
       <svg:use xlink:href='#clef.G'/>
       <svg:use xlink:href='#clef.G' transform='translate(4)'/>
     </g>
-    <g id='clef.C' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='clef.C' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='clefs.C' unicode='' horiz-adv-x='5.115'/>
         <bbox left='0' top='-3.75' width='5.1015625' height='7.5' right='5.1015625' bottom='3.75' xmlns=''/>
       </metadata>
       <path d='M318 0c0 -33 7 -73 45 -73c29 0 57 31 88 31c123 0 229 -89 229 -208c0 -169 -93 -250 -265 -250c-83 0 -152 61 -152 142c0 42 34 77 76 77s76 -35 76 -77c0 -39 -49 -37 -49 -76c0 -23 24 -38 49 -38c116 0 140 90 140 222c0 106 -12 180 -104 180 c-72 0 -119 -71 -119 -149c0 -9 -7 -14 -14 -14s-13 5 -13 14c0 76 -31 147 -84 200v-471c0 -6 -4 -10 -10 -10h-21c-6 0 -10 4 -10 10v980c0 6 4 10 10 10h21c6 0 10 -4 10 -10v-471c53 53 84 124 84 200c0 9 6 14 13 14s14 -5 14 -14c0 -78 47 -149 119 -149 c92 0 104 74 104 180c0 132 -24 222 -140 222c-25 0 -49 -15 -49 -38c0 -39 49 -37 49 -76c0 -42 -34 -77 -76 -77s-76 35 -76 77c0 81 69 142 152 142c172 0 265 -81 265 -250c0 -119 -106 -208 -229 -208c-31 0 -59 31 -88 31c-38 0 -45 -40 -45 -73zM129 -500h-119 c-6 0 -10 4 -10 10v980c0 6 4 10 10 10h119c6 0 10 -4 10 -10v-980c0 -6 -4 -10 -10 -10z'/>
     </g>
-    <g id='clef.perc' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='clef.perc' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='clefs.percussion' unicode='' horiz-adv-x='3.7575'/>
         <bbox left='1.25390625' top='-1.875' width='2.49609375' height='3.75' right='3.75' bottom='1.875' xmlns=''/>
       </metadata>
       <path d='M490 -250h-92c-6 0 -10 4 -10 10v480c0 6 4 10 10 10h92c6 0 10 -4 10 -10v-480c0 -6 -4 -10 -10 -10zM270 -250h-93c-6 0 -10 4 -10 10v480c0 6 4 10 10 10h93c6 0 10 -4 10 -10v-480c0 -6 -4 -10 -10 -10z'/>
     </g>
-    <g id='clef.TAB' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='clef.TAB' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='clefs.tab' unicode='' horiz-adv-x='5.265'/>
         <bbox left='0.3359375' top='-5.421875' width='4.9140625' height='10.8359375' right='5.25' bottom='5.4140625' xmlns=''/>
       </metadata>
       <path d='M267 -425c0 -24 -23 -27 -43 -27c-45 0 -84 31 -84 75c0 82 118 130 234 130c104 0 215 -22 215 -103c0 -51 -31 -86 -69 -110c58 -11 102 -36 102 -91c0 -90 -94 -158 -179 -158c-41 0 -80 15 -108 52c-2 2 -3 5 -3 8c0 12 16 25 28 25c4 0 8 -1 10 -4 c11 -15 27 -21 44 -21c43 0 95 40 95 93c0 47 -49 63 -101 63c-6 0 -8 8 -8 16c0 11 5 24 18 24c36 0 69 39 69 77c0 45 -36 68 -80 76c-11 -62 -31 -173 -40 -220c-20 -102 -84 -202 -159 -202c-44 0 -68 34 -96 53c-3 2 -4 5 -4 9c0 11 12 26 24 26c3 0 5 0 7 -2 c20 -13 36 -35 65 -35c65 0 89 99 89 195v8c0 35 9 109 18 163c-39 -13 -70 -40 -70 -70c0 -15 8 -28 19 -34c4 -3 7 -9 7 -16zM371 -116c-32 0 -56 12 -70 33l-39 -35c-42 -36 -90 -70 -134 -70c-33 0 -52 21 -78 32c-3 1 -5 5 -5 9c0 11 11 28 25 28c2 0 5 -1 7 -2 c16 -7 30 -18 50 -18c34 0 65 27 91 54c100 102 175 219 214 336c9 27 33 37 57 37c29 0 57 -15 57 -31c0 -2 -1 -4 -2 -6c-4 -116 -9 -233 -16 -350v-9c0 -16 3 -30 21 -30c16 0 35 13 53 19l2 1c5 0 9 -8 9 -17c0 -8 -3 -16 -12 -19c-29 -9 -54 -34 -87 -34 c-32 0 -45 29 -53 58c-16 61 -26 125 -31 191c-27 -35 -56 -68 -87 -101c11 -20 33 -33 64 -33c4 0 8 1 12 1c5 0 8 -7 8 -15c0 -25 -34 -29 -56 -29zM288 540c0 -23 -23 -24 -42 -24c-49 0 -91 36 -91 84c0 95 125 120 232 120c49 0 119 -41 171 -41c38 0 77 15 110 41 c3 2 6 3 9 3c11 0 23 -11 23 -19c0 -2 -1 -3 -2 -4c-40 -45 -95 -71 -148 -71c-15 0 -31 2 -44 6c-9 -59 -26 -151 -35 -193c-22 -96 -88 -185 -163 -185c-52 0 -81 42 -115 64c-3 2 -4 5 -4 9c0 11 12 26 23 26c2 0 5 -1 7 -2c23 -15 43 -46 75 -46c56 0 82 77 85 150 c2 45 13 150 22 208c-12 3 -23 5 -32 5c-51 0 -113 -21 -113 -70c0 -18 10 -36 24 -43c5 -3 8 -10 8 -18z'/>
     </g>
-    <g id='notehead.quarter' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='notehead.quarter' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='noteheads.s2' unicode='' horiz-adv-x='2.475'/>
         <bbox left='0' top='-1.03515625' width='2.46875' height='2.0703125' right='2.46875' bottom='1.03515625' xmlns=''/>
       </metadata>
       <path d='M220 138c56 0 109 -29 109 -91c0 -72 -56 -121 -103 -149c-36 -21 -76 -36 -117 -36c-56 0 -109 29 -109 91c0 72 56 121 103 149c36 21 76 36 117 36z'/>
     </g>
-    <g id='notehead.half' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='notehead.half' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='noteheads.s1' unicode='' horiz-adv-x='2.61'/>
         <bbox left='0' top='-1.02734375' width='2.6015625' height='2.0625' right='2.6015625' bottom='1.03515625' xmlns=''/>
       </metadata>
       <path d='M315 65c0 24 -21 41 -42 41c-4 0 -8 0 -12 -1c-31 -9 -77 -40 -114 -64s-84 -53 -104 -78c-7 -8 -11 -18 -11 -28c0 -24 21 -41 42 -41c4 0 8 0 12 1c31 9 78 40 115 64s84 53 104 78c7 8 10 18 10 28zM264 137c47 0 83 -21 83 -72c0 -19 -4 -37 -10 -56 c-12 -38 -32 -74 -65 -96c-54 -36 -113 -51 -188 -51c-47 0 -84 22 -84 73c0 19 5 37 11 56c12 38 31 74 64 96c54 36 114 50 189 50z'/>
     </g>
-    <g id='notehead.whole' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='notehead.whole' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='noteheads.s0' unicode='' horiz-adv-x='3.7199999999999998'/>
         <bbox left='0' top='-1.03515625' width='3.7109375' height='2.0703125' right='3.7109375' bottom='1.03515625' xmlns=''/>
       </metadata>
       <path d='M215 112c-50 0 -69 -43 -69 -88c0 -77 57 -136 134 -136c50 0 69 43 69 88c0 77 -57 136 -134 136zM495 0c0 -43 -35 -76 -73 -97c-53 -30 -113 -41 -174 -41s-122 11 -175 41c-38 21 -73 54 -73 97s35 76 73 97c53 30 114 41 175 41s121 -11 174 -41 c38 -21 73 -54 73 -97z'/>
     </g>
-    <g id='notehead.dblwhole' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='notehead.dblwhole' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='noteheads.sM1' unicode='' horiz-adv-x='3.7199999999999998'/>
         <bbox left='-0.30078125' top='-1.03515625' width='4.3125' height='2.0703125' right='4.01171875' bottom='1.03515625' xmlns=''/>
       </metadata>
       <path d='M248 138c91 0 201 -31 237 -99v73c0 14 11 26 25 26s25 -12 25 -26v-224c0 -14 -11 -26 -25 -26s-25 12 -25 26v73c-36 -68 -146 -99 -237 -99s-202 31 -238 99v-73c0 -14 -11 -26 -25 -26s-25 12 -25 26v224c0 14 11 26 25 26s25 -12 25 -26v-73c36 68 147 99 238 99z M215 112c-50 0 -69 -43 -69 -88c0 -77 57 -136 134 -136c50 0 69 43 69 88c0 77 -57 136 -134 136z'/>
     </g>
-    <g id='notehead.filldiamond' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='notehead.filldiamond' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='noteheads.s2harmonic' unicode='' horiz-adv-x='2.445'/>
         <bbox left='0' top='-1.34375' width='2.4375' height='2.6875' right='2.4375' bottom='1.34375' xmlns=''/>
       </metadata>
       <path d='M3 -7c-2 2 -3 5 -3 7s1 5 3 7l152 168c2 2 5 4 8 4s5 -2 7 -4l152 -168c2 -2 3 -5 3 -7s-1 -5 -3 -7l-152 -168c-2 -2 -4 -4 -7 -4s-6 2 -8 4z'/>
     </g>
-    <g id='notehead.diamond' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='notehead.diamond' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='noteheads.s0harmonic' unicode='' horiz-adv-x='2.445'/>
         <bbox left='0' top='-1.34375' width='2.4375' height='2.6875' right='2.4375' bottom='1.34375' xmlns=''/>
       </metadata>
       <path d='M73 36l122 -135l57 63l-122 135zM3 -7c-2 2 -3 5 -3 7s1 5 3 7l152 168c2 2 5 4 8 4s5 -2 7 -4l152 -168c2 -2 3 -5 3 -7s-1 -5 -3 -7l-152 -168c-2 -2 -4 -4 -7 -4s-6 2 -8 4z'/>
     </g>
-    <g id='notehead.fillisotriangle' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='notehead.fillisotriangle' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='noteheads.u2do' unicode='' horiz-adv-x='2.475'/>
         <bbox left='0' top='-0.84765625' width='2.46875' height='1.6875' right='2.46875' bottom='0.83984375' xmlns=''/>
       </metadata>
       <path d='M22 -112c-12 0 -22 9 -22 21c0 5 2 10 5 14l142 181c4 5 11 9 18 9s13 -4 17 -9l142 -181c3 -4 5 -9 5 -14c0 -12 -10 -21 -22 -21h-285z'/>
     </g>
-    <g id='notehead.isotriangle' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='notehead.isotriangle' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='noteheads.u1do' unicode='' horiz-adv-x='2.61'/>
         <bbox left='0' top='-0.84765625' width='2.6015625' height='1.6875' right='2.6015625' bottom='0.83984375' xmlns=''/>
       </metadata>
       <path d='M69 -69h210l-105 126zM22 -112c-12 0 -22 9 -22 21c0 5 2 10 5 14l152 182c4 5 11 8 17 8s13 -3 17 -8l151 -182c3 -4 5 -9 5 -14c0 -12 -9 -21 -21 -21h-304z'/>
     </g>
-    <g id='notehead.dwhisotriangle' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='notehead.dwhisotriangle' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='noteheads.s0do' unicode='' horiz-adv-x='3.7199999999999998'/>
         <bbox left='0' top='-0.83984375' width='3.7109375' height='1.6796875' right='3.7109375' bottom='0.83984375' xmlns=''/>
       </metadata>
       <path d='M84 -69h327l-163 132zM22 -112c-12 0 -22 9 -22 21c0 7 3 13 8 17l226 182c4 3 9 4 14 4s9 -1 13 -4l226 -182c5 -4 8 -10 8 -17c0 -12 -10 -21 -22 -21h-451z'/>
     </g>
-    <g id='notehead.fillpiewedge' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='notehead.fillpiewedge' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='noteheads.u2ti' unicode='' horiz-adv-x='2.475'/>
         <bbox left='0' top='-0.83984375' width='2.46875' height='1.6796875' right='2.46875' bottom='0.83984375' xmlns=''/>
       </metadata>
       <path d='M178 -108c-4 -3 -8 -4 -13 -4s-10 1 -14 4l-143 116c-5 4 -8 10 -8 16c0 7 4 13 8 18c40 45 97 70 157 70s116 -25 156 -70c4 -5 8 -11 8 -18c0 -6 -3 -12 -8 -16z'/>
     </g>
-    <g id='notehead.piewedge' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='notehead.piewedge' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='noteheads.u1ti' unicode='' horiz-adv-x='2.61'/>
         <bbox left='0' top='-0.83984375' width='2.609375' height='1.6796875' right='2.609375' bottom='0.83984375' xmlns=''/>
       </metadata>
       <path d='M174 -63l118 90c-33 27 -75 42 -118 42s-85 -15 -118 -42zM187 -108c-4 -3 -8 -4 -13 -4s-10 1 -14 4l-151 116c-5 4 -9 9 -9 16s4 14 9 19c43 45 103 69 165 69s122 -24 165 -69c5 -5 9 -12 9 -19s-4 -12 -9 -16z'/>
     </g>
-    <g id='notehead.dwhpiewedge' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='notehead.dwhpiewedge' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='noteheads.s0ti' unicode='' horiz-adv-x='3.7199999999999998'/>
         <bbox left='0' top='-0.84765625' width='3.7109375' height='1.6875' right='3.7109375' bottom='0.83984375' xmlns=''/>
       </metadata>
       <path d='M248 -66l179 92c-56 28 -117 43 -179 43s-124 -15 -180 -43zM258 -110c-3 -2 -7 -2 -10 -2s-7 0 -10 2l-226 116c-7 3 -12 11 -12 19s5 16 12 20c71 44 153 68 236 68s164 -24 235 -68c7 -4 12 -12 12 -20s-5 -16 -12 -19z'/>
     </g>
-    <g id='notehead.fillrectangle' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='notehead.fillrectangle' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='noteheads.s2la' unicode='' horiz-adv-x='2.475'/>
         <bbox left='0' top='-0.83984375' width='2.46875' height='1.6796875' right='2.46875' bottom='0.83984375' xmlns=''/>
       </metadata>
       <path d='M22 112h285c12 0 22 -9 22 -21v-182c0 -12 -10 -21 -22 -21h-285c-12 0 -22 9 -22 21v182c0 12 10 21 22 21z'/>
     </g>
-    <g id='notehead.rectangle' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='notehead.rectangle' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='noteheads.s1la' unicode='' horiz-adv-x='2.61'/>
         <bbox left='0' top='-0.83984375' width='2.6015625' height='1.6796875' right='2.6015625' bottom='0.83984375' xmlns=''/>
       </metadata>
       <path d='M44 69v-138h260v138h-260zM22 112h304c12 0 21 -9 21 -21v-182c0 -12 -9 -21 -21 -21h-304c-12 0 -22 9 -22 21v182c0 12 10 21 22 21z'/>
     </g>
-    <g id='notehead.dwhrectangle' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='notehead.dwhrectangle' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='noteheads.s0la' unicode='' horiz-adv-x='3.7199999999999998'/>
         <bbox left='0' top='-0.83984375' width='3.7109375' height='1.6796875' right='3.7109375' bottom='0.83984375' xmlns=''/>
       </metadata>
       <path d='M44 69v-138h407v138h-407zM22 112h451c12 0 22 -9 22 -21v-182c0 -12 -10 -21 -22 -21h-451c-12 0 -22 9 -22 21v182c0 12 10 21 22 21z'/>
     </g>
-    <g id='notehead.fillrtriangle' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='notehead.fillrtriangle' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='noteheads.d2fa' unicode='' horiz-adv-x='2.475'/>
         <bbox left='0' top='-0.83984375' width='2.46875' height='1.6796875' right='2.46875' bottom='0.83984375' xmlns=''/>
       </metadata>
       <path d='M329 -91c0 -12 -10 -21 -22 -21h-285c-12 0 -22 9 -22 21v182c0 12 10 21 22 21c4 0 8 -1 12 -3l285 -181c6 -4 10 -12 10 -19z'/>
     </g>
-    <g id='notehead.rtriangle' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='notehead.rtriangle' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='noteheads.d1fa' unicode='' horiz-adv-x='2.61'/>
         <bbox left='0' top='-0.83984375' width='2.6015625' height='1.6796875' right='2.6015625' bottom='0.83984375' xmlns=''/>
       </metadata>
       <path d='M246 -69l-202 121v-121h202zM347 -91c0 -12 -9 -21 -21 -21h-304c-12 0 -22 9 -22 21v182c0 12 10 21 22 21c4 0 8 -1 11 -3l304 -181c7 -4 10 -11 10 -19z'/>
     </g>
-    <g id='notehead.dwrtriangle' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='notehead.dwrtriangle' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='noteheads.d0fa' unicode='' horiz-adv-x='3.7199999999999998'/>
         <bbox left='0' top='-0.83984375' width='3.7109375' height='1.6796875' right='3.7109375' bottom='0.83984375' xmlns=''/>
       </metadata>
       <path d='M360 -69l-316 127v-127h316zM495 -91c0 -12 -10 -21 -22 -21h-451c-12 0 -22 9 -22 21v182c0 12 10 21 22 21c3 0 5 0 8 -1l451 -181c8 -3 14 -12 14 -21z'/>
     </g>
-    <g id='notehead.fillurtriangle' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='notehead.fillurtriangle' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='noteheads.u2fa' unicode='' horiz-adv-x='2.475'/>
         <bbox left='0' top='-0.83984375' width='2.46875' height='1.6796875' right='2.46875' bottom='0.83984375' xmlns=''/>
       </metadata>
       <path d='M0 91c0 12 10 21 22 21h285c12 0 22 -9 22 -21v-182c0 -12 -10 -21 -22 -21c-4 0 -8 1 -12 3l-285 181c-6 4 -10 12 -10 19z'/>
     </g>
-    <g id='notehead.urtriangle' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='notehead.urtriangle' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='noteheads.u1fa' unicode='' horiz-adv-x='2.61'/>
         <bbox left='0' top='-0.83984375' width='2.6015625' height='1.6796875' right='2.6015625' bottom='0.83984375' xmlns=''/>
       </metadata>
       <path d='M101 69l203 -121v121h-203zM0 91c0 12 10 21 22 21h304c12 0 21 -9 21 -21v-182c0 -12 -9 -21 -21 -21c-4 0 -9 1 -12 3l-303 181c-7 4 -11 11 -11 19z'/>
     </g>
-    <g id='notehead.dwurtriangle' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='notehead.dwurtriangle' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='noteheads.u0fa' unicode='' horiz-adv-x='3.7199999999999998'/>
         <bbox left='0' top='-0.83984375' width='3.7109375' height='1.6796875' right='3.7109375' bottom='0.83984375' xmlns=''/>
       </metadata>
       <path d='M135 69l316 -127v127h-316zM0 91c0 12 10 21 22 21h451c12 0 22 -9 22 -21v-182c0 -12 -10 -21 -22 -21c-3 0 -5 0 -8 1l-451 181c-8 3 -14 12 -14 21z'/>
     </g>
-    <g id='notehead.fillsemicircle' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='notehead.fillsemicircle' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='noteheads.u2re' unicode='' horiz-adv-x='2.475'/>
         <bbox left='0' top='-0.83984375' width='2.46875' height='1.6796875' right='2.46875' bottom='0.83984375' xmlns=''/>
       </metadata>
       <path d='M0 91c0 12 10 21 22 21h285c12 0 22 -9 22 -21v-55c0 -85 -76 -148 -164 -148s-165 63 -165 148v55z'/>
     </g>
-    <g id='notehead.semicircle' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='notehead.semicircle' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='noteheads.u1re' unicode='' horiz-adv-x='2.61'/>
         <bbox left='0' top='-0.83984375' width='2.6015625' height='1.6796875' right='2.6015625' bottom='0.83984375' xmlns=''/>
       </metadata>
       <path d='M44 69v-33c0 -63 62 -105 130 -105s130 42 130 105v33h-260zM0 91c0 12 10 21 22 21h304c12 0 21 -9 21 -21v-55c0 -87 -81 -148 -173 -148s-174 61 -174 148v55z'/>
     </g>
-    <g id='notehead.dwsemicircle' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='notehead.dwsemicircle' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='noteheads.s0re' unicode='' horiz-adv-x='3.7199999999999998'/>
         <bbox left='0' top='-0.83984375' width='3.7109375' height='1.6796875' right='3.7109375' bottom='0.83984375' xmlns=''/>
       </metadata>
       <path d='M44 69v-33c0 -84 106 -105 204 -105s203 21 203 105v33h-407zM0 91c0 12 10 21 22 21h451c12 0 22 -9 22 -21v-55c0 -106 -125 -148 -247 -148s-248 42 -248 148v55z'/>
     </g>
-    <g id='notehead.x' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='notehead.x' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='noteheads.s2cross' unicode='' horiz-adv-x='2.475'/>
         <bbox left='0' top='-1.03515625' width='2.46875' height='2.0703125' right='2.46875' bottom='1.03515625' xmlns=''/>
       </metadata>
       <path d='M165 36l120 98c3 2 6 4 9 4s7 -2 10 -4l20 -16c3 -3 5 -8 5 -12s-2 -8 -5 -11l-116 -95l116 -95c3 -3 5 -7 5 -11s-2 -9 -5 -12l-20 -16c-3 -2 -7 -4 -10 -4s-6 2 -9 4l-120 98l-121 -98c-3 -2 -6 -4 -9 -4s-7 2 -10 4l-20 16c-3 3 -5 8 -5 12s2 8 5 11l116 95l-116 95 c-3 3 -5 7 -5 11s2 9 5 12l20 16c3 2 7 4 10 4s6 -2 9 -4z'/>
     </g>
-    <g id='notehead.circlex' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='notehead.circlex' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='noteheads.s2xcircle' unicode='' horiz-adv-x='2.94'/>
         <bbox left='0' top='-1.296875' width='2.93359375' height='2.59375' right='2.93359375' bottom='1.296875' xmlns=''/>
       </metadata>
       <path d='M196 173c101 0 195 -74 195 -173s-94 -173 -195 -173s-196 74 -196 173s95 173 196 173zM196 24l96 84c-28 18 -61 28 -96 28s-69 -10 -97 -28zM168 0l-97 85c-22 -24 -35 -54 -35 -85s13 -61 35 -85zM223 0l98 -85c22 24 34 54 34 85s-12 61 -34 85zM196 -24l-97 -84 c28 -18 62 -28 97 -28s68 10 96 28z'/>
     </g>
-    <g id='rest.long' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='rest.long' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='rests.M2' unicode='' horiz-adv-x='1.125'/>
         <bbox left='0' top='-1.875' width='1.125' height='3.75' right='1.125' bottom='1.875' xmlns=''/>
       </metadata>
       <path d='M140 -250h-130c-6 0 -10 4 -10 10v480c0 6 4 10 10 10h130c6 0 10 -4 10 -10v-480c0 -6 -4 -10 -10 -10z'/>
     </g>
-    <g id='rest.breve' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='rest.breve' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='rests.M1' unicode='' horiz-adv-x='1.125'/>
         <bbox left='0' top='-1.875' width='1.125' height='1.875' right='1.125' bottom='0' xmlns=''/>
       </metadata>
       <path d='M140 0h-130c-6 0 -10 4 -10 10v230c0 6 4 10 10 10h130c6 0 10 -4 10 -10v-230c0 -6 -4 -10 -10 -10z'/>
     </g>
-    <g id='rest.1' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='rest.1' transform='translate(0,-2)scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='rests.0' unicode='' horiz-adv-x='2.82'/>
-        <bbox left='0' top='0' width='2.8125' height='1.171875' right='2.8125' bottom='1.171875' xmlns=''/>
+        <bbox left='0' top='-2' width='2.8125' height='1.171875' right='2.8125' bottom='-0.828125' xmlns=''/>
       </metadata>
       <path d='M365 -156h-355c-6 0 -10 4 -10 10v136c0 6 4 10 10 10h355c6 0 10 -4 10 -10v-136c0 -6 -4 -10 -10 -10z'/>
     </g>
-    <g id='rest.2' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='rest.2' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='rests.1o' unicode='' horiz-adv-x='2.82'/>
         <bbox left='-1.171875' top='-1.171875' width='5.15625' height='1.359375' right='3.984375' bottom='0.1875' xmlns=''/>
       </metadata>
       <path d='M506 -25h-637c-14 0 -25 11 -25 25s11 25 25 25h131v121c0 6 4 10 10 10h355c6 0 10 -4 10 -10v-121h131c14 0 25 -11 25 -25s-11 -25 -25 -25z'/>
     </g>
-    <g id='rest.4' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='rest.4' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='rests.2' unicode='' horiz-adv-x='1.785'/>
         <bbox left='-0.171875' top='-2.96875' width='1.99609375' height='5.3671875' right='1.82421875' bottom='2.3984375' xmlns=''/>
       </metadata>
       <path d='M-23 -116c0 28 11 42 40 42c33 0 78 -13 119 -31l-132 158c-7 9 -10 17 -10 25c0 34 50 66 87 99c25 22 37 52 37 83c0 24 -8 49 -25 69l-35 42c-3 3 -4 7 -4 10c0 9 9 15 17 15c4 0 8 -1 11 -5l151 -180c7 -9 10 -17 10 -25c0 -34 -50 -66 -87 -99 c-25 -22 -37 -52 -37 -83c0 -24 7 -49 24 -69l84 -99c3 -3 4 -7 4 -10c0 -9 -8 -16 -16 -16c-4 0 -9 2 -12 6c-18 21 -63 38 -97 38c-41 0 -53 -26 -53 -67c0 -35 11 -74 28 -94c5 -6 0 -13 -6 -13c-2 0 -4 0 -6 2c-45 54 -92 148 -92 202z'/>
     </g>
-    <g id='rest.8' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='rest.8' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='rests.3' unicode='' horiz-adv-x='1.875'/>
         <bbox left='-0.0234375' top='-1.5390625' width='1.8984375' height='3.48828125' right='1.875' bottom='1.94921875' xmlns=''/>
       </metadata>
       <path d='M72 -250l117 326c-34 -12 -69 -22 -105 -22c-46 0 -87 33 -87 79c0 40 33 72 73 72c25 0 48 -15 56 -39c10 -28 6 -59 35 -59c16 0 54 48 61 63c6 12 23 12 28 0l-123 -420c-8 -7 -17 -10 -27 -10s-20 3 -28 10z'/>
     </g>
-    <g id='rest.16' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='rest.16' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='rests.4' unicode='' horiz-adv-x='2.2575'/>
         <bbox left='-0.1953125' top='-1.5390625' width='2.4453125' height='5.36328125' right='2.25' bottom='3.82421875' xmlns=''/>
       </metadata>
       <path d='M66 -500l101 327c-34 -12 -70 -23 -106 -23c-46 0 -87 33 -87 79c0 40 32 72 72 72c25 0 49 -15 57 -39c10 -28 5 -59 34 -59c16 0 55 51 60 68l46 151c-34 -12 -68 -22 -104 -22c-46 0 -87 33 -87 79c0 40 33 72 73 72c25 0 48 -15 56 -39c10 -28 5 -59 34 -59 c15 0 50 49 57 63c6 12 23 12 28 0l-179 -670c-8 -7 -17 -10 -27 -10s-20 3 -28 10z'/>
     </g>
-    <g id='rest.32' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='rest.32' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='rests.5' unicode='' horiz-adv-x='2.445'/>
         <bbox left='-0.4140625' top='-3.4140625' width='2.8515625' height='7.23828125' right='2.4375' bottom='3.82421875' xmlns=''/>
       </metadata>
       <path d='M54 -500l86 327c-35 -13 -71 -23 -108 -23c-46 0 -87 33 -87 79c0 40 32 72 72 72c25 0 49 -15 57 -39c10 -28 5 -59 34 -59c17 0 54 54 59 71l39 149c-34 -12 -70 -23 -106 -23c-46 0 -87 33 -87 79c0 40 33 72 73 72c25 0 48 -15 56 -39c10 -28 5 -59 34 -59 c16 0 52 51 56 68l40 151c-33 -12 -68 -22 -103 -22c-46 0 -87 33 -87 79c0 40 32 72 72 72c25 0 49 -15 57 -39c10 -28 5 -59 34 -59c15 0 46 49 52 63c6 12 23 12 28 0l-216 -920c-8 -7 -18 -10 -28 -10s-19 3 -27 10z'/>
     </g>
-    <g id='rest.64' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='rest.64' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='rests.6' unicode='' horiz-adv-x='2.6325'/>
         <bbox left='-0.50390625' top='-3.4140625' width='3.12890625' height='9.11328125' right='2.625' bottom='5.69921875' xmlns=''/>
       </metadata>
       <path d='M60 -750l73 328c-36 -13 -74 -24 -113 -24c-46 0 -87 33 -87 79c0 40 33 72 73 72c25 0 48 -15 56 -39c10 -28 5 -59 34 -59c17 0 56 55 60 73l33 147c-35 -13 -71 -23 -109 -23c-46 0 -87 33 -87 79c0 40 32 72 72 72c25 0 49 -15 57 -39c10 -28 5 -59 34 -59 c16 0 51 54 55 71l34 149c-34 -12 -70 -23 -106 -23c-46 0 -87 33 -87 79c0 40 33 72 73 72c25 0 48 -15 56 -39c10 -28 5 -59 34 -59c15 0 48 52 52 68l34 151c-33 -12 -67 -22 -102 -22c-46 0 -87 33 -87 79c0 40 32 72 72 72c25 0 49 -15 57 -39c10 -28 5 -59 34 -59 c14 0 41 49 47 63c5 12 23 12 28 0l-235 -1170c-8 -7 -18 -10 -28 -10s-19 3 -27 10z'/>
     </g>
-    <g id='rest.128' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='rest.128' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='rests.7' unicode='' horiz-adv-x='2.82'/>
         <bbox left='-0.44921875' top='-5.2890625' width='3.26171875' height='10.98828125' right='2.8125' bottom='5.69921875' xmlns=''/>
       </metadata>
       <path d='M83 -750l61 329c-38 -14 -77 -25 -117 -25c-46 0 -87 33 -87 79c0 40 32 72 72 72c25 0 49 -15 57 -39c10 -28 5 -59 34 -59c18 0 57 57 60 76l27 145c-37 -13 -74 -24 -113 -24c-46 0 -87 33 -87 79c0 40 32 72 72 72c25 0 49 -15 57 -39c10 -28 5 -59 34 -59 c17 0 53 55 56 73l27 147c-35 -13 -71 -23 -108 -23c-46 0 -87 33 -87 79c0 40 32 72 72 72c25 0 49 -15 57 -39c10 -28 5 -59 34 -59c16 0 48 54 51 71l28 148c-34 -12 -69 -22 -105 -22c-46 0 -87 33 -87 79c0 40 32 72 72 72c25 0 49 -15 57 -39c10 -28 5 -59 34 -59 c15 0 44 52 47 68l28 151c-32 -12 -66 -22 -100 -22c-46 0 -87 33 -87 79c0 40 32 72 72 72c25 0 49 -15 57 -39c10 -28 5 -59 34 -59c25 0 33 78 60 72c5 -1 8 -4 10 -9l-237 -1420c-8 -7 -18 -10 -28 -10s-19 3 -27 10z'/>
     </g>
-    <g id='flags.-1' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='flags.-1' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='flags.u3' unicode='' horiz-adv-x='1.6949999999999998'/>
         <bbox left='-0.12109375' top='0' width='1.6875' height='5.640625' right='1.56640625' bottom='5.640625' xmlns=''/>
       </metadata>
       <path d='M-16 -250v250h16c0 -198 209 -335 209 -533c0 -71 -16 -141 -42 -207c-5 -8 -12 -12 -19 -12c-13 0 -26 11 -23 27c26 61 42 126 42 192c0 104 -95 208 -167 283h-16z'/>
     </g>
-    <g id='flags.-2' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='flags.-2' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='flags.u4' unicode='' horiz-adv-x='1.6949999999999998'/>
         <bbox left='-0.12109375' top='0' width='1.6875' height='6.578125' right='1.56640625' bottom='6.578125' xmlns=''/>
       </metadata>
       <path d='M0 0c0 -178 203 -292 203 -470c0 -33 -9 -65 -23 -95c18 -37 29 -75 29 -117c0 -63 -16 -125 -42 -183c-5 -8 -12 -12 -19 -12c-13 0 -26 11 -23 27c26 52 42 110 42 168c0 97 -95 191 -167 257v-75h-16v500h16zM153 -517c5 15 7 31 7 47c0 96 -91 190 -160 257 c0 -118 91 -206 153 -304z'/>
     </g>
-    <g id='flags.-3' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='flags.-3' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='flags.u5' unicode='' horiz-adv-x='1.5675'/>
         <bbox left='-0.12109375' top='0' width='1.6875' height='8.0546875' right='1.56640625' bottom='8.0546875' xmlns=''/>
       </metadata>
       <path d='M0 -212v-5c0 -112 86 -197 146 -290c3 11 4 22 4 33c0 95 -85 192 -150 262zM0 0c0 -177 193 -297 193 -474c0 -28 -7 -56 -19 -82c17 -35 29 -72 29 -113c0 -36 -9 -71 -24 -104c18 -35 30 -73 30 -114c0 -61 -16 -120 -42 -175c-5 -8 -12 -12 -19 -12 c-13 0 -26 11 -23 27c26 50 42 104 42 160c0 93 -95 180 -167 240v-103h-16v750h16zM0 -430v-5c0 -114 89 -197 151 -290c6 18 9 37 9 56c0 92 -91 178 -160 239z'/>
     </g>
-    <g id='flags.-4' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='flags.-4' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='flags.u6' unicode='' horiz-adv-x='1.5675'/>
         <bbox left='-0.12109375' top='0' width='1.6875' height='9.9296875' right='1.56640625' bottom='9.9296875' xmlns=''/>
       </metadata>
       <path d='M0 -212v-13c0 -114 86 -200 146 -294c3 12 4 24 4 37c0 97 -85 198 -150 270zM0 0c0 -179 193 -303 193 -482c0 -30 -7 -59 -19 -87c17 -36 29 -74 29 -115c0 -39 -11 -77 -29 -111c17 -36 29 -73 29 -114c0 -33 -14 -64 -35 -89c24 -42 41 -86 41 -136 c0 -62 -16 -123 -42 -179c-5 -8 -12 -11 -19 -11c-13 0 -26 11 -23 27c26 51 42 106 42 163c0 95 -95 184 -167 247v-113h-16v1000h16zM0 -437v-13c0 -115 88 -202 148 -298c8 20 12 42 12 64c0 93 -91 184 -160 247zM0 -662v-13c0 -111 84 -195 145 -286c10 15 15 33 15 52 c0 93 -91 184 -160 247z'/>
     </g>
-    <g id='flags.-5' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='flags.-5' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='flags.u7' unicode='' horiz-adv-x='1.5675'/>
         <bbox left='-0.12109375' top='0' width='1.6875' height='11.8046875' right='1.56640625' bottom='11.8046875' xmlns=''/>
       </metadata>
       <path d='M0 -213v-19c0 -112 85 -198 145 -291c4 14 5 30 5 45c0 96 -85 194 -150 265zM0 0c0 -178 193 -300 193 -478c0 -33 -7 -65 -19 -96c17 -36 29 -73 29 -114s-11 -82 -29 -119c17 -35 29 -72 29 -113s-11 -82 -29 -119c17 -35 29 -73 29 -114c0 -35 -14 -69 -35 -97 c24 -42 41 -85 41 -135c0 -61 -16 -122 -42 -178c-5 -8 -12 -11 -19 -11c-13 0 -26 11 -23 27c26 50 42 106 42 162c0 94 -95 182 -167 243v-108h-16v1250h16zM0 -445v-20c0 -114 87 -200 147 -294c8 23 13 47 13 71c0 93 -91 181 -160 243zM0 -677v-20 c0 -114 87 -200 147 -294c8 23 13 47 13 71c0 93 -91 181 -160 243zM0 -910v-20c0 -110 83 -193 144 -282c11 18 16 38 16 59c0 93 -91 181 -160 243z'/>
     </g>
-    <g id='flags.1' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='flags.1' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='flags.d3' unicode='' horiz-adv-x='2.025'/>
         <bbox left='-0.12109375' top='-5.4296875' width='2.13671875' height='5.4296875' right='2.015625' bottom='0' xmlns=''/>
       </metadata>
       <path d='M0 250c98 60 227 151 227 263c0 65 -21 128 -54 184c-3 16 10 27 23 27c7 0 14 -3 19 -11c33 -61 54 -130 54 -200c0 -205 -269 -308 -269 -513h-16v250h16z'/>
     </g>
-    <g id='flags.2' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='flags.2' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='flags.d4' unicode='' horiz-adv-x='2.025'/>
         <bbox left='-0.12109375' top='-5.640625' width='2.13671875' height='5.640625' right='2.015625' bottom='0' xmlns=''/>
       </metadata>
       <path d='M0 200c92 53 214 134 214 238c0 24 -5 48 -14 70c-80 -89 -200 -160 -200 -283v-25zM269 663c0 -44 -15 -82 -38 -116c16 -34 25 -71 25 -109c0 -181 -256 -257 -256 -438h-16v500h16v-75c98 51 227 131 227 238c0 21 -6 42 -14 62c-3 16 10 27 23 27c30 0 33 -63 33 -89 z'/>
     </g>
-    <g id='flags.3' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='flags.3' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='flags.d5' unicode='' horiz-adv-x='2.025'/>
         <bbox left='-0.12109375' top='-7.3046875' width='2.13671875' height='7.3046875' right='2.015625' bottom='0' xmlns=''/>
       </metadata>
       <path d='M0 210c89 58 206 143 206 247c0 18 -4 36 -11 52c-77 -89 -195 -162 -195 -284v-15zM269 886c0 -44 -15 -81 -38 -115c19 -34 30 -71 30 -110c0 -43 -15 -80 -37 -114c15 -28 24 -59 24 -90c0 -185 -248 -272 -248 -457h-16v750h16v-90c98 46 227 122 227 226 c0 21 -6 42 -14 61c-3 16 10 27 23 27c29 0 33 -63 33 -88zM0 435c94 47 219 124 219 226c0 26 -7 50 -18 73c-80 -89 -201 -160 -201 -284v-15z'/>
     </g>
-    <g id='flags.4' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='flags.4' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='flags.d6' unicode='' horiz-adv-x='2.025'/>
         <bbox left='-0.12109375' top='-8.2421875' width='2.13671875' height='8.2421875' right='2.015625' bottom='0' xmlns=''/>
       </metadata>
       <path d='M269 1026c0 -27 -7 -51 -19 -72c7 -27 11 -55 11 -83c0 -30 -7 -57 -19 -81c7 -34 11 -68 11 -102c0 -37 -9 -70 -25 -101c2 -32 3 -65 3 -97c0 -188 -231 -297 -231 -485v-5h-16v1000h16v-125c99 16 227 60 227 151c0 17 -6 34 -6 51c0 14 11 22 23 22 c27 0 25 -48 25 -73zM0 205c81 73 188 176 188 285v36c-75 -96 -188 -176 -188 -301v-20zM0 425c91 62 211 155 211 263c0 17 -2 33 -4 50c-76 -93 -207 -162 -207 -288v-25zM0 650c94 46 219 120 219 221c0 14 -1 27 -4 41c-79 -75 -215 -120 -215 -237v-25z'/>
     </g>
-    <g id='flags.5' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='flags.5' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='flags.d7' unicode='' horiz-adv-x='2.025'/>
         <bbox left='-0.12109375' top='-9.9296875' width='2.13671875' height='9.9296875' right='2.015625' bottom='0' xmlns=''/>
       </metadata>
       <path d='M269 1251c0 -27 -7 -51 -19 -72c7 -27 11 -55 11 -83c0 -30 -7 -57 -19 -81c7 -34 11 -68 11 -102c0 -37 -9 -70 -25 -101c2 -32 3 -65 3 -97c0 -37 -10 -71 -24 -103c2 -31 3 -62 3 -93c0 -191 -210 -319 -210 -510v-9h-16v1250h16v-150c99 16 227 60 227 151 c0 17 -6 34 -6 51c0 14 11 22 23 22c27 0 25 -48 25 -73zM0 209c72 84 168 199 168 310c0 8 -1 15 -1 23c-68 -100 -167 -189 -167 -312v-21zM0 430c81 73 188 176 188 285v36c-75 -96 -188 -176 -188 -301v-20zM0 650c91 62 211 155 211 263c0 17 -2 33 -4 50 c-76 -93 -207 -162 -207 -288v-25zM0 875c94 46 219 120 219 221c0 14 -1 27 -4 41c-79 -75 -215 -120 -215 -237v-25z'/>
     </g>
-    <g id='accidental.s' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='accidental.s' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='accidentals.sharp' unicode='' horiz-adv-x='2.07'/>
         <bbox left='0' top='-2.8125' width='2.0625' height='5.625' right='2.0625' bottom='2.8125' xmlns=''/>
       </metadata>
       <path d='M216 -312c0 -10 -8 -19 -18 -19s-19 9 -19 19v145l-83 -31v-158c0 -10 -9 -19 -19 -19s-18 9 -18 19v145l-32 -12c-2 -1 -5 -1 -7 -1c-11 0 -20 9 -20 20v60c0 8 5 16 13 19l46 16v160l-32 -11c-2 -1 -5 -1 -7 -1c-11 0 -20 9 -20 20v60c0 8 5 15 13 18l46 17v158 c0 10 8 19 18 19s19 -9 19 -19v-145l83 31v158c0 10 9 19 19 19s18 -9 18 -19v-145l32 12c2 1 5 1 7 1c11 0 20 -9 20 -20v-60c0 -8 -5 -16 -13 -19l-46 -16v-160l32 11c2 1 5 1 7 1c11 0 20 -9 20 -20v-60c0 -8 -5 -15 -13 -18l-46 -17v-158zM179 95l-83 -30v-160l83 30 v160z'/>
     </g>
-    <g id='accidental.f' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='accidental.f' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='accidentals.flat' unicode=''/>
         <bbox left='-0.203125' top='-3.48828125' width='1.703125' height='4.7109375' right='1.5' bottom='1.22265625' xmlns=''/>
       </metadata>
       <path d='M27 41l-1 -66v-11c0 -22 1 -44 4 -66c45 38 93 80 93 139c0 33 -14 67 -43 67c-31 0 -52 -30 -53 -63zM-15 -138l-12 595c8 5 18 8 27 8s19 -3 27 -8l-7 -345c25 21 58 34 91 34c52 0 89 -48 89 -102c0 -80 -86 -117 -147 -169c-15 -13 -24 -38 -45 -38 c-13 0 -23 11 -23 25z'/>
     </g>
-    <g id='accidental.x' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='accidental.x' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='accidentals.doublesharp' unicode='' horiz-adv-x='1.875'/>
         <bbox left='-0.07421875' top='-1.01171875' width='2.0234375' height='2.0234375' right='1.94921875' bottom='1.01171875' xmlns=''/>
       </metadata>
       <path d='M152 0c23 -23 56 -28 89 -28c6 0 10 -4 10 -10l9 -87c1 -5 -4 -10 -9 -10h-1l-87 9c-5 1 -10 5 -10 10c0 33 -5 66 -28 89c-23 -23 -28 -56 -28 -89c0 -5 -4 -9 -9 -10l-88 -9h-1c-5 0 -10 5 -9 10l9 87c0 6 4 10 10 10c33 0 66 5 89 28c-23 23 -56 28 -89 28 c-6 0 -10 4 -10 10l-9 87c-1 5 4 10 9 10h1l88 -9c5 -1 9 -5 9 -10c0 -33 5 -66 28 -89c23 23 28 56 28 89c0 5 5 9 10 10l87 9h1c5 0 10 -5 9 -10l-9 -87c0 -6 -4 -10 -10 -10c-33 0 -66 -5 -89 -28z'/>
     </g>
-    <g id='accidental.ff' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='accidental.ff' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='accidentals.flatflat' unicode='' horiz-adv-x='2.7224999999999997'/>
         <bbox left='-0.203125' top='-3.48828125' width='2.91796875' height='4.7109375' right='2.71484375' bottom='1.22265625' xmlns=''/>
       </metadata>
       <path d='M190 41l-1 -66c0 -4 -1 -7 -1 -11c0 -22 1 -44 4 -66c44 37 87 82 87 139c0 33 -11 67 -40 67c-30 0 -48 -30 -49 -63zM147 -138l-2 106c-27 -34 -66 -62 -98 -93c-13 -13 -19 -38 -39 -38c-13 0 -23 11 -23 25l-12 595c8 5 18 8 27 8s19 -3 27 -8l-7 -345 c17 21 43 34 70 34c20 0 38 -8 52 -21l-7 332c8 5 18 8 27 8s19 -3 27 -8l-6 -345c24 21 55 34 87 34c53 0 92 -47 92 -101c0 -80 -86 -118 -147 -170c-15 -13 -23 -38 -44 -38c-13 0 -24 11 -24 25zM17 -26v-10c0 -23 1 -45 4 -68c39 38 71 86 71 141c0 32 -6 67 -33 67 c-28 0 -39 -32 -40 -63z'/>
     </g>
-    <g id='accidental.n' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='accidental.n' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='accidentals.natural' unicode='' horiz-adv-x='1.2525'/>
         <bbox left='-0.05859375' top='-2.86328125' width='1.36328125' height='5.7265625' right='1.3046875' bottom='2.86328125' xmlns=''/>
       </metadata>
       <path d='M-8 375c8 4 17 7 26 7s17 -3 25 -7l-3 -183l106 20h3c10 0 18 -7 18 -17l7 -570c-8 -4 -16 -7 -25 -7s-17 3 -25 7l3 183l-106 -20h-3c-10 0 -18 7 -18 17zM128 -95l3 207l-92 -17l-3 -207z'/>
     </g>
-    <g id='accidental.su' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='accidental.su' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='accidentals.sharp.arrowup' unicode='' horiz-adv-x='2.07'/>
         <bbox left='0' top='-4.9140625' width='2.40625' height='7.7265625' right='2.40625' bottom='2.8125' xmlns=''/>
       </metadata>
       <path d='M216 -312c0 -10 -8 -19 -18 -19s-19 9 -19 19v145l-83 -31v-158c0 -10 -9 -19 -19 -19s-18 9 -18 19v145l-32 -12c-2 -1 -5 -1 -7 -1c-11 0 -20 9 -20 20v60c0 8 5 16 13 19l46 16v160l-32 -11c-2 -1 -5 -1 -7 -1c-11 0 -20 9 -20 20v60c0 8 5 15 13 18l46 17v158 c0 10 8 19 18 19s19 -9 19 -19v-145l83 31v224c0 13 -6 18 -14 18c-17 0 -48 -22 -76 -38c-9 -5 -19 5 -13 14c50 71 81 153 114 234c1 3 5 5 8 5s6 -2 7 -5c33 -81 64 -163 114 -234c1 -2 2 -3 2 -5c0 -7 -7 -13 -14 -9c-28 16 -60 38 -77 38c-8 0 -14 -5 -14 -18v-211 l32 12c2 1 5 1 7 1c11 0 20 -9 20 -20v-60c0 -8 -5 -16 -13 -19l-46 -16v-160l32 11c2 1 5 1 7 1c11 0 20 -9 20 -20v-60c0 -8 -5 -15 -13 -18l-46 -17v-158zM179 95l-83 -30v-160l83 30v160z'/>
     </g>
-    <g id='accidental.sd' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='accidental.sd' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='accidentals.sharp.arrowdown' unicode='' horiz-adv-x='2.07'/>
         <bbox left='-0.34375' top='-2.8125' width='2.40625' height='7.7265625' right='2.0625' bottom='4.9140625' xmlns=''/>
       </metadata>
       <path d='M216 -312c0 -10 -8 -19 -18 -19s-19 9 -19 19v145l-83 -31v-224c0 -13 6 -18 14 -18c17 0 48 22 76 38c9 5 19 -5 13 -14c-50 -71 -81 -153 -114 -234c-1 -3 -5 -5 -8 -5s-6 2 -7 5c-33 81 -64 163 -114 234c-1 2 -2 3 -2 5c0 7 7 13 14 9c28 -16 60 -38 77 -38 c8 0 14 5 14 18v211l-32 -12c-2 -1 -5 -1 -7 -1c-11 0 -20 9 -20 20v60c0 8 5 16 13 19l46 16v160l-32 -11c-2 -1 -5 -1 -7 -1c-11 0 -20 9 -20 20v60c0 8 5 15 13 18l46 17v158c0 10 8 19 18 19s19 -9 19 -19v-145l83 31v158c0 10 9 19 19 19s18 -9 18 -19v-145l32 12 c2 1 5 1 7 1c11 0 20 -9 20 -20v-60c0 -8 -5 -16 -13 -19l-46 -16v-160l32 11c2 1 5 1 7 1c11 0 20 -9 20 -20v-60c0 -8 -5 -15 -13 -18l-46 -17v-158zM179 95l-83 -30v-160l83 30v160z'/>
     </g>
-    <g id='accidental.fu' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='accidental.fu' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='accidentals.flat.arrowup' unicode=''/>
         <bbox left='-0.96875' top='-4.921875' width='2.46875' height='6.14453125' right='1.5' bottom='1.22265625' xmlns=''/>
       </metadata>
       <path d='M27 41l-1 -66v-11c0 -22 1 -44 4 -66c45 38 93 80 93 139c0 33 -14 67 -43 67c-31 0 -52 -30 -53 -63zM-15 -138l-8 562c0 13 -5 18 -13 18c-17 0 -48 -23 -76 -39c-8 -5 -17 2 -17 10c0 2 1 4 2 6c50 71 86 151 118 231c2 4 5 6 9 6s7 -2 9 -6c32 -80 68 -160 118 -231 c7 -10 -4 -22 -15 -16c-28 16 -59 39 -76 39c-8 0 -13 -5 -13 -18l-5 -312c26 21 59 34 93 34c52 0 89 -48 89 -102c0 -80 -86 -117 -147 -169c-15 -13 -24 -38 -45 -38c-13 0 -23 11 -23 25z'/>
     </g>
-    <g id='accidental.fd' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='accidental.fd' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='accidentals.flat.arrowdown' unicode=''/>
         <bbox left='-0.890625' top='-3.48828125' width='2.390625' height='7.45703125' right='1.5' bottom='3.96875' xmlns=''/>
       </metadata>
       <path d='M27 41l-1 -66v-11c0 -22 1 -44 4 -66c45 38 93 80 93 139c0 33 -14 67 -43 67c-31 0 -52 -30 -53 -63zM18 -175v-121c0 -13 5 -18 14 -18c17 0 49 21 77 37c8 5 16 -5 11 -13c-50 -72 -79 -154 -112 -235c-1 -3 -4 -4 -7 -4s-5 1 -6 4c-33 81 -62 163 -112 235 c-1 2 -2 3 -2 5c0 6 7 12 13 8c28 -16 60 -37 77 -37c9 0 14 5 14 18v158l-12 595c8 5 18 8 27 8s19 -3 27 -8l-7 -345c25 21 58 34 91 34c52 0 89 -48 89 -102c0 -80 -86 -117 -147 -169c-16 -14 -35 -29 -35 -50z'/>
     </g>
-    <g id='accidental.nu' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='accidental.nu' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='accidentals.natural.arrowup' unicode='' horiz-adv-x='1.2525'/>
         <bbox left='-0.82421875' top='-4.921875' width='2.12890625' height='7.78515625' right='1.3046875' bottom='2.86328125' xmlns=''/>
       </metadata>
       <path d='M146 212h3c10 0 18 -7 18 -17l7 -570c-8 -4 -16 -7 -25 -7s-17 3 -25 7l3 183l-106 -20h-3c-10 0 -18 7 -18 17l-4 619c0 13 -5 18 -13 18c-17 0 -49 -23 -77 -39c-8 -5 -16 1 -16 9c0 2 1 5 2 7c50 71 85 151 117 231c2 4 6 6 9 6s6 -2 8 -6c32 -80 67 -160 117 -231 c7 -10 -4 -22 -14 -16c-28 16 -60 39 -77 39c-8 0 -13 -5 -13 -18l-1 -232zM128 -95l3 207l-94 -17l-1 -208z'/>
     </g>
-    <g id='accidental.nd' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='accidental.nd' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='accidentals.natural.arrowdown' unicode='' horiz-adv-x='1.2525'/>
         <bbox left='-0.05859375' top='-2.86328125' width='2.13671875' height='7.78515625' right='2.078125' bottom='4.921875' xmlns=''/>
       </metadata>
       <path d='M-8 375c8 4 17 7 26 7s17 -3 25 -7l-3 -183l106 20h3c10 0 18 -7 18 -17l4 -619c0 -13 5 -18 13 -18c17 0 48 23 76 39c8 5 17 -1 17 -9c0 -2 -1 -5 -2 -7c-50 -71 -85 -151 -117 -231c-2 -4 -6 -6 -9 -6s-6 2 -8 6c-32 80 -67 160 -117 231c-7 10 4 22 14 16 c28 -16 60 -39 77 -39c8 0 13 5 13 18l1 232l-108 -20h-3c-10 0 -18 7 -18 17zM130 -95l1 208l-92 -18l-3 -207z'/>
     </g>
-    <g id='metersymbol.common' transform='translate(0,-2)scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='metersymbol.common' transform='translate(0,-2)scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='timesig.C44' unicode='' horiz-adv-x='3.195'/>
         <bbox left='0' top='-3.96484375' width='3.24609375' height='3.9375' right='3.24609375' bottom='-0.02734375' xmlns=''/>
       </metadata>
       <path d='M359 27c-49 0 -75 42 -75 75c0 38 27 77 72 77c4 0 9 0 14 -1c-28 37 -72 59 -120 59c-106 0 -113 -73 -113 -186v-51v-51c0 -113 7 -187 113 -187c80 0 139 70 158 151c2 7 7 10 12 10c6 0 13 -4 13 -12c0 -94 -105 -174 -183 -174c-68 0 -137 21 -184 70 c-49 51 -66 122 -66 193s17 142 66 193c47 49 116 69 184 69c87 0 160 -64 175 -150c1 -5 1 -9 1 -13c0 -40 -30 -72 -67 -72z'/>
     </g>
-    <g id='metersymbol.cut' transform='translate(0,-2)scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='metersymbol.cut' transform='translate(0,-2)scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='timesig.C22' unicode='' horiz-adv-x='3.195'/>
         <bbox left='0' top='-4.625' width='3.24609375' height='5.25' right='3.24609375' bottom='0.625' xmlns=''/>
       </metadata>
       <path d='M359 27c-49 0 -75 42 -75 75c0 38 27 77 72 77c4 0 9 0 14 -1c-28 37 -72 59 -120 59h-13v-474c4 0 9 -1 13 -1c80 0 139 70 158 151c2 7 7 10 12 10c6 0 13 -4 13 -12c0 -94 -105 -174 -183 -174c-4 0 -9 1 -13 1v-78c0 -6 -4 -10 -10 -10h-17c-6 0 -10 4 -10 10v81 c-51 8 -99 29 -134 66c-49 51 -66 122 -66 193s17 142 66 193c35 37 83 58 134 66v81c0 6 4 10 10 10h17c6 0 10 -4 10 -10v-78h13c87 0 160 -64 175 -150c1 -5 1 -9 1 -13c0 -40 -30 -72 -67 -72zM200 -230v460c-58 -22 -63 -87 -63 -179v-51v-51c0 -92 5 -157 63 -179z '/>
     </g>
-    <g id='ascii.0' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='ascii.0' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='zero' unicode='0' horiz-adv-x='2.76'/>
         <bbox left='0' top='-3.75' width='2.75390625' height='3.75' right='2.75390625' bottom='0' xmlns=''/>
       </metadata>
       <path d='M183 471c-61 0 -67 -88 -67 -166c0 -19 1 -38 1 -55s-1 -36 -1 -55c0 -78 6 -166 67 -166s67 88 67 166v55v55c0 78 -6 166 -67 166zM183 500c116 0 184 -123 184 -250s-68 -250 -184 -250s-183 123 -183 250s67 250 183 250z'/>
     </g>
-    <g id='ascii.1' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='ascii.1' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='one' unicode='1' horiz-adv-x='2.3925'/>
         <bbox left='-0.015625' top='-3.7734375' width='2.40234375' height='3.7734375' right='2.38671875' bottom='0' xmlns=''/>
       </metadata>
       <path d='M122 503c18 0 34 -16 53 -16c15 0 29 7 42 13c1 1 3 1 4 1c7 0 12 -7 12 -17v-367c0 -48 28 -94 73 -94c8 0 12 -5 12 -11s-4 -12 -12 -12c-44 0 -87 13 -131 13s-87 -13 -131 -13c-8 0 -12 6 -12 12s4 11 12 11c45 0 73 46 73 94v245c0 12 -9 19 -17 19 c-4 0 -8 -3 -10 -7l-64 -136c-3 -6 -7 -9 -12 -9c-8 0 -16 6 -16 14c0 2 1 5 2 7l117 250c1 2 3 3 5 3z'/>
     </g>
-    <g id='ascii.2' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='ascii.2' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='two' unicode='2' horiz-adv-x='2.76'/>
         <bbox left='0' top='-3.75' width='2.75390625' height='3.75' right='2.75390625' bottom='0' xmlns=''/>
       </metadata>
       <path d='M23 11c-1 -7 -6 -11 -11 -11c-6 0 -12 4 -12 11c0 175 235 165 235 344c0 60 -18 122 -70 122c-26 0 -51 -14 -51 -37c0 -27 35 -41 35 -68c0 -38 -30 -69 -68 -69s-69 31 -69 69c0 76 72 128 153 128c96 0 187 -56 187 -145c0 -153 -151 -159 -249 -220c9 2 17 3 26 3 c33 0 70 -11 105 -36c21 -15 46 -23 66 -23c21 0 39 9 44 29c2 6 6 9 11 9c6 0 12 -5 12 -12c0 -67 -90 -105 -138 -105c-36 0 -71 14 -96 44c-13 16 -31 22 -48 22c-30 0 -59 -20 -62 -55z'/>
     </g>
-    <g id='ascii.3' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='ascii.3' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='three' unicode='3' horiz-adv-x='2.505'/>
         <bbox left='0' top='-3.75' width='2.49609375' height='3.75' right='2.49609375' bottom='0' xmlns=''/>
       </metadata>
       <path d='M150 477c-29 0 -59 -8 -59 -33c0 -22 36 -25 36 -47c0 -32 -26 -58 -58 -58s-57 26 -57 58c0 65 67 103 138 103c91 0 169 -33 169 -114c0 -43 -4 -82 -42 -100c-9 -4 -14 -12 -14 -21s5 -18 14 -22c41 -19 56 -57 56 -103c0 -92 -79 -140 -179 -140 c-79 0 -154 42 -154 113c0 36 30 66 66 66s65 -30 65 -66c0 -25 -40 -28 -40 -53c0 -27 32 -37 63 -37c49 0 63 61 63 117v16c0 54 -2 94 -50 94h-80c-10 0 -14 8 -14 15s4 14 14 14h80c49 0 50 43 50 99v8c0 54 -18 91 -67 91z'/>
     </g>
-    <g id='ascii.4' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='ascii.4' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='four' unicode='4' horiz-adv-x='3.0075'/>
         <bbox left='-0.015625' top='-3.7578125' width='3.015625' height='3.7578125' right='3' bottom='0' xmlns=''/>
       </metadata>
       <path d='M204 307c22 14 44 29 60 50c11 15 19 33 27 50c2 4 5 6 9 6c6 0 13 -5 13 -14v-245h72c10 0 15 -7 15 -14s-5 -15 -15 -15h-72v-8c0 -48 27 -94 72 -94c8 0 12 -5 12 -11s-4 -12 -12 -12c-44 0 -87 13 -131 13s-87 -13 -131 -13c-8 0 -12 6 -12 12s4 11 12 11 c45 0 73 46 73 94v8h-167c-23 0 -31 14 -31 23c0 3 1 5 2 6c80 93 138 207 138 330c0 9 6 16 13 16h3c23 -7 47 -13 71 -13s48 6 71 13c2 1 3 1 5 1c11 0 18 -10 12 -17l-284 -330h167v131c0 8 1 17 8 22z'/>
     </g>
-    <g id='ascii.5' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='ascii.5' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='five' unicode='5' horiz-adv-x='2.5349999999999997'/>
         <bbox left='0' top='-3.75' width='2.6171875' height='3.75' right='2.6171875' bottom='0' xmlns=''/>
       </metadata>
       <path d='M46 500c46 -8 91 -13 137 -13s92 5 138 13h4c12 0 19 -10 13 -16c-68 -68 -166 -93 -263 -93c-9 0 -17 -8 -17 -17v-96c28 28 66 43 105 43c116 0 186 -51 186 -161c0 -94 -87 -160 -186 -160c-82 0 -163 39 -163 113c0 36 30 66 66 66s65 -30 65 -66 c0 -25 -40 -28 -40 -53c0 -30 37 -37 72 -37c57 0 70 71 70 137c0 63 -15 132 -70 132c-41 0 -84 -11 -107 -45c-3 -4 -8 -6 -12 -6c-8 0 -15 6 -15 15v228c0 9 7 16 15 16h2z'/>
     </g>
-    <g id='ascii.6' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='ascii.6' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='six' unicode='6' horiz-adv-x='2.5575'/>
         <bbox left='0' top='-3.75' width='2.55078125' height='3.75' right='2.55078125' bottom='0' xmlns=''/>
       </metadata>
       <path d='M170 256c-51 0 -53 -44 -53 -102v-14v-15c0 -58 2 -102 53 -102c57 0 61 51 61 117s-4 116 -61 116zM117 266c17 7 34 13 53 13c101 0 170 -44 170 -139s-69 -140 -170 -140c-112 0 -170 124 -170 250c0 128 72 250 190 250c71 0 138 -39 138 -103c0 -36 -29 -66 -65 -66 s-66 30 -66 66c0 24 39 25 39 49c0 20 -23 31 -46 31c-66 0 -75 -65 -75 -139c0 -24 2 -48 2 -72z'/>
     </g>
-    <g id='ascii.7' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='ascii.7' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='seven' unicode='7' horiz-adv-x='2.5349999999999997'/>
         <bbox left='0' top='-3.75' width='2.69921875' height='3.7734375' right='2.69921875' bottom='0.0234375' xmlns=''/>
       </metadata>
       <path d='M67 410c-31 0 -38 -43 -38 -70v-75c0 -10 -7 -15 -14 -15s-15 5 -15 15v220c0 10 8 15 15 15s14 -5 14 -15v-14c0 -9 12 -19 15 -15c21 29 48 44 78 44c29 0 58 -13 84 -39c12 -12 27 -17 43 -17c30 0 63 19 84 50c3 5 7 6 11 6c8 0 16 -6 16 -14c0 -3 -1 -6 -3 -9 c-83 -118 -158 -249 -158 -387c0 -25 3 -50 8 -76c2 -9 -5 -17 -13 -17c-1 0 -3 1 -4 1c-24 7 -48 15 -73 15s-50 -8 -74 -15c-1 0 -3 -1 -4 -1c-9 0 -16 9 -12 17c54 128 134 242 216 355c-20 -11 -40 -16 -59 -16c-22 0 -42 8 -60 26s-39 31 -57 31z'/>
     </g>
-    <g id='ascii.8' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='ascii.8' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='eight' unicode='8' horiz-adv-x='2.76'/>
         <bbox left='0' top='-3.75' width='2.7890625' height='3.75' right='2.7890625' bottom='0' xmlns=''/>
       </metadata>
       <path d='M259 288c27 29 49 62 49 102c0 55 -57 87 -117 87c-47 0 -75 -36 -75 -71c0 -20 10 -40 30 -52zM289 271c55 -31 83 -79 83 -127c0 -73 -66 -144 -189 -144c-94 0 -183 54 -183 140c0 50 39 85 76 120c-41 28 -61 67 -61 106c0 68 61 134 176 134c81 0 161 -38 161 -110 c0 -47 -30 -85 -63 -119zM106 242c-33 -29 -62 -59 -62 -102c0 -69 66 -117 139 -117c54 0 86 42 86 83c0 24 -10 48 -35 62z'/>
     </g>
-    <g id='ascii.9' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='ascii.9' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='nine' unicode='9' horiz-adv-x='2.5575'/>
         <bbox left='0' top='-3.75' width='2.55078125' height='3.75' right='2.55078125' bottom='0' xmlns=''/>
       </metadata>
       <path d='M170 244c51 0 53 44 53 102v14v15c0 58 -2 102 -53 102c-57 0 -61 -51 -61 -117s4 -116 61 -116zM223 234c-17 -7 -34 -13 -53 -13c-101 0 -170 44 -170 139s69 140 170 140c112 0 170 -124 170 -250c0 -128 -72 -250 -190 -250c-71 0 -138 39 -138 103c0 36 29 66 65 66 s66 -30 66 -66c0 -24 -39 -25 -39 -49c0 -20 23 -31 46 -31c66 0 75 65 75 139c0 24 -2 48 -2 72z'/>
     </g>
-    <g id='ascii.f' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='ascii.f' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='f' unicode='f' horiz-adv-x='2.415'/>
         <bbox left='-0.765625' top='-3.5546875' width='4.04296875' height='4.8515625' right='3.27734375' bottom='1.296875' xmlns=''/>
       </metadata>
       <path d='M253 245l-50 -163c-30 -99 -121 -255 -218 -255c-45 0 -87 27 -87 69c0 39 17 77 52 77c24 0 44 -20 44 -44c0 -30 -38 -24 -38 -54c0 -10 11 -11 23 -11h6c48 0 61 58 73 108l68 273h-49c-11 0 -19 8 -19 19s8 19 19 19h60c32 96 118 191 213 191c45 0 87 -27 87 -69 c0 -39 -17 -77 -52 -77c-24 0 -44 19 -44 43c0 30 38 25 38 55c0 10 -10 11 -22 11h-7c-62 0 -70 -88 -86 -154h55c11 0 19 -8 19 -19s-8 -19 -19 -19h-66z'/>
     </g>
-    <g id='ascii.p' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='ascii.p' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='p' unicode='p' horiz-adv-x='2.7375'/>
         <bbox left='-0.99609375' top='-2.19140625' width='3.671875' height='3.28515625' right='2.67578125' bottom='1.09375' xmlns=''/>
       </metadata>
       <path d='M233 243c-56 0 -102 -107 -102 -173c0 -22 8 -38 30 -38c64 0 97 126 97 178c0 18 -7 33 -25 33zM112 -146c-38 0 -78 5 -116 5c-39 0 -78 -5 -115 -5c-9 0 -14 7 -14 14c0 18 31 15 48 16c22 1 47 5 54 25l102 300c2 7 4 14 4 20c0 8 -2 14 -11 14 c-33 0 -63 -60 -79 -97c-5 -12 -15 -17 -24 -17c-8 0 -14 4 -14 12c0 2 1 5 2 8c30 68 72 143 132 143c35 0 59 -21 66 -52c29 31 67 52 103 52c69 0 107 -49 107 -114c0 -21 -4 -44 -12 -67c-20 -58 -91 -119 -147 -119c-27 0 -52 5 -73 17c-4 2 -7 3 -11 3 c-7 0 -14 -3 -16 -9l-29 -86c-1 -2 -1 -5 -1 -7c0 -20 21 -26 44 -28c9 -1 13 -8 13 -14c0 -7 -4 -14 -13 -14z'/>
     </g>
-    <g id='ascii.m' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='ascii.m' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='m' unicode='m' horiz-adv-x='3.2925'/>
         <bbox left='-0.32421875' top='-2.2421875' width='3.73046875' height='2.29296875' right='3.40625' bottom='0.05078125' xmlns=''/>
       </metadata>
       <path d='M-41 146c26 76 82 153 149 153c22 0 36 -20 41 -45c22 26 51 45 81 45c23 0 38 -21 44 -46c22 27 51 46 80 46c33 0 59 -35 59 -69c0 -5 -1 -10 -2 -15l-35 -149c0 -2 -1 -4 -1 -5c0 -5 2 -8 7 -8c9 0 27 11 48 31c4 4 9 6 13 6c6 0 11 -4 11 -10c0 -4 -3 -8 -7 -12 c-40 -38 -85 -75 -131 -75c-20 0 -32 13 -32 32c0 4 0 7 1 11l39 165c1 5 2 9 2 14c0 10 -4 18 -14 18c-16 0 -33 -16 -39 -32l-53 -183c-3 -10 -12 -18 -22 -18h-41c-10 0 -16 8 -13 18l52 183c2 6 3 11 3 16c0 9 -4 16 -13 16c-16 0 -35 -15 -41 -32l-62 -183 c-3 -10 -14 -18 -24 -18h-41c-10 0 -15 8 -12 18l63 183c2 5 2 10 2 15c0 10 -3 17 -13 17c-29 0 -54 -53 -66 -87c-4 -11 -15 -17 -23 -17c-7 0 -12 4 -12 11c0 2 1 4 2 6z'/>
     </g>
-    <g id='ascii.r' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='ascii.r' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='r' unicode='r' horiz-adv-x='1.6424999999999998'/>
         <bbox left='-0.2265625' top='-2.296875' width='2.37890625' height='2.296875' right='2.15234375' bottom='0' xmlns=''/>
       </metadata>
       <path d='M227 306c32 0 60 -13 60 -41c0 -24 -21 -47 -43 -47c-13 0 -24 5 -29 15c-7 13 -5 30 -25 30c-21 0 -52 -22 -58 -44l-52 -201c-3 -10 -12 -18 -22 -18h-40c-10 0 -16 8 -13 18l57 223c1 4 2 8 2 12c0 11 -4 20 -15 20c-20 0 -45 -31 -51 -54c-4 -7 -10 -10 -16 -10 c-7 0 -12 5 -12 12c0 3 1 6 3 9c12 44 52 75 97 75c29 0 52 -13 64 -35c28 23 62 36 93 36z'/>
     </g>
-    <g id='ascii.s' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='ascii.s' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='s' unicode='s' horiz-adv-x='1.5525'/>
         <bbox left='0.1640625' top='-2.19140625' width='1.64453125' height='2.19140625' right='1.80859375' bottom='0' xmlns=''/>
       </metadata>
       <path d='M180 216c0 10 9 19 9 29c0 13 -6 23 -18 23c-26 0 -47 -20 -47 -45c0 -17 16 -28 31 -37c33 -19 68 -42 68 -80c0 -61 -56 -106 -120 -106c-43 0 -81 28 -81 68c0 21 12 42 31 42c18 0 32 -14 32 -32c0 -13 -21 -16 -21 -29c0 -15 18 -22 35 -22c33 0 64 20 64 51 c0 57 -100 60 -100 117c0 54 45 97 99 97c56 0 79 -34 79 -62c0 -19 -11 -36 -30 -36c-18 0 -31 11 -31 22z'/>
     </g>
-    <g id='ascii.z' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='ascii.z' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='z' unicode='z' horiz-adv-x='2.145'/>
         <bbox left='0' top='-2.00390625' width='2.14453125' height='2.21484375' right='2.14453125' bottom='0.2109375' xmlns=''/>
       </metadata>
       <path d='M264 127c19 0 22 -45 22 -61c0 -52 -45 -94 -98 -94c-42 0 -73 39 -115 39c-8 0 -16 1 -24 1c-10 0 -19 -1 -26 -8c-3 -3 -6 -4 -9 -4c-7 0 -14 7 -14 14c0 3 1 7 4 10l186 176c-34 -6 -71 -5 -105 -11c-14 -2 -29 -7 -40 -7c-10 0 -17 4 -17 15c0 32 38 70 71 70 c32 0 62 -22 94 -22c8 0 15 -1 23 -1c11 0 22 1 30 9c3 3 7 4 10 4c7 0 14 -7 14 -14c0 -3 -2 -7 -5 -10l-177 -167h5c42 0 83 -11 125 -11c20 0 35 17 35 38c0 7 -4 14 -4 21c0 8 8 13 15 13z'/>
     </g>
-    <g id='ascii.plus' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='ascii.plus' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='plus' unicode='+' horiz-adv-x='1.875'/>
         <bbox left='0' top='-2.8125' width='1.875' height='1.875' right='1.875' bottom='-0.9375' xmlns=''/>
       </metadata>
       <path d='M125 125c-14 0 -25 11 -25 25v75h-75c-14 0 -25 11 -25 25s11 25 25 25h75v75c0 14 11 25 25 25s25 -11 25 -25v-75h75c14 0 25 -11 25 -25s-11 -25 -25 -25h-75v-75c0 -14 -11 -25 -25 -25z'/>
     </g>
-    <g id='ascii.period' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='ascii.period' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='period' unicode='.' horiz-adv-x='0.8624999999999999'/>
         <bbox left='0' top='-0.86328125' width='0.86328125' height='0.86328125' right='0.86328125' bottom='0' xmlns=''/>
       </metadata>
       <path d='M0 57c0 32 25 58 57 58s58 -26 58 -58s-26 -57 -58 -57s-57 25 -57 57z'/>
     </g>
-    <g id='articulation.acc' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='articulation.acc' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='scripts.sforzato' unicode='' horiz-adv-x='1.6875'/>
         <bbox left='-1.6875' top='-0.9375' width='3.375' height='1.875' right='1.6875' bottom='0.9375' xmlns=''/>
       </metadata>
       <path d='M-211 88c-8 2 -14 9 -14 18c0 10 9 19 19 19c2 0 3 -1 4 -1l408 -105c13 0 19 -6 19 -19s-6 -19 -19 -19l-408 -105c-1 0 -2 -1 -4 -1c-10 0 -19 9 -19 19c0 9 6 16 14 18l251 65l140 23l-140 23z'/>
     </g>
-    <g id='articulation.stacc' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='articulation.stacc' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='scripts.staccato' unicode='' horiz-adv-x='0.375'/>
         <bbox left='-0.375' top='-0.375' width='0.75' height='0.75' right='0.375' bottom='0.375' xmlns=''/>
       </metadata>
       <path d='M-50 0c0 28 22 50 50 50s50 -22 50 -50s-22 -50 -50 -50s-50 22 -50 50z'/>
     </g>
-    <g id='articulation.ten' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='articulation.ten' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='scripts.tenuto' unicode='' horiz-adv-x='1.125'/>
         <bbox left='-1.125' top='-0.1484375' width='2.25' height='0.296875' right='1.125' bottom='0.1484375' xmlns=''/>
       </metadata>
       <path d='M130 -20h-260c-11 0 -20 9 -20 20s9 20 20 20h260c11 0 20 -9 20 -20s-9 -20 -20 -20z'/>
     </g>
-    <g id='articulation.stacciss' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='articulation.stacciss' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='scripts.dstaccatissimo' unicode='' horiz-adv-x='0.375'/>
         <bbox left='-0.3828125' top='-0.09765625' width='0.765625' height='1.97265625' right='0.3828125' bottom='1.875' xmlns=''/>
       </metadata>
       <path d='M-13 0c1 7 6 13 13 13s12 -6 13 -13l37 -200c0 -2 1 -5 1 -7c0 -24 -24 -43 -51 -43s-51 19 -51 43c0 2 1 5 1 7z'/>
     </g>
-    <g id='articulation.marc' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='articulation.marc' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='scripts.dmarcato' unicode='' horiz-adv-x='0.9375'/>
         <bbox left='-0.9375' top='0' width='1.875' height='2.0625' right='0.9375' bottom='2.0625' xmlns=''/>
       </metadata>
       <path d='M112 0c7 0 13 -5 13 -12c0 -2 0 -4 -1 -6l-113 -250c-2 -4 -6 -7 -11 -7s-9 3 -11 7l-113 250c-1 2 -1 4 -1 6c0 7 6 12 13 12h66c5 0 10 -3 12 -7l68 -150l67 150c2 4 6 7 11 7z'/>
     </g>
-    <g id='articulation.spicc' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='articulation.spicc' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='scripts.staccato' unicode='' horiz-adv-x='0.375'/>
         <bbox left='-0.375' top='-0.375' width='0.75' height='0.75' right='0.375' bottom='0.375' xmlns=''/>
       </metadata>
       <path d='M-50 0c0 28 22 50 50 50s50 -22 50 -50s-22 -50 -50 -50s-50 22 -50 50z'/>
     </g>
-    <g id='articulation.dnbow' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='articulation.dnbow' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='scripts.downbow' unicode='' horiz-adv-x='1.41'/>
         <bbox left='-1.41015625' top='-2.49609375' width='2.8203125' height='2.49609375' right='1.41015625' bottom='0' xmlns=''/>
       </metadata>
       <path d='M-178 333h356c6 0 10 -4 10 -10v-308c0 -8 -7 -15 -15 -15s-16 7 -16 15v185h-314v-185c0 -8 -7 -15 -15 -15s-16 7 -16 15v308c0 6 4 10 10 10z'/>
     </g>
-    <g id='articulation.upbow' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='articulation.upbow' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='scripts.upbow' unicode='' horiz-adv-x='1.2225'/>
         <bbox left='-1.21484375' top='-3.8984375' width='2.4375' height='3.8984375' right='1.22265625' bottom='0' xmlns=''/>
       </metadata>
       <path d='M128 508c2 7 9 12 17 12c10 0 18 -8 18 -18c0 -2 -1 -3 -1 -5l-144 -479c0 -12 -6 -18 -18 -18s-18 6 -18 18l-144 479v5c0 10 7 18 17 18c8 0 15 -5 17 -12l88 -295l40 -164l40 164z'/>
     </g>
-    <g id='articulation.harm' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='articulation.harm' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='scripts.flageolet' unicode='' horiz-adv-x='0.9974999999999999'/>
         <bbox left='-0.99609375' top='-0.99609375' width='1.9921875' height='1.9921875' right='0.99609375' bottom='0.99609375' xmlns=''/>
       </metadata>
       <path d='M0 133c74 0 133 -59 133 -133s-59 -133 -133 -133s-133 59 -133 133s59 133 133 133zM0 113c-63 0 -113 -50 -113 -113s50 -113 113 -113s113 50 113 113s-50 113 -113 113z'/>
     </g>
-    <g id='articulation.open' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='articulation.open' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='scripts.open' unicode='' horiz-adv-x='0.75'/>
         <bbox left='-0.75' top='-0.9375' width='1.5' height='1.875' right='0.75' bottom='0.9375' xmlns=''/>
       </metadata>
       <path d='M100 0c0 -65 -40 -125 -100 -125s-100 60 -100 125s40 125 100 125s100 -60 100 -125zM57 0c0 47 -16 95 -57 95s-57 -48 -57 -95s16 -95 57 -95s57 48 57 95z'/>
     </g>
-    <g id='articulation.stop' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='articulation.stop' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='scripts.stopped' unicode='' horiz-adv-x='1.035'/>
         <bbox left='-1.03515625' top='-1.03515625' width='2.0703125' height='2.0703125' right='1.03515625' bottom='1.03515625' xmlns=''/>
       </metadata>
       <path d='M0 -138c-14 0 -25 12 -25 26v87h-87c-14 0 -26 11 -26 25s12 25 26 25h87v87c0 14 11 26 25 26s25 -12 25 -26v-87h87c14 0 26 -11 26 -25s-12 -25 -26 -25h-87v-87c0 -14 -11 -26 -25 -26z'/>
     </g>
-    <g id='articulation.heel' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='articulation.heel' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='scripts.dpedalheel' unicode='' horiz-adv-x='0.9375'/>
         <bbox left='-0.9375' top='-0.9375' width='1.875' height='2.19140625' right='0.9375' bottom='1.25390625' xmlns=''/>
       </metadata>
       <path d='M0 87c-48 0 -87 -39 -87 -87v-148c0 -10 -9 -19 -19 -19s-19 9 -19 19v148c0 69 56 125 125 125s125 -56 125 -125v-148c0 -10 -9 -19 -19 -19s-19 9 -19 19v148c0 48 -39 87 -87 87z'/>
     </g>
-    <g id='articulation.toe' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='articulation.toe' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='scripts.dpedaltoe' unicode='' horiz-adv-x='0.9375'/>
         <bbox left='-0.9375' top='0' width='1.875' height='2.8125' right='0.9375' bottom='2.8125' xmlns=''/>
       </metadata>
       <path d='M88 -362l-65 206l-23 103l-23 -103l-65 -206c-2 -8 -10 -13 -18 -13c-10 0 -19 9 -19 19c0 2 0 3 1 5l105 332c0 13 6 19 19 19s19 -6 19 -19l105 -332c1 -2 1 -3 1 -5c0 -10 -9 -19 -19 -19c-8 0 -16 5 -18 13z'/>
     </g>
-    <g id='articulation.dot' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='articulation.dot' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='scripts.staccato' unicode='' horiz-adv-x='0.375'/>
         <bbox left='-0.375' top='-0.375' width='0.75' height='0.75' right='0.375' bottom='0.375' xmlns=''/>
       </metadata>
       <path d='M-50 0c0 28 22 50 50 50s50 -22 50 -50s-22 -50 -50 -50s-50 22 -50 50z'/>
     </g>
-    <g id='articulation.stroke' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='articulation.stroke' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='scripts.tenuto' unicode='' horiz-adv-x='1.125'/>
         <bbox left='-1.125' top='-0.1484375' width='2.25' height='0.296875' right='1.125' bottom='0.1484375' xmlns=''/>
       </metadata>
       <path d='M130 -20h-260c-11 0 -20 9 -20 20s9 20 20 20h260c11 0 20 -9 20 -20s-9 -20 -20 -20z'/>
     </g>
-    <g id='brackettip' transform=' scale(.0075,-.0075)' class='symbol' style='stroke:none'>
+    <g id='brackettip' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
         <glyph glyph-name='brackettips.up' unicode='' horiz-adv-x='3.57'/>
         <bbox left='0' top='-2.49609375' width='3.49609375' height='2.91796875' right='3.49609375' bottom='0.421875' xmlns=''/>
