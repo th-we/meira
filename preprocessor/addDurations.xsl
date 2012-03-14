@@ -8,6 +8,10 @@
                                     	<!-- QUESTION: Is this the complete list of "events" that take up time?                  Why can't I use boolean(@dur) -->
 	<key name="timeConsumingElements" match="mei:note|mei:rest|mei:chord|mei:ftrem|mei:btrem|mei:space|mei:halfmRpt|mei:mRest|mei:mSpace" use="if (@dur)                                                                                                                                            then 'withDur'                                                                                                                                            else 'withoutDur'"/>
   
+  <template match="/" priority="-10">
+    <apply-templates select="." mode="addDurations"/>
+  </template>
+  
   <template mode="addDurations" match="@*|node()">
     <copy>
       <apply-templates mode="addDurations" select="@*|node()"/>
@@ -115,6 +119,7 @@
 		<variable name="staffN" select="ancestor::mei:staff/@n"/>
 		<variable name="timeSignatureDef" select="    preceding::mei:*[      (        (          local-name() = 'staffDef' and @n = $staffN        )         or         (          local-name() = 'scoreDef' and .//mei:staffDef[@n = $staffN]        )      )       and       @meter.count and @meter.unit    ][1]"/>
 		<copy>
+		  <apply-templates select="@*|node()" mode="addDurations"/>
 			<call-template name="write-duration">
 				<with-param name="duration" select="frac:completelyReduce($timeSignatureDef/@meter.count,$timeSignatureDef/@meter.unit)" as="xs:integer*"/>
 			</call-template>
