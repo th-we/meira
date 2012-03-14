@@ -2723,6 +2723,9 @@
          <apply-templates mode="draw"/>
       </svg:g>
    </template>
+   <xsl:key xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="beamNotes"
+            match="musx:note"
+            use="ancestor-or-self::*/musx:stem/@beam"/>
    <xsl:function xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                  name="g:beamYLacuna">
       <xsl:param name="beam" as="node()"/>
@@ -2788,9 +2791,6 @@
       </xsl:otherwise>
       </xsl:choose>
   </xsl:function>
-   <xsl:key xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="beamNotes"
-            match="musx:note"
-            use="musx:stem/@beam"/>
    <xsl:template xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="drawBeam">
       <xsl:param name="number" select="g:number(.)"/>
       <xsl:param name="direction" select="g:direction(.)"/>

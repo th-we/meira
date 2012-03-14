@@ -30,6 +30,11 @@
     
   </properties>
 
+  <xsl:key name="beamNotes" match="musx:note" use="ancestor-or-self::*/musx:stem/@beam"/>
+  <!-- QUESTION: What to do if both note and chord have @beam? Something like this doesn't seem to work:
+  <xsl:key name="beamNotes" match="musx:note" use="(ancestor-or-self::*musx:stem/@beam)[1]"/>
+  <xsl:key name="beamNotes" match="musx:note" use="(ancestor-or-self::*[musx:stem/@beam][1]/musx:stem/@beam"/> -->
+  
   <xsl:function name="g:beamYLacuna">
     <xsl:param name="beam" as="node()"/>
     <xsl:variable name="direction" select="g:direction($beam)" as="xs:double"/>
@@ -89,9 +94,6 @@
       </xsl:otherwise>
     </xsl:choose>
   </xsl:function>
-  
-<!--  <xsl:key name="beamNotes" match="musx:note" use="(.//@beam|parent::musx:chord/@beam)[1]"/>-->
-  <xsl:key name="beamNotes" match="musx:note" use="musx:stem/@beam"/>
   
   <xsl:template name="drawBeam">
     <xsl:param name="number" select="g:number(.)"/>
