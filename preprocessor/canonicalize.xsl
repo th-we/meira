@@ -11,6 +11,10 @@
     !!! @dur on ftrem/btrem is not conformant with the specs, but useful !!!
   -->
   
+  <xsl:template match="/" priority="-10">
+    <xsl:apply-templates select="." mode="canonicalize"/>
+  </xsl:template>
+  
   <xsl:template mode="canonicalize" match="*">
     <xsl:copy>
       <xsl:apply-templates mode="canonicalize" select="@*"/>
