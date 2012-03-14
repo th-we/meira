@@ -171,7 +171,7 @@
   </xsl:template>
   
   <xsl:template mode="mei2musx" match="mei:mRest">
-    <rest symbol="rest.1" y="S-6">
+    <rest symbol="rest.1" y="S4">
       <xsl:apply-templates select="." mode="copy-id"/>
       <xsl:apply-templates mode="mei2musx" select="@synch:id|*"/>
     </rest>
