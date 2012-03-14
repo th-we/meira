@@ -23,6 +23,7 @@
   
   <xsl:template match="/symbolmap">
     <xsl:variable name="svgfont" select="document(@svgfont)"/>
+    <xsl:variable name="scalingFactor" select="@emAdjust div $svgfont//@units-per-em[1]"/>
   
     <xsl:if test="not($svgfont)">
       <xsl:message terminate="yes">
@@ -114,11 +115,14 @@
       <defs class="symbols">
         <metadata>
           <font>
-            <xsl:apply-templates select="$svgfont//svg:font/@*|$svgfont//svg:font/svg:font-face"/>
+            <xsl:apply-templates select="$svgfont//svg:font/@*|$svgfont//svg:font/svg:font-face">
+              <xsl:with-param name="scalingFactor" select="$scalingFactor"/>
+            </xsl:apply-templates>
           </font>
         </metadata>
         <xsl:apply-templates select="symbol">
           <xsl:with-param name="svgfont" select="$svgfont"/>
+          <xsl:with-param name="scalingFactor" select="$scalingFactor"/>
         </xsl:apply-templates>
       </defs>
       <foreignObject width="100%" height="100%" class="temporary">
@@ -137,11 +141,29 @@
       <use id="use" class="temporary"/>
     </svg>
   </xsl:template>
-  
+
+  <xsl:template match="svg:font-face" priority="10">
+    <xsl:param name="emAdjust"/>
+    <xsl:copy>
+      <xsl:apply-templates select="@*">
+        <xsl:with-param name="emAdjust" select="$emAdjust"/>
+      </xsl:apply-templates>
+    </xsl:copy>
+  </xsl:template>
+    
+  <xsl:template match="@units-per-em" priority="10">
+    <xsl:param name="emAdjust"/>
+    <xsl:attribute name="{local-name()}">
+      <xsl:value-of select=". div $emAdjust"/>
+    </xsl:attribute>
+  </xsl:template>
+
   <xsl:template match="symbol[string-length(@musx) != 0 and (string-length(@glyph-name)!=0 or svg:*)]" priority="1">
     <xsl:param name="svgfont"/>
+    <xsl:param name="scalingFactor"/>
     <xsl:variable name="glyph-name" select="@glyph-name"/>
     <xsl:variable name="id" select="@musx"/>
+                                                            <!-- Trick: only add space if there's an @transform -->
     <xsl:variable name="transform" select="concat(@transform, substring(' ',string-length(@transform)))"/>
     <xsl:variable name="directSVG" select="svg:*"/>
     
@@ -151,9 +173,11 @@
       <xsl:choose>
         <xsl:when test="key('glyph',$glyph-name) or $directSVG">
           <xsl:variable name="glyph" select="key('glyph',$glyph-name)"/>
-          <g id="{$id}" transform="{$transform}scale(.0075,-.0075)" class="symbol" style="stroke:none">
+          <g id="{$id}" transform="{$transform}scale({$scalingFactor},{-$scalingFactor})" class="symbol" style="stroke:none">
             <metadata>
-              <xsl:apply-templates select="$glyph" mode="add-metadata"/>
+              <xsl:apply-templates select="$glyph" mode="add-metadata">
+                <xsl:with-param name="scalingFactor" select="$scalingFactor"/>
+              </xsl:apply-templates>
             </metadata>
             <xsl:apply-templates select="$glyph/@d" mode="glyph-to-path"/>
             <xsl:copy-of select="$directSVG|$glyph/*"/>
@@ -175,9 +199,12 @@
   </xsl:template>
 
   <xsl:template match="svg:glyph" mode="add-metadata">
+    <xsl:param name="scalingFactor"/>
     <!-- TODO: Is an SVG namespaced <glyph> O.K. here? Should the information be stored differently? -->
     <glyph>
-      <xsl:apply-templates select="@*"/>
+      <xsl:apply-templates select="@*">
+        <xsl:with-param name="scalingFactor" select="$scalingFactor"/>
+      </xsl:apply-templates>
     </glyph>
   </xsl:template>
   <xsl:template match="@*">
@@ -189,10 +216,10 @@
     <path d="{.}"/>
   </xsl:template>
   
-  
   <xsl:template match="@horiz-adv-x">
+    <xsl:param name="scalingFactor"/>
     <xsl:attribute name="horiz-adv-x">
-      <xsl:value-of select=". * .0075"/>
+      <xsl:value-of select=". * $scalingFactor"/>
     </xsl:attribute>
   </xsl:template>
 </xsl:stylesheet>
