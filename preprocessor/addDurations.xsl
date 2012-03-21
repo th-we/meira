@@ -121,7 +121,16 @@
 			ERROR: @dur required on <value-of select="local-name()"/> element <value-of select="@xml:id"/>
 		</message>
 	</template>
-	<template mode="addDurations" match="mei:*[(self::mei:mRest or self::mei:mSpace) and not(@dur)]" priority="3">
+  <!-- Be more tolerant with spaces -->
+  <template mode="addDurations" match="mei:space[not(@dur)]" priority="3">
+    <copy>
+      <call-template name="write-duration">
+        <with-param name="duration" select="(0,1)"/>
+      </call-template>
+      <apply-templates mode="addDurations"/>
+    </copy>
+  </template>
+  <template mode="addDurations" match="mei:*[(self::mei:mRest or self::mei:mSpace) and not(@dur)]" priority="3">
 		<variable name="staffN" select="ancestor::mei:staff/@n"/>
 		<variable name="timeSignatureDef" select="    preceding::mei:*[      (        (          local-name() = 'staffDef' and @n = $staffN        )         or         (          local-name() = 'scoreDef' and .//mei:staffDef[@n = $staffN]        )      )       and       @meter.count and @meter.unit    ][1]"/>
 		<copy>
