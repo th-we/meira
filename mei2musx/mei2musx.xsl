@@ -138,7 +138,21 @@
           - first with substring-after get the section that follows "s" for sharps and "f" for flats 
           - then, again with substring-after get section that belongs to the current clef (G, C or F; GG has same pattern as G
           - then with substring get the first $n 4-char "table cells" which represent the pattern -->
-        <xsl:value-of select="           substring(             substring-after(               substring-after(                 's G-6  -3  -7  -4  -1  -5  -2                      C-3   0  -4  -1   2  -2   1                    F 0   3  -1   2   5   1   4                  f G-2  -5  -1  -4   0  -3   1                      C 1  -2   2  -1   3   0   4                    F 4   1   5   2   6   3   7',                 mei:keySig/@accid               ),               substring((@clef.shape|mei:clef/@shape)[last()],1,1)            ), 1, mei:keySig/@n*4)"/>
+        <xsl:value-of select="           
+          substring(
+            substring-after(
+              substring-after(
+                's G-6  -3  -7  -4  -1  -5  -2
+                   C-3   0  -4  -1   2  -2   1
+                   F 0   3  -1   2   5   1   4
+                 f G-2  -5  -1  -4   0  -3   1
+                   C 1  -2   2  -1   3   0   4
+                   F 4   1   5   2   6   3   7',
+                   mei:keySig/@accid
+              ),
+              substring((@clef.shape|mei:clef/@shape)[last()],1,1)            
+            ), 1, mei:keySig/@n*4
+          )"/>
          </xsl:attribute>
     </keySignature>
     <!-- TODO: Handle more complex ("mixed") patterns -->
