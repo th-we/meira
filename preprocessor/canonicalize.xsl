@@ -29,6 +29,8 @@
 
   <xsl:template mode="canonicalize" match="mei:note">
     <mei:note>
+      <!-- TODO: Check that the canonicalized note has @dur, @oct and @pname. Otherwise we'll fail later
+                 Do this here or in a separate step (Schematron?) -->
       <xsl:copy-of select="(@dur|ancestor::mei:chord/@dur|preceding-sibling::mei:note/@dur)[last()]"/>
       <xsl:copy-of select="(@dots|ancestor::mei:chord/@dots)[last()]"/>
       <xsl:copy-of select="(@oct|preceding-sibling::mei:note/@oct)[last()]"/>
@@ -65,9 +67,11 @@
     -->
   </xsl:template>
 	
-	<xsl:template mode="canonicalize" match="@accid"/>
-	<xsl:template match="@accid" mode="turn-attributes-into-element">
-		<mei:accid accid="{.}"/>
+	<xsl:template mode="canonicalize" match="@accid">
+	  <xsl:copy-of select="."/>
+	</xsl:template>
+	<xsl:template match="mei:note/@accid" mode="turn-attributes-into-element">
+		<mei:accid accid="{string()}"/>
 	</xsl:template>
 	
 	<!-- QUESTION: Is there an attribute version of <dynam> that we need to canonicalize? -->
