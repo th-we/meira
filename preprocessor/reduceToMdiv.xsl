@@ -17,6 +17,10 @@
     
     <xsl:param name="mdiv2show"/>
     
+    <xsl:template match="/" priority="-10">
+      <xsl:apply-templates select="." mode="reduceToMdiv"/>
+    </xsl:template>
+    
     <xsl:template mode="reduceToMdiv" match="* | text()| @*">
         <xsl:copy>
             <xsl:apply-templates mode="reduceToMdiv" select="* | text() | @*"/>    

@@ -5,6 +5,10 @@
   
   <param name="checkIDsyntax" select="true()"/>
   
+  <template match="/" priority="-10">
+    <apply-templates select="." mode="add-ids"/>
+  </template>
+  
   <template mode="add-ids" match="/">
     <if test="$checkIDsyntax">
       <if test="key('problematicIDs',true())">
