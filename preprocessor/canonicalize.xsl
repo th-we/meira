@@ -30,6 +30,7 @@
   <xsl:template mode="canonicalize" match="mei:note">
     <mei:note>
       <xsl:copy-of select="(@dur|ancestor::mei:chord/@dur|preceding-sibling::mei:note/@dur)[last()]"/>
+      <xsl:copy-of select="(@dots|ancestor::mei:chord/@dots)[last()]"/>
       <xsl:copy-of select="(@oct|preceding-sibling::mei:note/@oct)[last()]"/>
       <xsl:copy-of select="(@pname|preceding-sibling::mei:note/@pname)[last()]"/>
       <xsl:apply-templates mode="canonicalize" select="@*"/>
