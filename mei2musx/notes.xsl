@@ -1,5 +1,11 @@
 <?xml version="1.0"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:mei="http://www.music-encoding.org/ns/mei" xmlns:svg="http://www.w3.org/2000/svg" xmlns="NS:MUSX" xmlns:synch="NS:SYNCH" version="2.0">
+<xsl:stylesheet version="2.0"
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
+    xmlns:mei="http://www.music-encoding.org/ns/mei" 
+    xmlns:svg="http://www.w3.org/2000/svg" 
+    xmlns="NS:MUSX" 
+    xmlns:synch="NS:SYNCH"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema">
   
   <xsl:template mode="mei2musx" match="mei:note">
     <note>
@@ -26,24 +32,29 @@
   </xsl:template>
   
   <xsl:template match="mei:note" mode="add-y-attribute">
-    <xsl:variable name="staffN" select="ancestor::mei:staff/@n"/>
-    <xsl:variable name="numericClefPitch">
+    <xsl:variable name="staffN" select="ancestor::mei:staff/@n" as="xs:string"/>
+    <xsl:variable name="numericClefPitch" as="xs:integer">
       <!-- Find the staffdef/scoredef/clefchange element that provides the clef currently "in action" -->
       <!-- TODO: in preprocessing, convert all clef attributes to elements to make matching easier and "safer"? -->
-    	<xsl:apply-templates mode="get-numeric-clef-pitch" select="       (       preceding::mei:*[self::mei:clef or @clef.shape]       [ancestor-or-self::mei:*[@n = $staffN and (self::mei:staff or self::mei:staffDef)]]       )[last()]"/>
-    	<!--<xsl:apply-templates mode="get-numeric-clef-pitch" select="
-    		(
-    		ancestor-or-self::mei:*/
-    		preceding-sibling::mei:*/
-    		descendant-or-self::mei:*[self::mei:clef or @clef.shape]
-    		[ancestor-or-self::mei:*[@n = $staffN and (self::mei:staff or self::mei:staffDef)]]
-    		)[last()]"/>-->
+      <xsl:variable name="clefCarryingElement" select="       
+        (       
+          preceding::mei:*[self::mei:clef or @clef.shape]       
+          [ancestor-or-self::mei:*[@n = $staffN and (self::mei:staff or self::mei:staffDef)]] 
+        )[last()]" as="node()*"/>
+      <xsl:if test="not($clefCarryingElement)">
+        <xsl:message terminate="yes">
+          ERROR: No clef information found for note <xsl:value-of select="@xml:id"/>
+        </xsl:message>
+      </xsl:if>
+    	<xsl:apply-templates mode="get-numeric-clef-pitch" select="$clefCarryingElement"/>
     </xsl:variable>
-    <xsl:variable name="oct" select="(preceding-sibling::mei:note/@oct|@oct)[last()]"/>
-    <xsl:variable name="pname" select="(preceding-sibling::mei:note/@pname|@pname)[last()]"/>
+    <xsl:variable name="oct" select="(preceding-sibling::mei:note/@oct|@oct)[last()]" as="xs:integer"/>
+    <xsl:variable name="pname" select="(preceding-sibling::mei:note/@pname|@pname)[last()]" as="xs:string"/>
     <xsl:attribute name="y">
       <!-- string-length(substring-before('cdefgab',$pname)) returns 0 for $pname='c', 1 for 'd' etc. -->
-      <xsl:value-of select="concat(           'S',           -(7*$oct + string-length(substring-before('cdefgab',$pname)) - $numericClefPitch - 8))"/>
+      <xsl:value-of select="concat(           
+          'S',
+          -(7*$oct + string-length(substring-before('cdefgab',$pname)) - $numericClefPitch - 8))"/>
          <!-- TODO: template mode get-numeric-clef-pitch returns a numeric pitch value for the bottommost
                     staff line, but we calculate from the top one (therefore "- 8" in the above calculation) -->
     </xsl:attribute>
@@ -56,7 +67,7 @@
   
   <!-- "numeric clef pitch" is the numeric pitch value of the bottommost staff line. -->
   <xsl:template mode="get-numeric-clef-pitch" match="mei:*[@line or @clef.line]">
-    <xsl:variable name="rawNumericClefPitch">
+    <xsl:variable name="rawNumericClefPitch" as="xs:integer">
       <xsl:apply-templates mode="get-raw-numeric-clef-pitch" select="(@clef.shape|@shape)[last()]"/>
     </xsl:variable>
     <!-- TODO: Implement octaveDisplacement; what does the syntax say?
@@ -65,7 +76,7 @@
           select="(@clef.dis|mei:clef/@dis|.)[last()]"/>
     </xsl:variable>-->
     <!-- TODO: in preprocessing, convert all clef attributes to elements to make handling easier? -->
-    <xsl:value-of select="$rawNumericClefPitch - 2*((@clef.line|@line) - 1)"/>
+    <xsl:sequence select="$rawNumericClefPitch - 2*((@clef.line|@line) cast as xs:integer - 1)"/>
   </xsl:template>
   
   <xsl:template mode="get-numeric-clef-pitch" match="mei:*" priority="-1">
