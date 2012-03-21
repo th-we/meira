@@ -171,7 +171,7 @@
   </xsl:template>
   
   <xsl:template mode="mei2musx" match="mei:mRest">
-    <rest symbol="rest.1" y="S4">
+    <rest symbol="rest.1" y="S4" end="{ancestor::mei:measure[last()]/@synch:end.id}">
       <xsl:apply-templates select="." mode="copy-id"/>
       <xsl:apply-templates mode="mei2musx" select="@synch:id|*"/>
     </rest>
