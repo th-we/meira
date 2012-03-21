@@ -107,7 +107,7 @@
     </if>
   </template>
 
-  <template mode="addSynchronicity" match="mei:note|mei:chord|mei:rest">
+  <template mode="addSynchronicity" match="mei:note|mei:chord|mei:rest|mei:mRest|mei:mSpace">
     <param name="synch" as="xs:integer*"/>
     <copy>
       <apply-templates mode="write-synch" select=".">
