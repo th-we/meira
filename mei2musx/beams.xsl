@@ -55,11 +55,23 @@
         </xsl:apply-templates>
       </xsl:attribute>
       <xsl:apply-templates select="." mode="copy-id"/>
+      <xsl:apply-templates select=".//@stem.dir[1]" mode="add-direction"/>
       <xsl:apply-templates mode="add-subbeams" select="*[self::mei:note or self::mei:chord][@dur &gt; $minimumDur]">
         <xsl:with-param name="alreadyDrawnDur" select="$minimumDur"/>
       </xsl:apply-templates>
     </beam>
     <xsl:apply-templates mode="mei2musx"/>
+  </xsl:template>
+  
+  <xsl:template match="@stem.dir[.='up']">
+    <xsl:attribute name="direction">
+      <xsl:value-of select="-1"/>
+    </xsl:attribute>
+  </xsl:template>
+  <xsl:template match="@stem.dir[.='down']">
+    <xsl:attribute name="direction">
+      <xsl:value-of select="1"/>
+    </xsl:attribute>
   </xsl:template>
   
   <!-- TODO: The matching/selection mechanism for subbeams should be improved.  As can be seen in 
