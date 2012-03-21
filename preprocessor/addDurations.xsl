@@ -81,7 +81,7 @@
       </when>
       <otherwise>
         <message terminate="yes">
-          <value-of select="local-name()"/> element <value-of select="@xml:id"/> has unexpected parent element <value-of select="local-name()"/>  
+          ERROR: <value-of select="local-name()"/> element <value-of select="@xml:id"/> has unexpected parent element <value-of select="local-name()"/>  
         </message>
       </otherwise>
     </choose>
@@ -105,7 +105,10 @@
     </variable>
     <copy>
       <call-template name="write-duration">
-        <with-param name="duration" select="frac:completelyReduce(                                               $rawNumerator * $tupletNumerator * (2 * $augmentationDenominator - 1),                                                $rawDenominator * $tupletDenominator * $augmentationDenominator                                             )" as="xs:integer*"/>
+        <with-param name="duration" select="frac:completelyReduce(
+                                              $rawNumerator * $tupletNumerator * (2 * $augmentationDenominator - 1),
+                                              $rawDenominator * $tupletDenominator * $augmentationDenominator
+                                            )" as="xs:integer*"/>
       </call-template>
       <apply-templates mode="addDurations" select="@*|node()"/>
     </copy>
@@ -159,9 +162,9 @@
   </template>
   
   <template match="mei:*" mode="get-augmentation-denominator" priority="-1">
-    <value-of select="1"/>
+    <sequence select="1"/>
   </template>
-  <template match="mei:*/@dots" mode="get-augmentation-denominator" name="get-augmentation-denominator">
+  <template match="mei:*[@dots]" mode="get-augmentation-denominator">
     <param name="augmentationDenominator" select="1" as="xs:integer"/>
     <param name="dots" select="@dots" as="xs:integer"/>
     <choose>
@@ -169,10 +172,10 @@
         <value-of select="$augmentationDenominator"/>
       </when>
       <otherwise>
-        <call-template name="get-augmentation-denominator">
+        <apply-templates select="." mode="get-augmentation-denominator">
           <with-param name="augmentationDenominator" select="$augmentationDenominator * 2"/>
           <with-param name="dots" select="$dots - 1"/>
-        </call-template>
+        </apply-templates>
       </otherwise>
     </choose>
   </template>
