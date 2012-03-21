@@ -6,7 +6,10 @@
 	
 	<!--  !!! We want to @dur added to ftrem/btrem during preprocessing, which is non-conformant with the specs !!! -->
                                     	<!-- QUESTION: Is this the complete list of "events" that take up time?                  Why can't I use boolean(@dur) -->
-	<key name="timeConsumingElements" match="mei:note|mei:rest|mei:chord|mei:ftrem|mei:btrem|mei:space|mei:halfmRpt|mei:mRest|mei:mSpace" use="if (@dur)                                                                                                                                            then 'withDur'                                                                                                                                            else 'withoutDur'"/>
+	<key name="timeConsumingElements" match="mei:note[not(@grace)]|mei:rest|mei:chord|mei:ftrem|mei:btrem|mei:space|mei:halfmRpt|mei:mRest|mei:mSpace" 
+	    use="if (@dur)
+	         then 'withDur'
+	         else 'withoutDur'"/>
   
   <template match="/" priority="-10">
     <apply-templates select="." mode="addDurations"/>
