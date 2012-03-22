@@ -4,77 +4,78 @@
   <import href="fraction.xsl"/>
   <import href="contentChronologyKeys.xsl"/>
   
-  <key name="att.duration.timestamp" match="mei:annot/@dur|mei:dir/@dur|mei:dynam/@dur|mei:hairpin/@dur|mei:harm/@dur|mei:octave/@dur|mei:phrase/@dur|mei:slur/@dur|mei:tie/@dur|mei:trill/@dur"
-      use="'true'"/>
-	
-	<param name="floatToFractionPrecision" select="100" as="xs:integer"/>
+  <param name="floatToFractionPrecision" select="100" as="xs:integer"/>
   
   <template match="/">
-  	<apply-templates select="." mode="addSynchronicity"/>
+    <apply-templates select="." mode="addSynchronicity"/>
   </template>
   
   <template mode="addSynchronicity" match="/">
-  	<variable name="meiWithSynch">
-  		<apply-templates mode="addSynchronicity"/>
-  	</variable>
-  	
-  	<apply-templates select="$meiWithSynch" mode="add-tstamp-synch"/>
+    <variable name="meiWithSynch">
+      <apply-templates mode="addSynchronicity"/>
+    </variable>
+    
+    <apply-templates select="$meiWithSynch" mode="add-tstamp-synch"/>
   </template>
   
-	<template mode="addSynchronicity" match="@*|node()">
-		<copy>
-			<apply-templates mode="addSynchronicity" select="@*|node()"/>
-		</copy>
-	</template>
-	
-	<template match="@*|node()" mode="add-tstamp-synch">
-		<copy>
-			<apply-templates select="@*|node()" mode="add-tstamp-synch"/>
-		</copy>
-	</template>
-	
-	<function name="synch:getMeasureSynch" as="xs:integer*">
-		<param name="measure" as="node()"/>
-		<sequence select="($measure/@synch:numerator cast as xs:integer, $measure/@synch:denominator cast as xs:integer)"/>
-	</function>
-	
-	<function name="synch:getFractionalPart">
-		<param name="tstamp" as="xs:string"/>
-		<sequence select="frac:completelyReduce(    
-		    round((number($tstamp) - 1) * $floatToFractionPrecision) cast as xs:integer,    
-		    $floatToFractionPrecision   
-		  )"/> 
-	</function>
-	
-	<template match="@tstamp" mode="add-tstamp-synch">
-		<copy-of select="."/>
-		<variable name="measureSynch" select="synch:getMeasureSynch(ancestor::mei:measure)" as="xs:integer*"/>
-		<variable name="tstampFraction" select="synch:getFractionalPart(.)" as="xs:integer*"/>
-		<call-template name="write-synch">
-			<with-param name="synch" select="frac:add($measureSynch,$tstampFraction)"/>
-		</call-template>
-	  <!-- TODO: Add a flag that tells whether an element is spacing significant or not -->
-	</template>
-	
-	<template match="key('att.duration.timestamp','true')" mode="add-tstamp-synch">
-		<copy-of select="."/>
-		<variable name="endMeasureOffset" select="if(contains(.,'m'))
-		                                          then substring-before(.,'m') cast as xs:integer 
-		                                          else 0" as="xs:integer"/>
-		<variable name="endMeasure" select="(following::mei:measure)[$endMeasureOffset + 1]" as="node()"/>
-		<variable name="endMeasureSynch" select="synch:getMeasureSynch($endMeasure)" as="xs:integer*"/>
-	  <variable name="endTstamp" select="synch:getFractionalPart(
-	                                       if(contains(.,'+'))
-		                                     then substring-after(.,'+')
-		                                     else .
-		                                   )" as="xs:integer*"/>
-		<call-template name="write-synch">
-			<with-param name="synch" select="frac:add($endMeasureSynch,$endTstamp)"/>
-			<with-param name="namePrefix" select="'end.'"/>
-		</call-template>
-	</template>
-	
-	<template mode="addSynchronicity" match="key('contentChronology','synchronous')">
+  <template mode="addSynchronicity" match="@*|node()">
+    <copy>
+      <apply-templates mode="addSynchronicity" select="@*|node()"/>
+    </copy>
+  </template>
+  
+  <template match="@*|node()" mode="add-tstamp-synch">
+    <copy>
+      <apply-templates select="@*|node()" mode="add-tstamp-synch"/>
+    </copy>
+  </template>
+  
+  <function name="synch:getMeasureSynch" as="xs:integer*">
+    <param name="measure" as="node()"/>
+    <sequence select="($measure/@synch:numerator cast as xs:integer, $measure/@synch:denominator cast as xs:integer)"/>
+  </function>
+  
+  <function name="synch:tstampToFraction">
+    <param name="tstampAttribute"/>
+    <variable name="tstamp" select="number (if(contains($tstampAttribute,'+'))
+                                            then substring-after($tstampAttribute,'+')
+                                            else $tstampAttribute)" as="xs:double"/>
+    <!-- This transforms MEI @dur and @tstamp floats to musx fractions. 1 equals a quarter note in MEI, but
+         a whole note in musx, therefore we multiply $floatToFractionPrecision * 4 -->
+    <!-- @tstamp starts counting at 1, our targeted @synch:*s as well as @dur starts at 0 -->
+    <sequence select="frac:completelyReduce(
+        round(($tstamp - 1) * $floatToFractionPrecision) cast as xs:integer,    
+        $floatToFractionPrecision * ($tstampAttribute/preceding::mei:*/@meter.unit[1] cast as xs:integer)
+      )"/>
+  </function>
+  
+  <template match="@tstamp" mode="add-tstamp-synch">
+    <copy-of select="."/>
+    <variable name="measureSynch" select="synch:getMeasureSynch(ancestor::mei:measure)" as="xs:integer*"/>
+    <variable name="tstampFraction" select="synch:tstampToFraction(.)" as="xs:integer*"/>
+    <call-template name="write-synch">
+      <with-param name="synch" select="frac:add($measureSynch,$tstampFraction)"/>
+    </call-template>
+    <!-- TODO: Add a flag that tells whether an element is spacing significant or not -->
+  </template>
+  
+  <key name="att.duration.timestamp" match="mei:annot/@dur|mei:dir/@dur|mei:dynam/@dur|mei:hairpin/@dur|mei:harm/@dur|mei:octave/@dur|mei:phrase/@dur|mei:slur/@dur|mei:tie/@dur|mei:trill/@dur"
+    use="'true'"/>
+  <template match="key('att.duration.timestamp','true')" mode="add-tstamp-synch">
+    <copy-of select="."/>
+    <variable name="endMeasureOffset" select="if(contains(.,'m'))
+                                              then substring-before(.,'m') cast as xs:integer 
+                                              else 0" as="xs:integer"/>
+    <variable name="endMeasure" select="(ancestor::mei:measure|following::mei:measure)[$endMeasureOffset + 1]" as="node()"/>
+    <variable name="endMeasureSynch" select="synch:getMeasureSynch($endMeasure)" as="xs:integer*"/>
+    <variable name="endTstamp" select="synch:tstampToFraction(.)" as="xs:integer*"/>
+    <call-template name="write-synch">
+      <with-param name="synch" select="frac:add($endMeasureSynch,$endTstamp)"/>
+      <with-param name="namePrefix" select="'end.'"/>
+    </call-template>
+  </template>
+  
+  <template mode="addSynchronicity" match="key('contentChronology','synchronous')">
     <param name="synch" select="(0,1)" as="xs:integer*"/>
     
     <copy>
@@ -129,7 +130,7 @@
       <apply-templates mode="addSynchronicity" select="@*|node()"/>
     </copy>
   </template>
-	
+
   
   <!-- QUESTION: This is basically identical to template "write-duration" from addDurations.xsl 
        Generalize this template? -->
