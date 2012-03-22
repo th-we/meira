@@ -3,6 +3,9 @@
   
   <import href="fraction.xsl"/>
   <import href="contentChronologyKeys.xsl"/>
+  
+  <key name="att.duration.timestamp" match="mei:annot/@dur|mei:dir/@dur|mei:dynam/@dur|mei:hairpin/@dur|mei:harm/@dur|mei:octave/@dur|mei:phrase/@dur|mei:slur/@dur|mei:tie/@dur|mei:trill/@dur"
+      use="'true'"/>
 	
 	<param name="floatToFractionPrecision" select="100" as="xs:integer"/>
   
@@ -37,7 +40,10 @@
 	
 	<function name="synch:getFractionalPart">
 		<param name="tstamp" as="xs:string"/>
-		<sequence select="frac:completelyReduce(    round((number($tstamp) - 1) * $floatToFractionPrecision) cast as xs:integer,    $floatToFractionPrecision   )"/> 
+		<sequence select="frac:completelyReduce(    
+		    round((number($tstamp) - 1) * $floatToFractionPrecision) cast as xs:integer,    
+		    $floatToFractionPrecision   
+		  )"/> 
 	</function>
 	
 	<template match="@tstamp" mode="add-tstamp-synch">
@@ -47,14 +53,21 @@
 		<call-template name="write-synch">
 			<with-param name="synch" select="frac:add($measureSynch,$tstampFraction)"/>
 		</call-template>
+	  <!-- TODO: Add a flag that tells whether an element is spacing significant or not -->
 	</template>
 	
-	<template match="@dur[contains(.,'m+')]" mode="add-tstamp-synch">
+	<template match="key('att.duration.timestamp','true')" mode="add-tstamp-synch">
 		<copy-of select="."/>
-		<variable name="endMeasureOffset" select="substring-before(.,'m') cast as xs:integer" as="xs:integer"/>
+		<variable name="endMeasureOffset" select="if(contains(.,'m'))
+		                                          then substring-before(.,'m') cast as xs:integer 
+		                                          else 0" as="xs:integer"/>
 		<variable name="endMeasure" select="(following::mei:measure)[$endMeasureOffset + 1]" as="node()"/>
 		<variable name="endMeasureSynch" select="synch:getMeasureSynch($endMeasure)" as="xs:integer*"/>
-		<variable name="endTstamp" select="synch:getFractionalPart(substring-after(.,'m+'))" as="xs:integer*"/>
+	  <variable name="endTstamp" select="synch:getFractionalPart(
+	                                       if(contains(.,'+'))
+		                                     then substring-after(.,'+')
+		                                     else .
+		                                   )" as="xs:integer*"/>
 		<call-template name="write-synch">
 			<with-param name="synch" select="frac:add($endMeasureSynch,$endTstamp)"/>
 			<with-param name="namePrefix" select="'end.'"/>
