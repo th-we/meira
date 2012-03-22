@@ -589,31 +589,31 @@
       <variable name="staff" select="ancestor::musx:staff[last()]" as="node()"/>
       <copy-of select="(0) + (g:size($staff) * number(substring(@x1,2)))"/>
    </template>
-   <key name="get_x2_page_system_staff_staffGroup_group_hairpin"
+   <key name="get_x2_page_system_staff_staffGroup_rest_group_hairpin"
         use="substring(@x2,1,1)"
-        match="musx:page|musx:system|musx:staff|musx:staffGroup|musx:group|musx:hairpin"/>
+        match="musx:page|musx:system|musx:staff|musx:staffGroup|musx:rest|musx:group|musx:hairpin"/>
    <template mode="get_x2"
-             match="musx:page|musx:system|musx:staff|musx:staffGroup|musx:group|musx:hairpin"
+             match="musx:page|musx:system|musx:staff|musx:staffGroup|musx:rest|musx:group|musx:hairpin"
              priority="-2">
       <copy-of select="(g:x(g:end(.))) + (0)"/>
    </template>
    <template mode="get_x2"
-             match="musx:page[@x2]|musx:system[@x2]|musx:staff[@x2]|musx:staffGroup[@x2]|musx:group[@x2]|musx:hairpin[@x2]"
+             match="musx:page[@x2]|musx:system[@x2]|musx:staff[@x2]|musx:staffGroup[@x2]|musx:rest[@x2]|musx:group[@x2]|musx:hairpin[@x2]"
              priority="-1">
       <copy-of select="number(@x2)"/>
    </template>
    <template mode="get_x2"
-             match="key('get_x2_page_system_staff_staffGroup_group_hairpin','p')">
+             match="key('get_x2_page_system_staff_staffGroup_rest_group_hairpin','p')">
       <variable name="page" select="ancestor-or-self::musx:page" as="node()"/>
       <copy-of select="(g:x(g:end(.))) + g:size($page) * number(substring(@x2,2))"/>
    </template>
    <template mode="get_x2"
-             match="key('get_x2_page_system_staff_staffGroup_group_hairpin','P')">
+             match="key('get_x2_page_system_staff_staffGroup_rest_group_hairpin','P')">
       <variable name="page" select="ancestor-or-self::musx:page" as="node()"/>
       <copy-of select="g:x($page) + g:size($page) * number(substring(@x2,2))"/>
    </template>
    <template mode="get_x2"
-             match="key('get_x2_page_system_staff_staffGroup_group_hairpin','s')">
+             match="key('get_x2_page_system_staff_staffGroup_rest_group_hairpin','s')">
       <variable name="staff" select="ancestor::musx:staff[last()]" as="node()"/>
       <copy-of select="(g:x(g:end(.))) + (g:size($staff) * number(substring(@x2,2)))"/>
    </template>
@@ -747,27 +747,31 @@
    <template mode="get_end" match="musx:system[@end]|musx:beam[@end]">
       <sequence select="id(@end)"/>
    </template>
-   <key name="get_x1_system_staff_staffGroup_group_hairpin" use="substring(@x1,1,1)"
-        match="musx:system|musx:staff|musx:staffGroup|musx:group|musx:hairpin"/>
+   <key name="get_x1_system_staff_staffGroup_rest_group_hairpin"
+        use="substring(@x1,1,1)"
+        match="musx:system|musx:staff|musx:staffGroup|musx:rest|musx:group|musx:hairpin"/>
    <template mode="get_x1"
-             match="musx:system|musx:staff|musx:staffGroup|musx:group|musx:hairpin"
+             match="musx:system|musx:staff|musx:staffGroup|musx:rest|musx:group|musx:hairpin"
              priority="-2">
       <copy-of select="(g:x(g:start(.))) + (0)"/>
    </template>
    <template mode="get_x1"
-             match="musx:system[@x1]|musx:staff[@x1]|musx:staffGroup[@x1]|musx:group[@x1]|musx:hairpin[@x1]"
+             match="musx:system[@x1]|musx:staff[@x1]|musx:staffGroup[@x1]|musx:rest[@x1]|musx:group[@x1]|musx:hairpin[@x1]"
              priority="-1">
       <copy-of select="number(@x1)"/>
    </template>
-   <template mode="get_x1" match="key('get_x1_system_staff_staffGroup_group_hairpin','p')">
+   <template mode="get_x1"
+             match="key('get_x1_system_staff_staffGroup_rest_group_hairpin','p')">
       <variable name="page" select="ancestor-or-self::musx:page" as="node()"/>
       <copy-of select="(g:x(g:start(.))) + g:size($page) * number(substring(@x1,2))"/>
    </template>
-   <template mode="get_x1" match="key('get_x1_system_staff_staffGroup_group_hairpin','P')">
+   <template mode="get_x1"
+             match="key('get_x1_system_staff_staffGroup_rest_group_hairpin','P')">
       <variable name="page" select="ancestor-or-self::musx:page" as="node()"/>
       <copy-of select="g:x($page) + g:size($page) * number(substring(@x1,2))"/>
    </template>
-   <template mode="get_x1" match="key('get_x1_system_staff_staffGroup_group_hairpin','s')">
+   <template mode="get_x1"
+             match="key('get_x1_system_staff_staffGroup_rest_group_hairpin','s')">
       <variable name="staff" select="ancestor::musx:staff[last()]" as="node()"/>
       <copy-of select="(g:x(g:start(.))) + (g:size($staff) * number(substring(@x1,2)))"/>
    </template>
@@ -984,59 +988,55 @@
    <template mode="get_lines" match="musx:staff[@lines]">
       <copy-of select="@lines cast as xs:integer"/>
    </template>
-   <key name="get_x_svg_clef_rest_barline_note_chord_symbolText"
-        use="substring(@x,1,1)"
-        match="musx:svg|musx:clef|musx:rest|musx:barline|musx:note|musx:chord|musx:symbolText"/>
+   <key name="get_x_svg_clef_barline_note_chord_symbolText" use="substring(@x,1,1)"
+        match="musx:svg|musx:clef|musx:barline|musx:note|musx:chord|musx:symbolText"/>
    <template mode="get_x"
-             match="musx:svg|musx:clef|musx:rest|musx:barline|musx:note|musx:chord|musx:symbolText"
+             match="musx:svg|musx:clef|musx:barline|musx:note|musx:chord|musx:symbolText"
              priority="-2">
       <copy-of select="(g:x(g:start(.))) + (0)"/>
    </template>
    <template mode="get_x"
-             match="musx:svg[@x]|musx:clef[@x]|musx:rest[@x]|musx:barline[@x]|musx:note[@x]|musx:chord[@x]|musx:symbolText[@x]"
+             match="musx:svg[@x]|musx:clef[@x]|musx:barline[@x]|musx:note[@x]|musx:chord[@x]|musx:symbolText[@x]"
              priority="-1">
       <copy-of select="number(@x)"/>
    </template>
-   <template mode="get_x"
-             match="key('get_x_svg_clef_rest_barline_note_chord_symbolText','p')">
+   <template mode="get_x" match="key('get_x_svg_clef_barline_note_chord_symbolText','p')">
       <variable name="page" select="ancestor-or-self::musx:page" as="node()"/>
       <copy-of select="(g:x(g:start(.))) + g:size($page) * number(substring(@x,2))"/>
    </template>
-   <template mode="get_x"
-             match="key('get_x_svg_clef_rest_barline_note_chord_symbolText','P')">
+   <template mode="get_x" match="key('get_x_svg_clef_barline_note_chord_symbolText','P')">
       <variable name="page" select="ancestor-or-self::musx:page" as="node()"/>
       <copy-of select="g:x($page) + g:size($page) * number(substring(@x,2))"/>
    </template>
-   <template mode="get_x"
-             match="key('get_x_svg_clef_rest_barline_note_chord_symbolText','s')">
+   <template mode="get_x" match="key('get_x_svg_clef_barline_note_chord_symbolText','s')">
       <variable name="staff" select="ancestor::musx:staff[last()]" as="node()"/>
       <copy-of select="(g:x(g:start(.))) + (g:size($staff) * number(substring(@x,2)))"/>
    </template>
-   <key name="get_x1_svg_clef_transposeNumber_rest_staffBracket_barline_note_head_accidental_chord_stem_flags"
+   <key name="get_x1_svg_clef_transposeNumber_staffBracket_barline_note_head_accidental_chord_stem_flags"
         use="substring(@x1,1,1)"
-        match="musx:svg|musx:clef|musx:transposeNumber|musx:rest|musx:staffBracket|musx:barline|musx:note|musx:head|musx:accidental|musx:chord|musx:stem|musx:flags"/>
+        match="musx:svg|musx:clef|musx:transposeNumber|musx:staffBracket|musx:barline|musx:note|musx:head|musx:accidental|musx:chord|musx:stem|musx:flags"/>
    <template mode="get_x1"
-             match="musx:svg|musx:clef|musx:transposeNumber|musx:rest|musx:staffBracket|musx:barline|musx:note|musx:head|musx:accidental|musx:chord|musx:stem|musx:flags"
+             match="musx:svg|musx:clef|musx:transposeNumber|musx:staffBracket|musx:barline|musx:note|musx:head|musx:accidental|musx:chord|musx:stem|musx:flags"
              priority="-2">
       <copy-of select="(g:x(.)) + (0)"/>
    </template>
    <template mode="get_x1"
-             match="musx:svg[@x1]|musx:clef[@x1]|musx:transposeNumber[@x1]|musx:rest[@x1]|musx:staffBracket[@x1]|musx:barline[@x1]|musx:note[@x1]|musx:head[@x1]|musx:accidental[@x1]|musx:chord[@x1]|musx:stem[@x1]|musx:flags[@x1]"
+             match="musx:svg[@x1]|musx:clef[@x1]|musx:transposeNumber[@x1]|musx:staffBracket[@x1]|musx:barline[@x1]|musx:note[@x1]|musx:head[@x1]|musx:accidental[@x1]|musx:chord[@x1]|musx:stem[@x1]|musx:flags[@x1]"
              priority="-1">
       <copy-of select="number(@x1)"/>
    </template>
    <template mode="get_x1"
-             match="key('get_x1_svg_clef_transposeNumber_rest_staffBracket_barline_note_head_accidental_chord_stem_flags','p')">
+             match="key('get_x1_svg_clef_transposeNumber_staffBracket_barline_note_head_accidental_chord_stem_flags','p')">
       <variable name="page" select="ancestor-or-self::musx:page" as="node()"/>
       <copy-of select="(g:x(.)) + g:size($page) * number(substring(@x1,2))"/>
    </template>
    <template mode="get_x1"
-             match="key('get_x1_svg_clef_transposeNumber_rest_staffBracket_barline_note_head_accidental_chord_stem_flags','P')">
+             match="key('get_x1_svg_clef_transposeNumber_staffBracket_barline_note_head_accidental_chord_stem_flags','P')">
       <variable name="page" select="ancestor-or-self::musx:page" as="node()"/>
       <copy-of select="g:x($page) + g:size($page) * number(substring(@x1,2))"/>
    </template>
    <template mode="get_x1"
-             match="key('get_x1_svg_clef_transposeNumber_rest_staffBracket_barline_note_head_accidental_chord_stem_flags','s')">
+             match="key('get_x1_svg_clef_transposeNumber_staffBracket_barline_note_head_accidental_chord_stem_flags','s')">
       <variable name="staff" select="ancestor::musx:staff[last()]" as="node()"/>
       <copy-of select="(g:x(.)) + (g:size($staff) * number(substring(@x1,2)))"/>
    </template>
@@ -1169,6 +1169,25 @@
    <template mode="get_end" match="musx:rest[@end]|musx:hairpin[@end]">
       <sequence select="id(@end)"/>
    </template>
+   <key name="get_x_rest" use="substring(@x,1,1)" match="musx:rest"/>
+   <template mode="get_x" match="musx:rest" priority="-2">
+      <copy-of select="((g:x1(.) + g:x2(.)) div 2) + (if (@end or @x2)                                                                                     then g:width(.) div -2                                                                                     else 0)"/>
+   </template>
+   <template mode="get_x" match="musx:rest[@x]" priority="-1">
+      <copy-of select="number(@x)"/>
+   </template>
+   <template mode="get_x" match="key('get_x_rest','p')">
+      <variable name="page" select="ancestor-or-self::musx:page" as="node()"/>
+      <copy-of select="((g:x1(.) + g:x2(.)) div 2) + g:size($page) * number(substring(@x,2))"/>
+   </template>
+   <template mode="get_x" match="key('get_x_rest','P')">
+      <variable name="page" select="ancestor-or-self::musx:page" as="node()"/>
+      <copy-of select="g:x($page) + g:size($page) * number(substring(@x,2))"/>
+   </template>
+   <template mode="get_x" match="key('get_x_rest','s')">
+      <variable name="staff" select="ancestor::musx:staff[last()]" as="node()"/>
+      <copy-of select="((g:x1(.) + g:x2(.)) div 2) + (g:size($staff) * number(substring(@x,2)))"/>
+   </template>
    <key name="get_y_rest" use="substring(@y,1,1)" match="musx:rest"/>
    <template mode="get_y" match="musx:rest" priority="-2">
       <copy-of select="(g:y(..)) + (-4 * g:size(ancestor::staff))"/>
@@ -1195,25 +1214,6 @@
    <template mode="get_y" match="key('get_y_rest','L')">
       <variable name="staff" select="ancestor::musx:staff[last()]" as="node()"/>
       <copy-of select="(g:y2($staff)) -            + 2 * g:size($staff) * (number(substring(@y,2)) - 1)"/>
-   </template>
-   <key name="get_x2_rest" use="substring(@x2,1,1)" match="musx:rest"/>
-   <template mode="get_x2" match="musx:rest" priority="-2">
-      <copy-of select="(g:x(g:end(.))) + (         if (@end)          then -g:size(.)*number(g:svgSymbolBoundingBox(g:symbol(.))/@width)         else 0)"/>
-   </template>
-   <template mode="get_x2" match="musx:rest[@x2]" priority="-1">
-      <copy-of select="number(@x2)"/>
-   </template>
-   <template mode="get_x2" match="key('get_x2_rest','p')">
-      <variable name="page" select="ancestor-or-self::musx:page" as="node()"/>
-      <copy-of select="(g:x(g:end(.))) + g:size($page) * number(substring(@x2,2))"/>
-   </template>
-   <template mode="get_x2" match="key('get_x2_rest','P')">
-      <variable name="page" select="ancestor-or-self::musx:page" as="node()"/>
-      <copy-of select="g:x($page) + g:size($page) * number(substring(@x2,2))"/>
-   </template>
-   <template mode="get_x2" match="key('get_x2_rest','s')">
-      <variable name="staff" select="ancestor::musx:staff[last()]" as="node()"/>
-      <copy-of select="(g:x(g:end(.))) + (g:size($staff) * number(substring(@x2,2)))"/>
    </template>
    <key name="get_width_rest_head" use="substring(@width,1,1)"
         match="musx:rest|musx:head"/>
@@ -2365,7 +2365,7 @@
          </attribute>
          <apply-templates select="@*" mode="copy-svg-and-id-attributes"/>
          <svg:use xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                  transform="translate({(g:x1(.) + g:x2(.)) div 2},{g:y(.)}) scale({g:size(.)})"
+                  transform="translate({g:x(.)},{g:y(.)}) scale({g:size(.)})"
                   xlink:href="{g:symbol(.)}"/>
          <apply-templates mode="draw"/>
       </svg:g>
