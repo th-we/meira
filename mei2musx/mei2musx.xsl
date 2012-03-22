@@ -13,6 +13,8 @@
   <!--<xsl:key name="when" match="mei:when" use="@*[local-name()='id' or local-name()='xml:id']"/>-->
   <xsl:key name="id" match="*" use="@*[contains(local-name(),'id')]"/>
   <xsl:key name="staff" match="mei:staff" use="@n"/>
+  <xsl:key name="staff" match="mei:*[not(ancestor::mei:staff)]" use="@staff"/>
+  <!-- TODO: Handle elements correctly that are inside another staff and have @staff -->
   <xsl:key name="measure" match="mei:measure" use="@n"/>
   <xsl:key name="synchValue" match="mei:*[@synch:rounded]" use="@synch:rounded"/>
   <xsl:key name="synchedElement" match="mei:*[@synch:rounded]" use="'true'"/>
@@ -32,7 +34,7 @@
   
   
   <xsl:template match="/" priority="-10">
-  	<xsl:apply-templates select="." mode="mei2musx"/>
+    <xsl:apply-templates select="." mode="mei2musx"/>
   </xsl:template>
  
   <xsl:template mode="mei2musx" match="/mei:mei">
@@ -40,23 +42,23 @@
       <musxHead>
         <libDirectory xlink:href="lib"/>
       </musxHead>
-    	<eventList>
-    		<!-- Add a special event that we use for attaching the clef, key and time signatures to -->
-    		<event xml:id="_t0" x="0" synchTime="0"/>
-    		<!--<xsl:apply-templates select="//mei:scoreDef[1]/mei:timeline[last()]/mei:when" mode="add-events"/>-->
-    		<!-- Only match one element with this synch value (first one returned by key('synchValue'..)) -->
-    		<xsl:for-each-group select="//@synch:rounded|//@synch:end.rounded" group-by=".">
-    			<xsl:sort select="number(.)"/>
-    			<xsl:variable name="synchIdAttributeLocalName" select="concat(substring-before(local-name(),'rounded'),'id')"/>
-    			<!-- This ("200 * .") is *VERY BAD* proportional spacing, just to have some spacing info. 
+      <eventList>
+        <!-- Add a special event that we use for attaching the clef, key and time signatures to -->
+        <event xml:id="_t0" x="0" synchTime="0"/>
+        <!--<xsl:apply-templates select="//mei:scoreDef[1]/mei:timeline[last()]/mei:when" mode="add-events"/>-->
+        <!-- Only match one element with this synch value (first one returned by key('synchValue'..)) -->
+        <xsl:for-each-group select="//@synch:rounded|//@synch:end.rounded" group-by=".">
+          <xsl:sort select="number(.)"/>
+          <xsl:variable name="synchIdAttributeLocalName" select="concat(substring-before(local-name(),'rounded'),'id')"/>
+          <!-- This ("200 * .") is *VERY BAD* proportional spacing, just to have some spacing info. 
               TODO: Implement separate, elaborate spacing algorithm. -->
-    			<event x="{200 * .}" synchTime="{.}">
-    				<xsl:attribute name="xml:id">
-    					<xsl:value-of select="../@synch:*[local-name()=$synchIdAttributeLocalName]"/>
-    				</xsl:attribute>
-    			</event>
-    		</xsl:for-each-group>
-    	</eventList>    	
+          <event x="{200 * .}" synchTime="{.}">
+            <xsl:attribute name="xml:id">
+              <xsl:value-of select="../@synch:*[local-name()=$synchIdAttributeLocalName]"/>
+            </xsl:attribute>
+          </event>
+        </xsl:for-each-group>
+      </eventList>      
       <xsl:apply-templates mode="mei2musx" select="(//mei:scoreDef)[1]"/>
     </musx>
   </xsl:template>
@@ -96,9 +98,9 @@
     <!-- As <staffdef>s may occur grouped in <staffgrp>s, a simple 
          count(preceding-sibling::mei:staffDef) doesn't do the job. -->
     <staff y="p{$staffDistance * (
-	    	 count(
-	    	   preceding-sibling::mei:staffDef|ancestor::mei:staffGrp/preceding-sibling::mei:*/descendant-or-self::mei:staffDef             
-	    	 ) + 1)}" start="_t0">
+         count(
+           preceding-sibling::mei:staffDef|ancestor::mei:staffGrp/preceding-sibling::mei:*/descendant-or-self::mei:staffDef             
+         ) + 1)}" start="_t0">
       <!-- Display staff label -->
       <svg y="S6" x="s-2">
         <svg:text font-size="4" text-anchor="end">
@@ -181,22 +183,21 @@
       <xsl:apply-templates mode="mei2musx"/>
     </group>
   </xsl:template>
-	
-	<xsl:template mode="mei2musx" match="mei:hairpin">
-		<!-- TODO: Proper y positioning (as well for mei:dynam, see below) -->
-		<hairpin start="{@synch:id}" end="{@synch:end.id}" y="S{if(@place='above') then '-5' else '14'}">
-			<xsl:variable name="opening" select="if(@opening) then @opening * 2 else 4"/>
-			<xsl:attribute name="{if(@form = 'cres') then 'endSpread' else 'startSpread'}">
-				<xsl:value-of select="concat('s',$opening)"/>
-			</xsl:attribute>
-		</hairpin>
-	</xsl:template>
-	
-	<xsl:template mode="mei2musx" match="mei:dynam">
-		<!-- TODO: Proper y positioning (as well for mei:hairpin, see above) -->
-		<symbolText start="{@synch:id}" class="dynam" y="S{if(@place='above') then '-5' else '14'}">
-			<xsl:apply-templates mode="mei2musx"/>
-		</symbolText>
-	</xsl:template>
-	
+  
+  <xsl:template mode="mei2musx" match="mei:hairpin">
+    <!-- TODO: Proper y positioning (as well for mei:dynam, see below) -->
+    <hairpin start="{(@synch:id|@startid)[1]}" end="{(@synch:end.id|@endid)[1]}" y="S{if(@place='above') then '-5' else '14'}">
+      <xsl:variable name="opening" select="if(@opening) then @opening * 2 else 4"/>
+      <xsl:attribute name="{if(@form = 'cres') then 'endSpread' else 'startSpread'}">
+        <xsl:value-of select="concat('s',$opening)"/>
+      </xsl:attribute>
+    </hairpin>
+  </xsl:template>
+  
+  <xsl:template mode="mei2musx" match="mei:dynam">
+    <!-- TODO: Proper y positioning (as well for mei:hairpin, see above) -->
+    <symbolText start="{@synch:id}" class="dynam" y="S{if(@place='above') then '-5' else '14'}">
+      <xsl:apply-templates mode="mei2musx"/>
+    </symbolText>
+  </xsl:template>
 </xsl:stylesheet>
