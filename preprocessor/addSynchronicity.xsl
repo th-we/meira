@@ -49,11 +49,11 @@
     <variable name="tstamp" select="number (if(contains($tstampAttribute,'+'))
                                             then substring-after($tstampAttribute,'+')
                                             else $tstampAttribute)" as="xs:double"/>
-    <variable name="meterUnit" select="(($measure//mei:scoreDef|
+    <variable name="meterUnit" select="((($measure//mei:scoreDef|
                                          $measure/preceding::mei:scoreDef)|
                                          $measure//mei:staffDef[@n=$staffN]|
                                          $measure/preceding::mei:staffDef[@n=$staffN]
-                                        )/@meter.unit[last()]" as="xs:integer"/>
+                                        )/@meter.unit)[last()]" as="xs:integer"/>
     <sequence select="frac:completelyReduce(
       (: @tstamp/@dur start counting at 1, our targeted @synch:*s starts at 0 => substract 1 :)
       round(($tstamp - 1) * $floatToFractionPrecision) cast as xs:integer,    
