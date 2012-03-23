@@ -36,23 +36,35 @@
   </function>
   
   <function name="synch:tstampToFraction">
-    <param name="tstampAttribute"/>
+    <param name="tstampAttribute" as="node()"/>
+    <param name="measure" as="node()"/>
+    <!-- This transforms MEI @dur (of type att.duration.timestamp) and @tstamp floats to musx fractions. 
+         @tstamp and @dur use the @meter.unit currently in action for counting durations.
+         In musx, a whole note is always of duration 1, therefore we multiply $floatToFractionPrecision
+         with the "active" @meter.unit.
+         QUESTION: What about compound meter? -->
+    <variable name="staffN" select="($tstampAttribute/ancestor::mei:*/@staff|
+                                     $tstampAttribute/ancestor::mei:staff/@n
+                                    )[last()]" as="xs:string?"/>
     <variable name="tstamp" select="number (if(contains($tstampAttribute,'+'))
                                             then substring-after($tstampAttribute,'+')
                                             else $tstampAttribute)" as="xs:double"/>
-    <!-- This transforms MEI @dur and @tstamp floats to musx fractions. 1 equals a quarter note in MEI, but
-         a whole note in musx, therefore we multiply $floatToFractionPrecision * 4 -->
-    <!-- @tstamp starts counting at 1, our targeted @synch:*s as well as @dur starts at 0 -->
+    <variable name="meterUnit" select="(($measure//mei:scoreDef|
+                                         $measure/preceding::mei:scoreDef)|
+                                         $measure//mei:staffDef[@n=$staffN]|
+                                         $measure/preceding::mei:staffDef[@n=$staffN]
+                                        )/@meter.unit[last()]" as="xs:integer"/>
     <sequence select="frac:completelyReduce(
-        round(($tstamp - 1) * $floatToFractionPrecision) cast as xs:integer,    
-        $floatToFractionPrecision * ($tstampAttribute/preceding::mei:*/@meter.unit[1] cast as xs:integer)
+      (: @tstamp/@dur start counting at 1, our targeted @synch:*s starts at 0 => substract 1 :)
+      round(($tstamp - 1) * $floatToFractionPrecision) cast as xs:integer,    
+      $floatToFractionPrecision * $meterUnit
       )"/>
   </function>
   
   <template match="@tstamp" mode="add-tstamp-synch">
     <copy-of select="."/>
     <variable name="measureSynch" select="synch:getMeasureSynch(ancestor::mei:measure)" as="xs:integer*"/>
-    <variable name="tstampFraction" select="synch:tstampToFraction(.)" as="xs:integer*"/>
+    <variable name="tstampFraction" select="synch:tstampToFraction(.,ancestor::mei:measure[1])" as="xs:integer*"/>
     <call-template name="write-synch">
       <with-param name="synch" select="frac:add($measureSynch,$tstampFraction)"/>
     </call-template>
@@ -68,7 +80,7 @@
                                               else 0" as="xs:integer"/>
     <variable name="endMeasure" select="(ancestor::mei:measure|following::mei:measure)[$endMeasureOffset + 1]" as="node()"/>
     <variable name="endMeasureSynch" select="synch:getMeasureSynch($endMeasure)" as="xs:integer*"/>
-    <variable name="endTstamp" select="synch:tstampToFraction(.)" as="xs:integer*"/>
+    <variable name="endTstamp" select="synch:tstampToFraction(.,$endMeasure)" as="xs:integer*"/>
     <call-template name="write-synch">
       <with-param name="synch" select="frac:add($endMeasureSynch,$endTstamp)"/>
       <with-param name="namePrefix" select="'end.'"/>
