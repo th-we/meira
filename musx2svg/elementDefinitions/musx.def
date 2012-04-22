@@ -21,8 +21,9 @@
   <includeDefinition href="dots.def"/>
   <includeDefinition href="BoundingBox.def"/>
 	<includeDefinition href="beam.def"/>
-	<includeDefinition href="hairpin.def"/>
-	<includeDefinition href="symbolText.def"/>
+  <includeDefinition href="hairpin.def"/>
+  <includeDefinition href="slur.def"/>
+  <includeDefinition href="symbolText.def"/>
 	
   <draw/>
 

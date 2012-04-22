@@ -8,7 +8,8 @@
   xmlns:xlink="http://www.w3.org/1999/xlink"
   xmlns:def="NS:DEF"
   xmlns:g="NS:GET"
-  xmlns:musx="NS:MUSX">
+  xmlns:musx="NS:MUSX"
+  xmlns:xsb="http://www.expedimentum.org/XSLT/SB">
 	
 	<!-- QUESTION: Use xpath-default-namespaee="NS:MUSX"? -->
   
@@ -31,9 +32,12 @@
     		
     		If we're calling this from a wrapper XSLT, then the root node isn't <musx> but <mei>. 
            The wrapper XSLT can provide required to -->
-    	<xsl:param name="libDirectory" select="if (/musx:musx) then /musx:musx/musx:musxHead/musx:libDirectory/@xlink:href else 'lib'" as="xs:string"/>
+      <xsl:import href="math/math.xsl"/>
+      
+      <xsl:param name="libDirectory" select="if (/musx:musx) then /musx:musx/musx:musxHead/musx:libDirectory/@xlink:href else 'lib'" as="xs:string"/>
     	<xsl:param name="musicFont" select="'musicSymbols'" as="xs:string"/>
     	<xsl:param name="symbolFile" select="'symbols.svg'" as="xs:string"/>
+      
       
       <call-template name="add-getter-functions-and-templates">
         <with-param name="properties" as="node()*">

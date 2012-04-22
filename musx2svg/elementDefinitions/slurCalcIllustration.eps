@@ -1,0 +1,168 @@
+%!PS-Adobe-3.0 EPSF-3.0
+%%BoundingBox: 0 0 300 150
+
+/ex 100 def
+/s .5 def
+/height 40 def
+/ch .618 def
+/ca .382 def
+/w  1.2 def
+
+/cdef {cvx def} def
+
+/El [ex neg 0] cdef
+/Er [ex 0] cdef
+/M  [0 height] cdef
+/Sl [ex s mul neg height] cdef
+/Sr [ex s mul height] cdef
+/Cl [
+      s 1 sub ch mul 1 ca sub mul 1 add ex mul neg
+      height ch mul 
+    ] cdef
+/Cr [
+      s 1 sub ch mul 1 ca sub mul 1 add ex mul
+      height ch mul 
+    ] cdef
+
+150 50 translate
+
+/fontsize 12 def
+/setPointColor {1 0 0 setrgbcolor} def
+/pointDiameter 5 def
+
+/showSub {
+  0 fontsize -.4 mul rmoveto
+  show
+} def
+
+/point {
+  gsave     
+    setPointColor
+    1 setlinecap
+    pointDiameter setlinewidth
+    setPointColor
+    2 copy moveto lineto stroke
+  grestore
+} def
+
+/Courier fontsize selectfont
+
+
+/Pl [ex neg height]cdef
+/Pr [ex height]cdef
+Pl moveto 
+-.5 fontsize mul .5 fontsize mul rmoveto
+(P)show(l)showSub
+
+Pr moveto 
+0 .5 fontsize mul rmoveto
+(P)show(r)showSub
+
+/Q [1 s sub ex mul 1 ca sub mul ex sub height] cdef
+Q moveto 
+-.25 fontsize mul .5 fontsize mul rmoveto
+(Q) show
+
+
+gsave
+%draw helper lines in gray
+
+.5 setgray
+El moveto
+Pl lineto
+Sl lineto
+closepath
+stroke
+
+El moveto
+Q lineto
+stroke
+
+El moveto
+Er lineto
+stroke
+
+Er moveto 
+-12 4 rmoveto
+Er lineto
+-12 -4 rlineto
+stroke
+
+grestore
+
+El Er      %lx ly rx ry
+3 -1 roll  %lx rx ry ly
+add 2 div  %lx rx y
+3 1 roll   %y lx rx
+add 2 div  %y x
+exch       %x y
+moveto
+0 -10 rmoveto
+(d)show
+
+%draw control polygon
+El moveto
+Cl lineto
+Sl lineto
+M lineto
+Sr lineto
+Cr lineto
+Er lineto
+stroke
+
+%draw slur shape
+gsave
+2 setlinewidth
+El moveto
+Cl Sl w add M w add curveto
+Sr w add Cr Er curveto
+
+Cr Sr w sub M w sub curveto
+Sl w sub Cl El curveto
+
+closepath
+
+gsave fill grestore
+stroke
+grestore
+
+Pl point
+Pr point
+Q point 
+
+El point
+El moveto
+0 fontsize neg rmoveto
+(E)show(l)showSub
+
+Er point
+Er moveto
+0 fontsize neg rmoveto
+(E)show(r)showSub
+
+M point
+M moveto
+0 fontsize .5 mul rmoveto
+(M)show
+
+Cl point
+Cl moveto
+fontsize -1.5 mul 0 rmoveto
+(C)show(l)showSub
+
+Sl point
+Sl moveto
+fontsize -.5 mul fontsize .5 mul rmoveto
+(S)show(l)showSub
+
+Cr point
+Cr moveto
+fontsize .5 mul 0 rmoveto
+(C)show(r)showSub
+
+Sr point
+Sr moveto
+0 fontsize .5 mul rmoveto
+(S)show(r)showSub
+
+showpage

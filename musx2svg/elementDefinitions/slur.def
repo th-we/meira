@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<elementDefinition
+  xmlns="NS:DEF"
+  xmlns:svg="http://www.w3.org/2000/svg"
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+  xmlns:v="NS:VECTOR">
+  
+<element name="slur">
+  <properties>
+    <elementReference name="start" lacuna=".."/>
+    <elementReference name="end" lacuna=".."/>
+    
+    <!-- TODO: Slur endpoints need to be positioned more differenciatedly -->
+    <coordinate name="x1" orientation="x" anchor="g:x(g:start(.))" lacuna="0"/>
+    <coordinate name="x2" orientation="x" anchor="g:x(g:end(.))" lacuna="0"/>
+    <!-- TODO: lacunas for y attributes, depending on note direction -->
+<!--    <coordinate name="y1" orientation="y" anchor="g:y((g:slurNotes(.),..)[1])" lacuna="0"/>
+    <coordinate name="y2" orientation="y" anchor="g:y((..,g:slurNotes)[last()])" lacuna="0"/>-->
+    
+    <coordinate name="y1" orientation="y" anchor="
+        if(g:start(.)/self::musx:note)
+        then (g:y(g:start(.)))
+        else g:y((g:slurNotes(.),..)[1])" lacuna="0"/>
+    <coordinate name="y2" orientation="y" anchor="
+        if(g:end(.)/self::musx:note)
+        then g:y(g:end(.))
+        else g:y((..,g:slurNotes)[last()])" lacuna="0"/>
+    
+    <coordinate name="x" orientation="x" anchor="g:x1(.)" lacuna="0"/>
+    <coordinate name="y" orientation="y" anchor="g:y1(.)" lacuna="0"/>
+    
+    <scaleFactor name="size" anchor="g:size(..)" lacuna="1"/>
+    <scaleFactor name="height" anchor="g:size(.)" lacuna="1"/>
+    
+    <scaleFactor name="centerThickness" anchor="g:size(.)" lacuna=".5"/>
+    <scaleFactor name="tipThickness" anchor="g:centerThickness(.)" lacuna=".618"/>
+    <number name="swellingRate" lacuna=".618"/>
+    <number name="swellingRate1" lacuna="g:swellingRate(.)"/>
+    <number name="swellingRate2" lacuna="g:swellingRate(.)"/>
+    
+    <number name="tilt" lacuna="1"/>
+    <number name="shift" lacuna="0"/>
+    <number name="shoulder" lacuna=".618"/>
+    <number name="curvature" lacuna=".5"/>
+    <number name="curvature1" lacuna="g:curvature(.)"/>
+    <number name="curvature2" lacuna="g:curvature(.)"/>
+    <number name="tipAngle" lacuna=".618"/>
+    <number name="tipAngle1" lacuna="g:tipAngle(.)"/>
+    <number name="tipAngle2" lacuna="g:tipAngle(.)"/>
+    
+    <!-- QUESTION: Require @direction to be set explicitly? (Calculate it during mei2musx?) -->
+    <integer name="direction" lacuna="g:slurDirection(.)"/>
+  </properties>
+  
+  <!-- QUESTION: Leave this away and require @direction to be set explicitly? -->
+  <xsl:function name="g:slurDirection" as="xs:integer">
+    <xsl:param name="slur" as="node()"/>
+    <xsl:variable name="slurNotes" select="g:slurNotes($slur)" as="node()*"/>
+    <!-- TODO: Document this! -->
+    <xsl:variable name="slurDirections" select="g:direction($slurNotes)" as="xs:integer*"/>
+    
+    <xsl:sequence select="if ($slurNotes)
+                          then if (count(distinct-values($slurDirections))=1)
+                               then $slurDirections[1]
+                               else -g:calculateDirection($slurNotes)
+                          else -1"/>
+  </xsl:function>
+  
+  <xsl:function name="g:slurNotes" as="node()*">
+    <xsl:param name="slurElement" as="node()"/>
+    
+    <!-- TODO: Implement this -->
+  </xsl:function>
+  
+  <!-- relativeCoordinate is inappropriate here, introduce a new type -->
+  <!--<relativeCoordinate name="halfWidth" anchor="?x2 - ?x1 div 2"/>-->
+
+  <!-- Inner Bézier control points -->
+  <!--<relativeCoordinate name="xc1" anchor="?x1 * "-->
+
+  <xsl:function name="v:sub">
+    <xsl:param name="v1" as="xs:double+"/>
+    <xsl:param name="v2" as="xs:double+"/>
+    
+    <xsl:sequence select="($v1[1]-$v2[1],$v1[2]-$v2[2])"/>
+  </xsl:function>
+  
+  <xsl:function name="v:add">
+    <xsl:param name="v1" as="xs:double+"/>
+    <xsl:param name="v2" as="xs:double+"/>
+    
+    <xsl:sequence select="($v1[1]+$v2[1],$v1[2]+$v2[2])"/>
+  </xsl:function>
+  
+  <xsl:function name="v:pointAtDivisionRatio">
+    <xsl:param name="v1" as="xs:double+"/>
+    <xsl:param name="v2" as="xs:double+"/>
+    <xsl:param name="divisionRatio" as="xs:double"/>
+    
+    <xsl:sequence select="(
+        $v1[1]+$divisionRatio*($v2[1]-$v1[1]),
+        $v1[2]+$divisionRatio*($v2[2]-$v1[2]))"/>
+  </xsl:function>
+  
+  <xsl:function name="v:mul">
+    <xsl:param name="v" as="xs:double+"/>
+    <xsl:param name="c" as="xs:double"/>
+    
+    <xsl:sequence select="($v[1]*$c,$v[2]*$c)"/>
+  </xsl:function>
+
+  <draw>
+    <!-- All calculations are documented in slurCalculation.pdf or slurCalculation.tex
+         (The documentation is not included here because it consist of 5 pages with lots of math) -->
+    <xsl:variable name="El" select="(g:x1(.),g:y1(.))" as="xs:double+"/>
+    <xsl:variable name="Er" select="(g:x2(.),g:y2(.))" as="xs:double+"/>
+    <xsl:variable name="d" select="v:sub($Er,$El)" as="xs:double+"/>
+    
+    <xsl:variable name="t" select="g:tilt(.)" as="xs:double"/>
+    <xsl:variable name="h" select="g:height(.)" as="xs:double"/>
+    <xsl:variable name="s" select="g:shoulder(.)" as="xs:double"/>
+    
+    <xsl:variable name="v" select="($t*$d[2],$d[1])" as="xs:double+"/>
+    <xsl:variable name="vLength" select="xsb:sqrt($v[1]*$v[1]+$v[2]*$v[2])" as="xs:double"/>
+    <xsl:variable name="vNorm" select="($v[1] div $vLength,$v[2] div $vLength)" as="xs:double+"/>
+    
+    <xsl:variable name="c" select="(1-$t)*$d[1]*$d[2] div (2*$vLength)" as="xs:double"/>
+    
+    <xsl:variable name="Pl" select="(
+      $El[1]+($h + $c)*$vNorm[1],
+      $El[2]+($h + $c)*$vNorm[2])" as="xs:double+"/>
+    <xsl:variable name="Pr" select="(
+      $Er[1]+($h - $c)*$vNorm[1],
+      $Er[2]+($h - $c)*$vNorm[2])" as="xs:double+"/>
+    
+    <xsl:variable name="M"  select="v:pointAtDivisionRatio($Pl,$Pr,.5*(g:shift(.)+1))" as="xs:double+"/>
+    <xsl:variable name="Sl" select="v:pointAtDivisionRatio($M ,$Pl,$s)" as="xs:double+"/>
+    <xsl:variable name="Sr" select="v:pointAtDivisionRatio($M ,$Pr,$s)" as="xs:double+"/>
+    <xsl:variable name="Ql" select="v:pointAtDivisionRatio($Sl,$Pl,g:tipAngle1(.))" as="xs:double+"/>
+    <xsl:variable name="Qr" select="v:pointAtDivisionRatio($Sr,$Pr,g:tipAngle2(.))" as="xs:double+"/>
+    <xsl:variable name="Cl" select="v:pointAtDivisionRatio($El,$Ql,g:curvature1(.))" as="xs:double+"/>
+    <xsl:variable name="Cr" select="v:pointAtDivisionRatio($Er,$Qr,g:curvature2(.))" as="xs:double+"/>
+    
+    <xsl:variable name="thicknessDelta" select="g:centerThickness(.)-g:tipThickness(.)" as="xs:double"/>
+    <xsl:variable name="o" select="v:mul($vNorm,$thicknessDelta)" as="xs:double+"/>
+    <xsl:variable name="ol" select="v:mul($o,g:swellingRate1(.))" as="xs:double+"/>
+    <xsl:variable name="or" select="v:mul($o,g:swellingRate2(.))" as="xs:double+"/>
+    
+    <svg:path fill="currentColor" stroke="currentColor" stroke-width="{g:tipThickness(.)}"
+        d="M{$El}
+        C{(v:add($Cl,$ol),v:add($Sl,$o ),v:add($M,$o))}
+        C{(v:add($Sr,$o ),v:add($Cr,$or),$Er)}
+        C{(v:sub($Cr,$or),v:sub($Sr,$o ),v:sub($M,$o))}
+        C{(v:sub($Sl,$o ),v:sub($Cl,$ol),$El)}
+        z"/>
+  </draw>
+</element>
+
+</elementDefinition>
