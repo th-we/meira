@@ -35,6 +35,8 @@
     <sequence select="($measure/@synch:numerator cast as xs:integer, $measure/@synch:denominator cast as xs:integer)"/>
   </function>
   
+  <!-- TODO: How do we handle @tstamp/@dur with measure tstamp "0" (star barline) or e.g. "5" in 4/4 meter?
+             Those can't be converted to synch:* timestamps and will appear in the measure before/after -->
   <function name="synch:tstampToFraction">
     <param name="tstampAttribute" as="node()"/>
     <param name="measure" as="node()"/>
