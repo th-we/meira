@@ -1,5 +1,11 @@
 <?xml version="1.0"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:mei="http://www.music-encoding.org/ns/mei" xmlns:svg="http://www.w3.org/2000/svg" xmlns:synch="NS:SYNCH" xmlns="NS:MUSX" xmlns:xlink="http://www.w3.org/1999/xlink" version="2.0">
+<xsl:stylesheet version="2.0" 
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
+    xmlns:mei="http://www.music-encoding.org/ns/mei" 
+    xmlns:svg="http://www.w3.org/2000/svg" 
+    xmlns:synch="NS:SYNCH" xmlns="NS:MUSX" 
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xsl:include href="beams.xsl"/>
   <xsl:include href="notes.xsl"/>
 
@@ -8,13 +14,14 @@
     (among other things) IDs on all elements.
   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!-->
 
-  <!-- Why doesn't this work in Firefox???
-  <xsl:key name="when" match="mei:when" use="@xml:id"/>-->
   <!--<xsl:key name="when" match="mei:when" use="@*[local-name()='id' or local-name()='xml:id']"/>-->
   <xsl:key name="id" match="*" use="@*[contains(local-name(),'id')]"/>
-  <xsl:key name="staff" match="mei:staff" use="@n"/>
-  <xsl:key name="staff" match="mei:*[not(ancestor::mei:staff)]" use="@staff"/>
-  <!-- TODO: Handle elements correctly that are inside another staff and have @staff -->
+<!--  <xsl:key name="staff" match="mei:staff" use="@n"/>
+  <xsl:key name="staff" match="mei:*[@staff]" use="@staff"/>-->
+  <xsl:key name="staffBySection" match="mei:staff" use="concat(@n,'_',ancestor::mei:section/@xml:id)"/>
+  <xsl:key name="staffBySection" match="mei:*[@staff]" use="concat(@staff,'_',ancestor::mei:section/@xml:id)"/>
+  <!-- TODO: Handle elements correctly that are inside another staff and have @staff 
+             (they have to be omitted when processing the staff they're inside) -->
   <xsl:key name="measure" match="mei:measure" use="@n"/>
   <xsl:key name="synchValue" match="mei:*[@synch:rounded]" use="@synch:rounded"/>
   <xsl:key name="synchedElement" match="mei:*[@synch:rounded]" use="'true'"/>
@@ -49,7 +56,10 @@
         <!-- Only match one element with this synch value (first one returned by key('synchValue'..)) -->
         <xsl:for-each-group select="//@synch:rounded|//@synch:end.rounded" group-by=".">
           <xsl:sort select="number(.)"/>
-          <xsl:variable name="synchIdAttributeLocalName" select="concat(substring-before(local-name(),'rounded'),'id')"/>
+          <!-- We need to find the corresponding synch:id or synch:end.id the  -->
+          <xsl:variable name="synchIdAttributeLocalName" select="if(local-name()='end.rounded')
+                                                                 then 'end.id'
+                                                                 else 'id'" as="xs:string"/>
           <!-- This ("200 * .") is *VERY BAD* proportional spacing, just to have some spacing info. 
               TODO: Implement separate, elaborate spacing algorithm. -->
           <event x="{200 * .}" synchTime="{.}">
@@ -59,8 +69,56 @@
           </event>
         </xsl:for-each-group>
       </eventList>      
-      <xsl:apply-templates mode="mei2musx" select="(//mei:scoreDef)[1]"/>
+      <page y2="{(count(distinct-values(//mei:staff/@n)) + 2) * $staffDistance}" 
+        x2="p{2*$margin}" end="{//@synch:end.id[number(../@synch:end.rounded)=max(//@synch:end.rounded)]}">
+        <xsl:apply-templates mode="mei2musx" select="mei:music/mei:*"/>
+      </page>
     </musx>
+  </xsl:template>
+  
+  <xsl:template match="mei:group|mei:music|mei:body|mei:mdiv" mode="mei2musx">
+    <xsl:apply-templates mode="mei2musx"/>
+  </xsl:template>
+  
+  <xsl:template match="mei:section" mode="mei2musx">
+    <xsl:variable name="section" select="." as="node()"/>
+    <system start="{@synch:id}" end="{(//mei:measure)[last()]/@synch:end.id}" size="{$size}">
+      <barline/><!-- System barline -->
+      <xsl:variable name="sortedStaffNs" as="xs:string*">
+        <xsl:for-each select="distinct-values(.//mei:staff/@n)">
+          <xsl:sort select="number(current())"/>
+          <xsl:sequence select="."/>
+        </xsl:for-each>
+      </xsl:variable>
+      <xsl:for-each select="$sortedStaffNs">
+        <!-- TODO: What about staffGrp? Those get lost -->
+        <xsl:variable name="firstStaffN" select="($section//mei:staff[@n=current()])[1]"/>
+        <!-- QUESTION: is ($firstStaffN/preceding::mei:staffDef[@n=current()])[last()]
+              the same as  $firstStaffN/preceding::mei:staffDef[@n=current()][1]  ? -->
+        <xsl:variable name="initialStaffDef" select="($firstStaffN/preceding::mei:staffDef[@n=current()])[last()]"/>
+        <staff y="p{$staffDistance * position()}" start="{$section/@synch:id}">
+          <!-- Display staff label -->
+          <svg y="S6" x="s-2">
+            <svg:text font-size="4" text-anchor="end">
+              <xsl:value-of select="current()"/>
+            </svg:text>
+          </svg>
+          <!-- TODO: more general templates for clef and keysignature generation, not only at the start of a piece 
+                 Use those templates instead of explicitly adding them here -->
+          <xsl:variable name="clefElement" select="($firstStaffN/preceding::mei:staffDef/mei:clef)[last()]"/>
+          <clef symbol="clef.{$clefElement/@shape}" y="L{$clefElement/@line}" x="s{1}"/>
+          <timeSignature x="p{$clefSpace + $keysignatureSpace}">
+            <!-- Look for meter definition, either in this very element or a preceding scoredef -->
+            <!-- TODO: Adjust the following for this context -->
+            <!--<xsl:apply-templates select="(ancestor-or-self::mei:*[@*[starts-with(local-name(),'meter.')]])[last()]" mode="add-timesignature-symbols"/>-->
+          </timeSignature>
+          <!-- Add all content from all <staff> elements with corresponding @n -->
+          <!-- QUESTION: Does this key actually work?? -->
+<!--          <xsl:apply-templates mode="mei2musx" select="key('staffBySection',concat(current(),'_',$section/@xml:id))"/>-->
+          <xsl:apply-templates mode="mei2musx" select="key('staffBySection',concat(current(),'_',$section/@xml:id),$section)"/>
+        </staff>
+      </xsl:for-each>
+    </system>
   </xsl:template>
   
   <xsl:template match="*" mode="copy-id">
@@ -76,48 +134,12 @@
     </xsl:attribute>
   </xsl:template>
   
-  <!-- TODO: Don't repeat this for every scoreDef. It creates multiple pages that cover each other -->
-  <xsl:template mode="mei2musx" match="mei:scoreDef">
-    <page y2="{(count(//mei:staffDef[not(contains($excludeStaffsList,concat(' ',@n,' ')))]) + 2) * $staffDistance}" x2="p{2*$margin}" end="{//@synch:end.id[number(../@synch:end.rounded)=max(//@synch:end.rounded)]}">
-      <!-- Currently, everything is put into a single line of music, i.e no system breaks. -->
-      <!-- Firefox doesn't support accessing @xml:id, for some reason, therefore the strange workaround -->
-      <system start="_t0" end="{(//mei:measure)[last()]/@synch:end.id}" size="{$size}" svg:transform="translate({$margin},{$margin})">
-        <barline/><!-- System barline -->
-        <xsl:apply-templates mode="add-staffs" select="mei:staffGrp|mei:staffDef"/>
-      </system>
-    </page>
-  </xsl:template>
-  
-  <xsl:template match="mei:staffGrp" mode="add-staffs">
+  <!-- TODO: Find an appropriate replacement for this template -->
+<!--  <xsl:template match="mei:staffGrp" mode="add-staffs">
     <staffGroup>
       <xsl:apply-templates mode="add-staffs" select="mei:staffGrp|mei:staffDef"/>
     </staffGroup>
-  </xsl:template>
-  
-  <xsl:template match="mei:staffDef" mode="add-staffs">
-    <!-- As <staffdef>s may occur grouped in <staffgrp>s, a simple 
-         count(preceding-sibling::mei:staffDef) doesn't do the job. -->
-    <staff y="p{$staffDistance * (
-         count(
-           preceding-sibling::mei:staffDef|ancestor::mei:staffGrp/preceding-sibling::mei:*/descendant-or-self::mei:staffDef             
-         ) + 1)}" start="_t0">
-      <!-- Display staff label -->
-      <svg y="S6" x="s-2">
-        <svg:text font-size="4" text-anchor="end">
-          <xsl:value-of select="@n"/>
-        </svg:text>
-      </svg>
-      <!-- TODO: more general templates for clef and keysignature generation, not only at the start of a piece 
-                 Use those templates instead of explicitly adding them here -->
-      <clef symbol="clef.{(@clef.shape|mei:clef/@shape)[last()]}" y="L{(@clef.line|mei:clef/@line)[last()]}" x="s{1}"/>
-      <timeSignature x="p{$clefSpace + $keysignatureSpace}">
-        <!-- Look for meter definition, either in this very element or a preceding scoredef -->
-        <xsl:apply-templates select="(ancestor-or-self::mei:*[@*[starts-with(local-name(),'meter.')]])[last()]" mode="add-timesignature-symbols"/>
-      </timeSignature>
-      <!-- Add all content from all <staff> elements with corresponding @n -->
-      <xsl:apply-templates mode="mei2musx" select="key('staff',@n)"/>
-    </staff>
-  </xsl:template>
+  </xsl:template>-->
   
   <xsl:template match="mei:*[@meter.sym]" mode="add-timesignature-symbols" priority="1">
     <xsl:attribute name="symbol">
@@ -133,7 +155,7 @@
   </xsl:template>
   
   <xsl:template mode="get-keysignature-pattern" match="mei:staffDef[mei:keySig]">
-    <keySignature symbol="accidental.{mei:keySig/@accid}" y="L{(@clef.line|mei:clef/@line)[last()]}" x="p{$clefSpace}">
+    <keySignature symbol="accidental.{mei:keySig/@accid}" y="L{mei:clef/@line}" x="p{$clefSpace}">
       <!-- $clefSpace tells us how much space the preceding clef takes up -->
       <xsl:attribute name="pattern">
         <!-- Extract pattern from table
@@ -152,7 +174,7 @@
                    F 4   1   5   2   6   3   7',
                    mei:keySig/@accid
               ),
-              substring((@clef.shape|mei:clef/@shape)[last()],1,1)            
+              substring(mei:clef/@shape,1,1)            
             ), 1, mei:keySig/@n*4
           )"/>
          </xsl:attribute>
@@ -194,10 +216,26 @@
     </hairpin>
   </xsl:template>
   
+  <xsl:template mode="mei2musx" match="mei:slur">
+    <xsl:variable name="y" select="if(@curvedir='below') then '14' else '-5'"/>
+    <!-- TODO: Proper height and y positioning (as well for mei:dynam, see below) -->
+    <slur start="{(@synch:id,@startid)[1]}" end="{(@synch:end.id,@endid)[1]}" y1="S{$y}" y2="S{$y}" 
+      height="s{if(@curvedir='below') then '' else '-'}8"/>
+  </xsl:template>
+  
+  <xsl:template mode="mei2musx" match="mei:tie">
+    <!-- TODO: 
+      - Proper height
+      - accept @tstamp instead of @startid
+      - proper y positioning (as well for mei:dynam, see below) -->
+    <slur class="tie" start="{(@startid,@synch:id)[1]}" end="{(@endid,@synch:end.id)[1]}" height="s{if(@curvedir='below') then '' else '-'}3.5"/>
+  </xsl:template>
+  
   <xsl:template mode="mei2musx" match="mei:dynam">
     <!-- TODO: Proper y positioning (as well for mei:hairpin, see above) -->
     <symbolText start="{@synch:id}" class="dynam" y="S{if(@place='above') then '-5' else '14'}">
       <xsl:apply-templates mode="mei2musx"/>
     </symbolText>
   </xsl:template>
+  
 </xsl:stylesheet>
