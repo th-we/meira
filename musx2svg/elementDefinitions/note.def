@@ -18,7 +18,7 @@
     <coordinate name="y1" orientation="y" anchor="g:y(.)" lacuna="0"/>
     <coordinate name="y2" orientation="y" anchor="g:y(.)" lacuna="0"/>
     
-    <integer name="ledgerLines.direction" lacuna="if (g:step(.) &lt; 0)
+    <integer name="ledgerLines.direction" lacuna="if (g:step(.) lt 0)
                                                   then -1
                                                   else 1"/>
     <coordinate name="ledgerLines.y1" orientation="y" lacuna="0" anchor="
@@ -196,8 +196,8 @@
   </properties>
   
   <!-- This function is also used by beams. The 'beamNotes' key is defined there. --> 
-  <xsl:function name="g:calculateDirection">
-    <xsl:param name="element"/>
+  <xsl:function name="g:calculateDirection" as="xs:integer">
+    <xsl:param name="element" as="node()*"/>
     <xsl:variable name="notes" select="$element/(self::musx:note, self::musx:chord/musx:note, key('beamNotes',@xml:id))"/>
     <xsl:variable name="sortedSteps" as="xs:double*">
       <xsl:for-each select="g:step($notes)">
@@ -205,7 +205,8 @@
         <xsl:sequence select="."/>
       </xsl:for-each>
     </xsl:variable>
-    <xsl:variable name="staffCenter" select="g:lines($notes[1]/ancestor::musx:staff[last()]) - 1"/>
+    <xsl:variable name="staffCenter" select="g:lines($notes[1]/ancestor::musx:staff[last()]) - 1" as="xs:integer"/>
+    <!-- If there are no $notes, expression in if(..) will be false and 1 will be returned -->
     <xsl:sequence select="
         if (.5*($sortedSteps[last()] + $sortedSteps[1]) &gt; $staffCenter)
         then -1

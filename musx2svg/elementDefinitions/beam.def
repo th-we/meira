@@ -22,6 +22,7 @@
     
     <scaleFactor name="size" anchor="g:size(..)" lacuna="1"/>
     <scaleFactor name="width" anchor="g:size(.)" lacuna="1"/>
+    <!-- Distance between two "partial" beams in y direction-->
     <scaleFactor name="distance" anchor="g:size(.)" lacuna="1.5"/>
     
     <!-- The caluclateDirection function is defined in note.def -->
