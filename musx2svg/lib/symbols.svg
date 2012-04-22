@@ -246,10 +246,10 @@
     </g>
     <g id='rest.1' transform='translate(0,-2)scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
-        <glyph glyph-name='rests.0' unicode='' horiz-adv-x='2.82'/>
-        <bbox left='0' top='-2' width='2.8125' height='1.171875' right='2.8125' bottom='-0.828125' xmlns=''/>
+        <glyph glyph-name='rests.0o' unicode='' horiz-adv-x='2.82'/>
+        <bbox left='-1.171875' top='-2.1875' width='5.15625' height='1.359375' right='3.984375' bottom='-0.828125' xmlns=''/>
       </metadata>
-      <path d='M365 -156h-355c-6 0 -10 4 -10 10v136c0 6 4 10 10 10h355c6 0 10 -4 10 -10v-136c0 -6 -4 -10 -10 -10z'/>
+      <path d='M365 -156h-355c-6 0 -10 4 -10 10v121h-131c-14 0 -25 11 -25 25s11 25 25 25h637c14 0 25 -11 25 -25s-11 -25 -25 -25h-131v-121c0 -6 -4 -10 -10 -10z'/>
     </g>
     <g id='rest.2' transform=' scale(0.0075,-0.0075)' class='symbol' style='stroke:none'>
       <metadata>
