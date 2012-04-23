@@ -107,8 +107,8 @@
       ]">
     <xsl:variable name="staffN" select="ancestor::mei:staff/@n"/>
     <xsl:variable name="layerN" select="ancestor::mei:layer/@n"/>
-    <mei:tie startid="{@xml:id}" 
-      endid="{../following::mei:note[@tie='t' and ancestor::mei:staff/@n=$staffN and ancestor::mei:layer/@n=$layerN]/@xml:id}"/>
+    <mei:tie startid="{../@xml:id}" 
+      endid="{../following::mei:note[@tie='t' and ancestor::mei:staff/@n=$staffN and ancestor::mei:layer/@n=$layerN][1]/@xml:id}"/>
   </xsl:template> 
 
   <!-- QUESTION: Is there an attribute version of <dynam> that we need to canonicalize? -->
