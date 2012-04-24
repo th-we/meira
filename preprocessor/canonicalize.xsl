@@ -138,6 +138,21 @@
     </mei:verse>
   </xsl:template>
   
+  <xsl:template match="mei:syl[not(parent::mei:verse)]" mode="canonicalize">
+    <mei:verse n="{count(preceding-sibling::mei:syl) + 1}">
+      <xsl:copy-of select="."/>
+    </mei:verse>
+  </xsl:template>
+  
+  <xsl:template match="mei:verse[not(@n)]" mode="canonicalize">
+    <xsl:copy>
+      <xsl:attribute name="n">
+        <xsl:value-of select="count(preceding-sibling::mei:verse) + 1"/>
+      </xsl:attribute>
+      <xsl:copy-of select="@*|node()"/>
+    </xsl:copy>
+  </xsl:template>
+  
   <xsl:template mode="turn-attributes-into-element" 
       match="@tie[
         string()='i' and not(
@@ -156,19 +171,5 @@
 
   <xsl:template match="@*" mode="turn-attributes-into-element"/>
 
-  <xsl:template match="mei:syl[not(parent::mei:verse)]">
-    <mei:verse n="{count(preceding-sibling::mei:syl) + 1}">
-      <xsl:copy-of select="."/>
-    </mei:verse>
-  </xsl:template>
-  
-  <xsl:template match="mei:verse[not(@n)]">
-    <xsl:copy>
-      <xsl:attribute name="n">
-        <xsl:value-of select="count(preceding-sibling::mei:verse) + 1"/>
-      </xsl:attribute>
-      <xsl:copy-of select="@*|node()"/>
-    </xsl:copy>
-  </xsl:template>
 
 </xsl:stylesheet>
