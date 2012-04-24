@@ -20,6 +20,8 @@
   <xsl:key name="staff" match="mei:*[@staff]" use="@staff"/>-->
   <xsl:key name="staffBySection" match="mei:staff" use="concat(@n,'_',ancestor::mei:section/@xml:id)"/>
   <xsl:key name="staffBySection" match="mei:*[@staff]" use="concat(@staff,'_',ancestor::mei:section/@xml:id)"/>
+  <xsl:key name="defsBySynchId" match="mei:scoreDef|mei:staffDef" use="(ancestor-or-self::mei:*/@synch:id)[last()]"/>
+  <xsl:key name="staffsBySynchId" match="mei:staff" use="(ancestor-or-self::mei:*/@synch:id)[last()]"/>
   <!-- TODO: Handle elements correctly that are inside another staff and have @staff 
              (they have to be omitted when processing the staff they're inside) -->
   <xsl:key name="measure" match="mei:measure" use="@n"/>
@@ -81,7 +83,7 @@
   </xsl:template>
   
   <xsl:template match="mei:section" mode="mei2musx">
-    <xsl:variable name="section" select="." as="node()"/>
+    <xsl:variable name="section" select="." as="element()"/>
     <system start="{@synch:id}" end="{(//mei:measure)[last()]/@synch:end.id}" size="{$size}">
       <barline/><!-- System barline -->
       <xsl:variable name="sortedStaffNs" as="xs:string*">
@@ -103,15 +105,17 @@
               <xsl:value-of select="current()"/>
             </svg:text>
           </svg>
-          <!-- TODO: more general templates for clef and keysignature generation, not only at the start of a piece 
-                 Use those templates instead of explicitly adding them here -->
-          <xsl:variable name="clefElement" select="($firstStaffN/preceding::mei:staffDef/mei:clef)[last()]"/>
+          <!-- In theory, the clef information can be found inside a scoreDef, but as we're only handling 
+               canonicalized <clef> elements and scoreDef only has @clef.* attributes, we're hoping a clef
+               element has been provided and will fail if it isn't. -->
+          <xsl:variable name="clefElement" as="element()">
+            <xsl:apply-templates select="$firstStaffN" mode="get-current-clef-element"/>
+          </xsl:variable>
           <clef symbol="clef.{$clefElement/@shape}" y="L{$clefElement/@line}" x="s{1}"/>
-          <timeSignature x="p{$clefSpace + $keysignatureSpace}">
-            <!-- Look for meter definition, either in this very element or a preceding scoredef -->
-            <!-- TODO: Adjust the following for this context -->
-            <!--<xsl:apply-templates select="(ancestor-or-self::mei:*[@*[starts-with(local-name(),'meter.')]])[last()]" mode="add-timesignature-symbols"/>-->
-          </timeSignature>
+          <xsl:apply-templates mode="add-key-signature" select="$section">
+            <xsl:with-param name="meiClef" select="$clefElement" as="element()"/>
+          </xsl:apply-templates>
+          <xsl:apply-templates mode="add-time-signature" select="(key('staffsBySynchId',$section/@synch:id,$section),$section)[1]"/>
           <!-- Add all content from all <staff> elements with corresponding @n -->
           <!-- QUESTION: Does this key actually work?? -->
 <!--          <xsl:apply-templates mode="mei2musx" select="key('staffBySection',concat(current(),'_',$section/@xml:id))"/>-->
@@ -141,6 +145,22 @@
     </staffGroup>
   </xsl:template>-->
   
+  <xsl:template match="*" mode="add-time-signature">
+    <xsl:variable name="staffN" select="((ancestor-or-self::mei:staff|ancestor-or-self::mei:staffDef)/@n)[last()]"/>
+    <xsl:variable name="synchID" select="(ancestor-or-self::*/@synch:id)[last()]"/> 
+    <xsl:variable name="meterDefiningElement" as="element()" select="
+      (: Select keySig's at the immediate start of this element or previous ones :)
+      (
+        preceding::mei:staffDef[@n=$staffN]|preceding::mei:scoreDef
+        ,key('defsBySynchId',$synchID)
+      )
+      [@meter.symbol or @meter.count]
+      [last()]"/>
+    <timeSignature start="{$synchID}">
+      <xsl:apply-templates mode="add-timesignature-symbols" select="$meterDefiningElement"/>
+    </timeSignature>
+  </xsl:template>
+  
   <xsl:template match="mei:*[@meter.sym]" mode="add-timesignature-symbols" priority="1">
     <xsl:attribute name="symbol">
       <xsl:value-of select="concat('metersymbol.',@meter.sym)"/>
@@ -153,9 +173,41 @@
       <string><xsl:value-of select="@meter.unit"/></string>
     </fraction>
   </xsl:template>
+
+  <xsl:template match="mei:*" mode="get-current-key-signature-element">
+    <xsl:variable name="synchID" select="@synch:id"/>
+    <xsl:variable name="staffN" select="(ancestor-or-self::mei:staff/@n)[last()]" as="xs:string?"/>
+    <xsl:sequence select="
+      (: Select keySig's at the immediate start of this element or previous ones :)
+      (
+        descendant::mei:keySig[ancestor::*/@synch:id[1]=$synchID]|
+        preceding::mei:keySig
+      )
+      (: reduce sequence to only those keySig's that are inside staffDef's with proper @n or inside scoreDef's
+         i.e. exclude those from staffDef's with improper @n :)
+      [not(ancestor::mei:staffDef/@n!=$staffN)][last()]"/>
+    <!-- TODO: Check whether the above "filter" actually works for elements that aren't inside <staff>s -->
+  </xsl:template>
   
-  <xsl:template mode="get-keysignature-pattern" match="mei:staffDef[mei:keySig]">
-    <keySignature symbol="accidental.{mei:keySig/@accid}" y="L{mei:clef/@line}" x="p{$clefSpace}">
+  <xsl:template match="mei:*" mode="get-current-clef-element">
+    <xsl:variable name="staffN" select="(ancestor-or-self::mei:staff/@n)[last()]" as="xs:string"/>
+    <xsl:sequence select="
+      (
+        mei:staffDef/mei:clef
+        |preceding::mei:clef[
+          (ancestor::mei:staffDef|ancestor::mei:staff)/@n=$staffN
+        ]
+      )[last()]"/>
+  </xsl:template>
+
+  <xsl:template mode="add-key-signature" match="*">
+    <xsl:param name="meiKeySig" as="element()">
+      <xsl:apply-templates select="." mode="get-current-key-signature-element"/>
+    </xsl:param>
+    <xsl:param name="meiClef" as="element()">
+      <xsl:apply-templates select="." mode="get-current-clef-element"/>
+    </xsl:param>
+    <keySignature symbol="accidental.{$meiKeySig/@accid}" y="L{$meiClef/@line}" x="p{$clefSpace}">
       <!-- $clefSpace tells us how much space the preceding clef takes up -->
       <xsl:attribute name="pattern">
         <!-- Extract pattern from table
@@ -172,16 +224,16 @@
                  f G-2  -5  -1  -4   0  -3   1
                    C 1  -2   2  -1   3   0   4
                    F 4   1   5   2   6   3   7',
-                   mei:keySig/@accid
+                 mei:keySig/@accid
               ),
-              substring(mei:clef/@shape,1,1)            
-            ), 1, mei:keySig/@n*4
+              (: We only take the first letter of @shape because it could be 'GG' :)
+              substring($meiClef/@shape,1,1)            
+            ), 1, ($meiKeySig/@n cast as xs:integer)*4
           )"/>
          </xsl:attribute>
     </keySignature>
     <!-- TODO: Handle more complex ("mixed") patterns -->
   </xsl:template>
-  <xsl:template mode="get-keysignature-pattern" match="*"/>
   
   <xsl:template mode="mei2musx" match="mei:staff">
     <group class="measure">
