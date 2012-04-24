@@ -71,6 +71,7 @@
     		   copy-of? -->
       <xsl:apply-templates mode="canonicalize" select="@*"/>
       <xsl:copy-of select="(@dur|descendant::mei:note/@dur)[1]"/>
+      <xsl:apply-templates select="@*" mode="turn-attributes-into-element"/>
       <xsl:apply-templates mode="canonicalize"/>
     </mei:chord>
   </xsl:template>
@@ -97,6 +98,46 @@
     <mei:accid accid="{string()}"/>
   </xsl:template>
   
+  <xsl:template mode="canonicalize" match="@syl"/>
+  <xsl:template mode="turn-attributes-into-element" match="@syl">
+    <xsl:variable name="staffN" select="(ancestor::mei:staff/@n)[last()]"/>
+    <xsl:variable name="previousSyl" select="(preceding::mei:staff[@n=$staffN]//@syl)[last()]"/>
+    <mei:verse n="1">
+      <mei:syl>
+        <xsl:choose>
+          <!-- @syl has "-" -->
+          <xsl:when test="ends-with(.,'-')">
+            <xsl:attribute name="con">
+              <xsl:value-of select="'d'"/>
+            </xsl:attribute>
+            <xsl:attribute name="wordpos">
+              <xsl:value-of select="if(ends-with($previousSyl,'-'))
+                then 'm'
+                else 'i'"/>
+            </xsl:attribute>
+          </xsl:when>
+          <!-- @syl does not have "-" -->
+          <xsl:otherwise>
+            <xsl:if test="ends-with($previousSyl,'-')">
+              <xsl:attribute name="wordpos">
+                <xsl:value-of select="'t'"/>
+              </xsl:attribute>
+            </xsl:if>
+            <xsl:if test="ends-with(.,'_')">
+              <xsl:attribute name="con">
+                <xsl:value-of select="'u'"/>
+              </xsl:attribute>
+            </xsl:if>
+          </xsl:otherwise>
+        </xsl:choose>
+        <!-- Copy everything except the last char as this might be dash/underscore -->
+        <xsl:value-of select="substring(.,1,string-length(.)-1)"/>
+        <!-- Copy the last char (if it's a dash or underscore, it will be translated to an empty string) -->
+        <xsl:value-of select="translate(substring(.,string-length(.),1),'-_','')"/>
+      </mei:syl>
+    </mei:verse>
+  </xsl:template>
+  
   <xsl:template mode="turn-attributes-into-element" 
       match="@tie[
         string()='i' and not(
@@ -114,5 +155,20 @@
   <!-- QUESTION: Is there an attribute version of <dynam> that we need to canonicalize? -->
 
   <xsl:template match="@*" mode="turn-attributes-into-element"/>
+
+  <xsl:template match="mei:syl[not(parent::mei:verse)]">
+    <mei:verse n="{count(preceding-sibling::mei:syl) + 1}">
+      <xsl:copy-of select="."/>
+    </mei:verse>
+  </xsl:template>
+  
+  <xsl:template match="mei:verse[not(@n)]">
+    <xsl:copy>
+      <xsl:attribute name="n">
+        <xsl:value-of select="count(preceding-sibling::mei:verse) + 1"/>
+      </xsl:attribute>
+      <xsl:copy-of select="@*|node()"/>
+    </xsl:copy>
+  </xsl:template>
 
 </xsl:stylesheet>

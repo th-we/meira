@@ -290,4 +290,17 @@
     </symbolText>
   </xsl:template>
   
+  <!-- TODO: Implement lyrics properly -->
+  <!-- TODO: Canonicalize lyrics so that they always appear in a <verse> element with proper @n -->
+  <xsl:template mode="mei2musx" match="mei:syl">
+    <svg y="S{10 + 5*number(parent::mei:verse/@n)}">
+      <svg:text font-size="5">
+        <xsl:value-of select="."/>
+        <xsl:if test="@wordpos=('i','m')">
+          <xsl:value-of select="'-'"/>
+        </xsl:if>
+      </svg:text>
+    </svg>
+  </xsl:template>
+  
 </xsl:stylesheet>
