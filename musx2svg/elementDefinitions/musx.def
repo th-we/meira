@@ -25,6 +25,7 @@
   <includeDefinition href="slur.def"/>
   <includeDefinition href="symbolText.def"/>
   <includeDefinition href="keySignature.def"/>
+  <includeDefinition href="timeSignature.def"/>
   
   <draw/>
 

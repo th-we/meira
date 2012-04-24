@@ -169,8 +169,8 @@
   
   <xsl:template match="mei:*[@meter.count and @meter.unit]" mode="add-timesignature-symbols">
     <fraction>
-      <string><xsl:value-of select="@meter.count"/></string>
-      <string><xsl:value-of select="@meter.unit"/></string>
+      <symbolText><xsl:value-of select="@meter.count"/></symbolText>
+      <symbolText><xsl:value-of select="@meter.unit"/></symbolText>
     </fraction>
   </xsl:template>
 
@@ -207,7 +207,7 @@
     <xsl:param name="meiClef" as="element()">
       <xsl:apply-templates select="." mode="get-current-clef-element"/>
     </xsl:param>
-    <keySignature symbol="accidental.{$meiKeySig/@accid}" y="L{$meiClef/@line}" x="p{$clefSpace}">
+    <keySignature symbol="accidental.{$meiKeySig/@accid}" y="L{$meiClef/@line}">
       <!-- $clefSpace tells us how much space the preceding clef takes up -->
       <xsl:attribute name="pattern">
         <!-- Extract pattern from table

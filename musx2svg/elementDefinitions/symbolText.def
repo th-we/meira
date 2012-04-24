@@ -11,9 +11,16 @@
 	<element name="symbolText">
 		<properties>
 			<elementReference name="start" lacuna=".."/>
-			
-			<coordinate name="x" anchor="g:x(g:start(.))" lacuna="0" orientation="x"/>
-			<coordinate name="y" anchor="g:y(..)" lacuna="0" orientation="y"/>
+      <!-- TODO: Is there a more elegant solution (that can be defined in timeSignature.def) 
+           for automatically centering timeSignature fractions? Same below for @y. -->
+			<coordinate name="x" anchor="g:x(g:start(.))" lacuna="if (parent::musx:fraction)
+			                                                      then .5*(g:width(..) - g:width(.))
+			                                                      else 0" orientation="x"/>
+		  <!-- TODO: Is there a more elegant solution (that can be defined in timeSignature.def)
+		       for vertically positioning timeSignature fractions? Same above for @x. -->
+		  <coordinate name="y" anchor="g:y(..)" lacuna="if (parent::musx:fraction)
+			                                              then (4*count(preceding-sibling::musx:symbolText)-2)*g:staffSize(.)
+			                                              else 0" orientation="y"/>
 			
 			<coordinate name="x1" anchor="g:x(.)" lacuna="0 - g:width(.) * g:textAnchor(.)" orientation="x"/>
 			<coordinate name="x2" anchor="g:x(.)" lacuna="(1 - g:textAnchor(.)) * g:width(.)" orientation="x"/>
