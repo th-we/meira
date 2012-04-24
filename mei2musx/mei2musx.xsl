@@ -296,7 +296,7 @@
     <svg y="S{10 + 5*number(parent::mei:verse/@n)}">
       <svg:text font-size="5">
         <xsl:value-of select="."/>
-        <xsl:if test="@wordpos=('i','m')">
+        <xsl:if test="@wordpos=('i','m') or @con='d'">
           <xsl:value-of select="'-'"/>
         </xsl:if>
       </svg:text>
