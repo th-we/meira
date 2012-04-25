@@ -5,7 +5,8 @@
     xmlns:svg="http://www.w3.org/2000/svg" 
     xmlns:synch="NS:SYNCH" xmlns="NS:MUSX" 
     xmlns:xlink="http://www.w3.org/1999/xlink"
-    xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:lf="NS:LOCAL_FUNCTIONS">
   <xsl:include href="beams.xsl"/>
   <xsl:include href="notes.xsl"/>
 
@@ -40,6 +41,8 @@
   <xsl:param name="excludeStaffsList" select="''"/>
   <xsl:param name="startMeasure" select="//mei:measure[1]/@n"/>
   <xsl:param name="endMeasure" select="//mei:measure[last()]/@n"/>
+  <xsl:variable name="svgNS" select="'http://www.w3.org/2000/svg' cast as xs:anyURI" as="xs:anyURI"/>
+  <xsl:variable name="nullNS" select="'' cast as xs:anyURI" as="xs:anyURI"/>
   
   
   <xsl:template match="/" priority="-10">
@@ -236,18 +239,62 @@
   </xsl:template>
   
   <xsl:template mode="mei2musx" match="mei:staff">
+    <xsl:variable name="measure" select="ancestor::mei:measure[last()]" as="element()"/>
     <group class="measure">
       <!-- Display measure number -->
       <svg y="S-2" x="p{-1 * $barlineSpace}">
         <xsl:apply-templates mode="mei2musx" select="ancestor-or-self::*/@synch:id"/>
         <svg:text font-size="3" text-anchor="end">
-          <xsl:value-of select="ancestor::mei:measure/@n"/>
+          <xsl:value-of select="$measure/@n"/>
         </svg:text>
       </svg>
+      <xsl:if test="string($measure/@left)!=('','invis')">
+        <barline x="p{-.85 * $barlineSpace}" start="{$measure/@synch:id}">
+          <xsl:apply-templates select="@right" mode="add-barline-type-attributes"/>
+          <xsl:apply-templates select="@right" mode="add-barline-stroke-features"/>
+        </barline>
+      </xsl:if>
       <xsl:apply-templates mode="mei2musx"/>
-      <barline x="p{-.85 * $barlineSpace}" start="{ancestor::mei:measure/@synch:end.id}"/>
+      <xsl:if test="$measure/@right!='invis'">
+        <barline x="p{-.85 * $barlineSpace}" start="{$measure/@synch:end.id}">
+          <xsl:apply-templates select="$measure/@right" mode="add-barline-type-attributes"/>
+          <xsl:apply-templates select="$measure/@right" mode="add-barline-stroke-features"/>
+        </barline>
+      </xsl:if>
     </group>
   </xsl:template>
+  
+  <xsl:function name="lf:generateAttribute">
+    <xsl:param name="namespace" as="xs:anyURI"/>
+    <xsl:param name="name" as="xs:string"/>
+    <xsl:param name="value" as="xs:string"/>
+    <xsl:attribute name="{$name}" namespace="{$namespace}">
+      <xsl:value-of select="$value"/>
+    </xsl:attribute>
+  </xsl:function>
+  
+  <xsl:template match="mei:measure/@right[string()=('dbl','dbldashed','dbldotted')]" mode="add-barline-type-attributes">
+    <xsl:sequence select="lf:generateAttribute($nullNS,'type','double')"/>
+  </xsl:template>
+  <xsl:template match="mei:measure/@right[string()='end']" mode="add-barline-type-attributes">
+    <xsl:sequence select="lf:generateAttribute($nullNS,'type','end')"/>
+  </xsl:template>
+  <xsl:template match="mei:measure/@right[string()='rptstart']" mode="add-barline-type-attributes">
+    <xsl:sequence select="lf:generateAttribute($nullNS,'type','repeatStart')"/>
+  </xsl:template>
+  <xsl:template match="mei:measure/@right[string()='rptend']" mode="add-barline-type-attributes">
+    <xsl:sequence select="lf:generateAttribute($nullNS,'type','repeatEnd')"/>
+  </xsl:template>
+  <xsl:template match="mei:measure/@right" mode="add-barline-type-attributes" priority="-1"/>
+  
+  <xsl:template match="mei:measure/@right[string()=('dashed','dbldashed')]" mode="add-barline-stroke-features">
+    <xsl:sequence select="lf:generateAttribute($svgNS,'stroke-dasharray','12,8')"/>
+  </xsl:template>
+  <xsl:template match="mei:measure/@right[string()=('dotted','dbldotted')]" mode="add-barline-stroke-features">
+    <xsl:sequence select="lf:generateAttribute($svgNS,'stroke-dasharray','6,6')"/>
+    <xsl:sequence select="lf:generateAttribute($svgNS,'stroke-linecap','round')"/>
+  </xsl:template>
+  <xsl:template match="mei:measure/@right" mode="add-barline-stroke-features"/>
   
   <!-- This groups elements so that they can be styled (e.g. hidden) or manipulated with Javascript as a whole. -->
   <xsl:template mode="mei2musx" match="mei:rdg|mei:del|mei:lem|mei:orig|mei:reg|mei:app">
