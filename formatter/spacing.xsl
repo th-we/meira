@@ -1,18 +1,22 @@
 <?xml version="1.0"?>
-<stylesheet xmlns="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:update="NS:UPDATE" xmlns:musx="NS:MUSX" version="2.0">
+<stylesheet version="2.0"
+    xmlns="http://www.w3.org/1999/XSL/Transform" 
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+    xmlns:update="NS:UPDATE" 
+    xmlns:musx="NS:MUSX" 
+    xmlns:xsb="http://www.expedimentum.org/XSLT/SB">
 
-<param name="spacingBase" select="1"/>
-<param name="referenceNote.duration" select=".25"/>
-<param name="referenceNote.space" select="40"/>
-<param name="taylorPolynomialDegree" select="20"/>
-<variable name="spacingFactor" select="$referenceNote.space div musx:power($spacingBase,$referenceNote.duration,$taylorPolynomialDegree)"/>
+<import href="../musx2svg/math/math.xsl"/>
+
+<param name="spacingBase" select="1.618" as="xs:double"/>
+<param name="referenceNote.duration" select=".25" as="xs:double"/>
+<param name="referenceNote.space" select="40" as="xs:double"/>
+<!--<param name="taylorPolynomialDegree" select="20" as="xs:integer"/>-->
 		
 <function name="musx:space" as="xs:double">
 	<param name="duration" as="xs:double"/>
-	<sequence select="musx:power($spacingBase,$duration,$taylorPolynomialDegree) * $spacingFactor"/>
-<!--	<message>
-		Space for duration <value-of select="$duration"/> = <value-of select="musx:power($spacingBase,$duration,$taylorPolynomialDegree)"/>
-	</message>-->
+  <!--<sequence select="musx:power($spacingBase,$duration div $referenceNote.duration - 1,$taylorPolynomialDegree) * $referenceNote.space"/>-->
+  <sequence select="xsb:pow($spacingBase,$duration div $referenceNote.duration - 1) * $referenceNote.space"/>
 </function>
 	
 <!-- The power function (f(x)=b^x) is emulated by a Taylor series, developed at b=1. 
@@ -30,24 +34,28 @@
 	   All other notes' spacing is accurate within a tolerance of less than a percent.
 	-->
 	
-<function name="musx:power" as="xs:double">
-	<!-- Calculates the sum of polynomial terms recursively (does the "SUM" part of the above formula) -->
+<!--<function name="musx:power" as="xs:double">
+	<!-\- Calculates the sum of polynomial terms recursively (does the "SUM" part of the above formula) -\->
 	<param name="b" as="xs:double"/>
 	<param name="x" as="xs:double"/>
 	<param name="termIndex" as="xs:integer"/>
-	<!-- the higher $termIndex, the more terms are being calculated, the higher the accuracy -->
+	<!-\- the higher $termIndex, the more terms are being calculated, the higher the accuracy -\->
 
-	<sequence select="if($termIndex &gt;= 0)                   then musx:polynomialTerm($b,$x,$termIndex) + musx:power($b,$x,$termIndex - 1)                   else 0"/>
+	<sequence select="if($termIndex &gt;= 0)                   
+	                  then musx:polynomialTerm($b,$x,$termIndex) + musx:power($b,$x,$termIndex - 1)                   
+	                  else 0"/>
 </function>
 	
 <function name="musx:polynomialTerm" as="xs:double">
-	<!-- Calculates the polynomial term recursively (does the "PROD" part of the above formula) -->
+	<!-\- Calculates the polynomial term recursively (does the "PROD" part of the above formula) -\->
 	<param name="b" as="xs:double"/>
 	<param name="x" as="xs:double"/>
 	<param name="j" as="xs:integer"/>
 	
-	<sequence select="if($j &gt;= 1)                   then ($b - 1)*($x + 1 - $j) div $j * musx:polynomialTerm($b,$x,$j - 1)                    else 1"/> 
-</function>
+	<sequence select="if($j &gt;= 1)
+	                  then ($b - 1)*($x + 1 - $j) div $j * musx:polynomialTerm($b,$x,$j - 1)                    
+	                  else 1"/> 
+</function>-->
 
 <template mode="spacing" match="node()|@*">
 	<copy>
@@ -64,10 +72,10 @@
 <template mode="spacing" match="musx:event">
 	<param name="x" select="0"/><!-- as="xs:double"/>-->
 	<copy>
-		<apply-templates mode="spacing" select="node()|@*"/>
-		<attribute name="x">
-			<value-of select="$x"/>
-		</attribute>
+	  <apply-templates mode="spacing" select="node()|@*"/>
+	  <attribute name="x">
+	    <value-of select="$x"/>
+	  </attribute>
 	</copy>
 	<variable name="nextEvent" select="following-sibling::musx:event[1]"/>
 <!--	<message>
