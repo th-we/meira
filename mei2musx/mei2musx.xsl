@@ -29,18 +29,10 @@
   <xsl:key name="synchValue" match="mei:*[@synch:rounded]" use="@synch:rounded"/>
   <xsl:key name="synchedElement" match="mei:*[@synch:rounded]" use="'true'"/>
   <xsl:param name="stylesheet" select="'type=&quot;text/xsl&quot; href=&quot;xsl/musx2svg.xsl&quot;'"/>
-  <xsl:param name="spacePerQuarter" select="200"/>
-  <xsl:param name="equidistantProportionalBalance" select=".1"/>
-  <xsl:param name="staffDistance" select="70"/>
-  <xsl:param name="barlineSpace" select="10"/>
-  <xsl:param name="clefSpace" select="35"/>
-  <xsl:param name="keysignatureSpace" select="60"/>
-  <xsl:param name="timesignatureSpace" select="20"/>
-  <xsl:param name="size" select="3"/>
-  <xsl:param name="margin" select="30"/>
-  <xsl:param name="excludeStaffsList" select="''"/>
-  <xsl:param name="startMeasure" select="//mei:measure[1]/@n"/>
-  <xsl:param name="endMeasure" select="//mei:measure[last()]/@n"/>
+  <xsl:param name="staffDistance" select="70" as="xs:double"/>
+  <xsl:param name="barlineSpace" select="10" as="xs:double"/>
+  <xsl:param name="size" select="3" as="xs:double"/>
+  <xsl:param name="margin" select="30" as="xs:double"/>
   <xsl:variable name="svgNS" select="'http://www.w3.org/2000/svg' cast as xs:anyURI" as="xs:anyURI"/>
   <xsl:variable name="nullNS" select="'' cast as xs:anyURI" as="xs:anyURI"/>
   
