@@ -3621,8 +3621,8 @@
    </template>
    <xsl:template xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" match="@symbol"
                  mode="render-time-signature">
-      <svg:use transform="translate({g:x(.)},{g:y(.)}) scale({g:size(.)})"
-               xlink:href="{g:symbol(.)}"/>
+      <svg:use transform="translate({g:x(..)},{g:y(..)}) scale({g:size(..)})"
+               xlink:href="{g:symbol(..)}"/>
   </xsl:template>
    <template match="musx:timeSignature" mode="draw">
       <svg:g>

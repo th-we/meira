@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<elementDefinition
+    xmlns="NS:DEF"
+    xmlns:svg="http://www.w3.org/2000/svg"
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:xlink="http://www.w3.org/1999/xlink">
+
+  <!-- The to be rendered symbol may be provided by @symbol or
+       a <string> child element, especially for a sequence of symbols
+       like "sfz". -->
+
+<element name="timeSignature">
+  <properties>
+    <elementReference name="start" lacuna=".."/>
+    
+    <coordinate name="x" orientation="x" anchor="g:x(g:start(.))" lacuna="0"/>
+    <!-- The anchor for a time signature is the second staff line.
+         If there is a single element (i.e. no fraction), it sits right on this line.
+         For a fraction, the numerator is shifted one line up, numerator one line down. -->
+    <coordinate name="y" orientation="y" anchor="g:y(..)" lacuna="6*g:staffSize(.)"/>
+    
+    <coordinate name="x1" orientation="x" anchor="g:x(.)" lacuna="0"/>
+    <coordinate name="x2" orientation="x" anchor="g:x(.)" lacuna="0"/>
+    <coordinate name="y1" orientation="y" anchor="g:y(.)" lacuna="0"/>
+    <coordinate name="y2" orientation="y" anchor="g:y(.)" lacuna="0"/>
+
+    <scaleFactor name="size" anchor="g:size(..)" lacuna="1"/>
+
+    <symbol name="symbol" lacuna="'clef.G'"/>
+  </properties>
+  
+  <draw>
+    <xsl:apply-templates select="@symbol" mode="render-time-signature"/>
+  </draw>
+
+<!-- TODO: Implement compound time signatures. This is the code from XSLT 1.0 incarnation  
+  <xsl:template match="*" mode="renderTimeSignature">
+    <xsl:param name="x" select="?x"/>
+    
+    <xsl:apply-templates select=".">
+      <xsl:with-param name="x" select="$x"/>
+    </xsl:apply-templates>
+    <xsl:apply-templates select="following-sibling::*[1]" mode="renderTimeSignature">
+      <xsl:with-param name="x" select="$x + ?width"/>
+    </xsl:apply-templates>
+  </xsl:template>-->
+  
+  <xsl:template match="@symbol" mode="render-time-signature">
+    <svg:use transform="translate({g:x(..)},{g:y(..)}) scale({g:size(..)})"
+        xlink:href="{g:symbol(..)}"/>
+  </xsl:template>
+
+</element>
+
+<element name="fraction">
+  <properties>
+    <coordinate name="x" orientation="x" anchor="g:x(..)" lacuna="0"/>
+    <coordinate name="y" orientation="y" anchor="g:y(..)" lacuna="0"/>
+    
+    <coordinate name="x1" orientation="x" anchor="g:x(.)" lacuna="0"/>
+    <coordinate name="x2" orientation="x" anchor="g:x(.)" lacuna="0"/>
+    <coordinate name="y1" orientation="y" anchor="g:y(.)" lacuna="0"/>
+    <coordinate name="y2" orientation="y" anchor="g:y(.)" lacuna="0"/>
+    
+    <scaleFactor name="size" anchor="g:size(..)" lacuna="1"/>
+    
+    <scaleFactor name="width" anchor="max((g:width(*),0))" lacuna="1"/>
+  </properties>
+
+  <draw/>
+</element>
+  
+</elementDefinition>

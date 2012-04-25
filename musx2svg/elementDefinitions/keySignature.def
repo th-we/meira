@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<elementDefinition
+    xmlns="NS:DEF"
+    xmlns:svg="http://www.w3.org/2000/svg"
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:xlink="http://www.w3.org/1999/xlink">
+
+<!-- TODO: - Provide global settings for line widths and local attributes to override them -->
+
+<element name="keySignature">
+  <properties>
+    <elementReference name="start" lacuna=".."/>
+    
+    <coordinate name="x" orientation="x" anchor="g:x(g:start(.))" lacuna="0"/>
+    <coordinate name="y" orientation="y" anchor="g:y(..)" lacuna="0"/>
+    
+    <coordinate name="x1" orientation="x" anchor="g:x(.)" lacuna="0"/>
+    <coordinate name="x2" orientation="x" anchor="g:x(.)" lacuna="0"/>
+    <coordinate name="y1" orientation="y" anchor="g:y(.)" lacuna="0"/>
+    <coordinate name="y2" orientation="y" anchor="g:y(.)" lacuna="0"/>
+    
+    <scaleFactor name="size" anchor="g:size(..)" lacuna="1"/>
+    
+    <symbol name="symbol" lacuna="''"/>
+    
+    <!-- TODO: Find more appropriate parameters. These here are
+             technically useful, but maybe not for humans. -->
+    <!-- @pattern provides a list of "steps" that tell us where 
+         on which lines/in which spaces to place the accidentals. -->
+    <string name="pattern" lacuna="''"/>
+    <scaleFactor name="distance" anchor="g:size(.)" lacuna="2"/>
+  </properties>
+
+  <draw>
+    <xsl:variable name="steps" select="tokenize(normalize-space(g:pattern(.)),'\s+')"/>
+    <xsl:variable name="staffSize" select="g:staffSize(.)"/>
+    <xsl:variable name="distance" select="g:distance(.) div $staffSize"/>
+    <xsl:variable name="symbol" select="g:symbol(.)"/>
+    <svg:g transform="translate({g:x(.)},{g:y(.)}) scale({$staffSize})">
+      <xsl:for-each select="$steps">
+        <svg:use x="{(position()-1) * $distance}" y="{number(.)}" xlink:href="{$symbol}"/>
+      </xsl:for-each>
+    </svg:g>
+  </draw>
+</element>
+
+</elementDefinition>
