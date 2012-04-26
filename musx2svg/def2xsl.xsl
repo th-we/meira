@@ -40,7 +40,7 @@
       
       
       <call-template name="add-getter-functions-and-templates">
-        <with-param name="properties" as="node()*">
+        <with-param name="properties" as="element()*">
           <for-each select="def:includeDefinition">
             <sequence select="document(@href)/def:elementDefinition/def:element/def:properties/def:*"/>
           </for-each>
@@ -48,7 +48,7 @@
       </call-template>
       
       <for-each select="def:includeDefinition">
-        <variable name="element" select="document(@href)/def:elementDefinition/def:element" as="node()*"/>
+        <variable name="element" select="document(@href)/def:elementDefinition/def:element" as="element()*"/>
         <!-- TODO: Currently, there is no guaranty that templates, function etc. with identical names are
                    supplied by different element definitions. Work out naming scheme or check mechanism so
                    that we prevent clashes when copying everything! -->
@@ -107,10 +107,10 @@
       </xsl:template>
       
       <xsl:template match="musx:*" mode="add-bounding-boxes" priority="1">
-        <xsl:variable name="children" as="node()*">
+        <xsl:variable name="children" as="element()*">
           <xsl:apply-templates mode="add-bounding-boxes" select="node()"/>
         </xsl:variable>
-        <xsl:variable name="allBoundingBoxes" as="node()*">
+        <xsl:variable name="allBoundingBoxes" as="element()*">
           <xsl:sequence select="$children/musx:BoundingBox"/>
           <xsl:apply-templates mode="get_OwnBoundingBox" select="."/>
         </xsl:variable>
@@ -132,20 +132,20 @@
            E.g., the <staff>'s OwnBoundingBox are the dimensions of the staff lines, not the
            dimensions of all elements inside the staff. -->
       <xsl:template match="node()|@*" mode="get_OwnBoundingBox" priority="-2"/>
-      <xsl:function name="g:OwnBoundingBox" as="node()*">
-        <xsl:param name="element" as="node()*"/>
+      <xsl:function name="g:OwnBoundingBox" as="element()*">
+        <xsl:param name="element" as="element()*"/>
         <xsl:apply-templates select="$element" mode="get_OwnBoundingBox"/>
       </xsl:function>
       
       <xsl:function name="g:staffSize" as="xs:double*">
-        <xsl:param name="element" as="node()*"/>
+        <xsl:param name="element" as="element()*"/>
         <xsl:sequence select="g:size($element/ancestor::musx:staff[last()])"/>
       </xsl:function>
       
       <!-- We require every symbol in the symbols.svg file to have a <bbox> element inside a <metadata> element.
            This is the function to access the <bbox> element. -->
       <xsl:key name="svgID" match="svg:*[@id]" use="@id"/>
-      <xsl:function name="g:svgSymbolBoundingBox" as="node()*">
+      <xsl:function name="g:svgSymbolBoundingBox" as="element()*">
         <xsl:param name="symbolURI" as="xs:string*"/>
 
         <xsl:for-each select="$symbolURI">
@@ -171,7 +171,7 @@
   
   <!-- Add functions and templates that are used to access properties (in "g:x(.)" style) -->
   <template name="add-getter-functions-and-templates">
-    <param name="properties" as="node()*"/>
+    <param name="properties" as="element()*"/>
     
     <for-each-group select="$properties" group-by="@name">
       <!-- Require that all properties of the same name must be of the same type
@@ -188,7 +188,7 @@
       
       <xsl:function name="g:{@name}">
         <apply-templates select="." mode="add-as-type-attribute"/>
-        <xsl:param name="elements" as="node()*"/>
+        <xsl:param name="elements" as="element()*"/>
         <xsl:variable name="result">
           <apply-templates select="." mode="add-as-type-attribute"/>
           <xsl:apply-templates select="$elements" mode="get_{@name}"/>
