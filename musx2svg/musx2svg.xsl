@@ -17,7 +17,7 @@
    <param name="musicFont" select="'musicSymbols'" as="xs:string"/>
    <param name="symbolFile" select="'symbols.svg'" as="xs:string"/>
    <function name="g:end" as="node()*">
-      <param name="elements" as="node()*"/>
+      <param name="elements" as="element()*"/>
       <variable name="result" as="node()*">
          <apply-templates select="$elements" mode="get_end"/>
       </variable>
@@ -31,7 +31,7 @@
       </choose>
    </function>
    <function name="g:x1" as="xs:double*">
-      <param name="elements" as="node()*"/>
+      <param name="elements" as="element()*"/>
       <variable name="result" as="xs:double*">
          <apply-templates select="$elements" mode="get_x1"/>
       </variable>
@@ -45,7 +45,7 @@
       </choose>
    </function>
    <function name="g:x2" as="xs:double*">
-      <param name="elements" as="node()*"/>
+      <param name="elements" as="element()*"/>
       <variable name="result" as="xs:double*">
          <apply-templates select="$elements" mode="get_x2"/>
       </variable>
@@ -59,7 +59,7 @@
       </choose>
    </function>
    <function name="g:y" as="xs:double*">
-      <param name="elements" as="node()*"/>
+      <param name="elements" as="element()*"/>
       <variable name="result" as="xs:double*">
          <apply-templates select="$elements" mode="get_y"/>
       </variable>
@@ -73,7 +73,7 @@
       </choose>
    </function>
    <function name="g:x" as="xs:double*">
-      <param name="elements" as="node()*"/>
+      <param name="elements" as="element()*"/>
       <variable name="result" as="xs:double*">
          <apply-templates select="$elements" mode="get_x"/>
       </variable>
@@ -87,7 +87,7 @@
       </choose>
    </function>
    <function name="g:y1" as="xs:double*">
-      <param name="elements" as="node()*"/>
+      <param name="elements" as="element()*"/>
       <variable name="result" as="xs:double*">
          <apply-templates select="$elements" mode="get_y1"/>
       </variable>
@@ -101,7 +101,7 @@
       </choose>
    </function>
    <function name="g:y2" as="xs:double*">
-      <param name="elements" as="node()*"/>
+      <param name="elements" as="element()*"/>
       <variable name="result" as="xs:double*">
          <apply-templates select="$elements" mode="get_y2"/>
       </variable>
@@ -115,7 +115,7 @@
       </choose>
    </function>
    <function name="g:size" as="xs:double*">
-      <param name="elements" as="node()*"/>
+      <param name="elements" as="element()*"/>
       <variable name="result" as="xs:double*">
          <apply-templates select="$elements" mode="get_size"/>
       </variable>
@@ -129,7 +129,7 @@
       </choose>
    </function>
    <function name="g:start" as="node()*">
-      <param name="elements" as="node()*"/>
+      <param name="elements" as="element()*"/>
       <variable name="result" as="node()*">
          <apply-templates select="$elements" mode="get_start"/>
       </variable>
@@ -143,7 +143,7 @@
       </choose>
    </function>
    <function name="g:lines" as="xs:integer*">
-      <param name="elements" as="node()*"/>
+      <param name="elements" as="element()*"/>
       <variable name="result" as="xs:integer*">
          <apply-templates select="$elements" mode="get_lines"/>
       </variable>
@@ -155,7 +155,7 @@
       </choose>
    </function>
    <function name="g:symbol" as="xs:string*">
-      <param name="elements" as="node()*"/>
+      <param name="elements" as="element()*"/>
       <variable name="result" as="xs:string*">
          <apply-templates select="$elements" mode="get_symbol"/>
       </variable>
@@ -167,7 +167,7 @@
       </choose>
    </function>
    <function name="g:placement" as="xs:string*">
-      <param name="elements" as="node()*"/>
+      <param name="elements" as="element()*"/>
       <variable name="result" as="xs:string*">
          <apply-templates select="$elements" mode="get_placement"/>
       </variable>
@@ -179,7 +179,7 @@
       </choose>
    </function>
    <function name="g:width" as="xs:double*">
-      <param name="elements" as="node()*"/>
+      <param name="elements" as="element()*"/>
       <variable name="result" as="xs:double*">
          <apply-templates select="$elements" mode="get_width"/>
       </variable>
@@ -193,7 +193,7 @@
       </choose>
    </function>
    <function name="g:direction" as="xs:integer*">
-      <param name="elements" as="node()*"/>
+      <param name="elements" as="element()*"/>
       <variable name="result" as="xs:integer*">
          <apply-templates select="$elements" mode="get_direction"/>
       </variable>
@@ -205,7 +205,7 @@
       </choose>
    </function>
    <function name="g:step" as="xs:double*">
-      <param name="elements" as="node()*"/>
+      <param name="elements" as="element()*"/>
       <variable name="result" as="xs:double*">
          <apply-templates select="$elements" mode="get_step"/>
       </variable>
@@ -217,7 +217,7 @@
       </choose>
    </function>
    <function name="g:topStaff" as="node()*">
-      <param name="elements" as="node()*"/>
+      <param name="elements" as="element()*"/>
       <variable name="result" as="node()*">
          <apply-templates select="$elements" mode="get_topStaff"/>
       </variable>
@@ -231,7 +231,7 @@
       </choose>
    </function>
    <function name="g:bottomStaff" as="node()*">
-      <param name="elements" as="node()*"/>
+      <param name="elements" as="element()*"/>
       <variable name="result" as="node()*">
          <apply-templates select="$elements" mode="get_bottomStaff"/>
       </variable>
@@ -245,7 +245,7 @@
       </choose>
    </function>
    <function name="g:brackettip" as="xs:string*">
-      <param name="elements" as="node()*"/>
+      <param name="elements" as="element()*"/>
       <variable name="result" as="xs:string*">
          <apply-templates select="$elements" mode="get_brackettip"/>
       </variable>
@@ -257,7 +257,7 @@
       </choose>
    </function>
    <function name="g:lineOffset" as="xs:double*">
-      <param name="elements" as="node()*"/>
+      <param name="elements" as="element()*"/>
       <variable name="result" as="xs:double*">
          <apply-templates select="$elements" mode="get_lineOffset"/>
       </variable>
@@ -271,7 +271,7 @@
       </choose>
    </function>
    <function name="g:dotOffset" as="xs:double*">
-      <param name="elements" as="node()*"/>
+      <param name="elements" as="element()*"/>
       <variable name="result" as="xs:double*">
          <apply-templates select="$elements" mode="get_dotOffset"/>
       </variable>
@@ -285,7 +285,7 @@
       </choose>
    </function>
    <function name="g:dotRadius" as="xs:double*">
-      <param name="elements" as="node()*"/>
+      <param name="elements" as="element()*"/>
       <variable name="result" as="xs:double*">
          <apply-templates select="$elements" mode="get_dotRadius"/>
       </variable>
@@ -299,7 +299,7 @@
       </choose>
    </function>
    <function name="g:lineWidth" as="xs:double*">
-      <param name="elements" as="node()*"/>
+      <param name="elements" as="element()*"/>
       <variable name="result" as="xs:double*">
          <apply-templates select="$elements" mode="get_lineWidth"/>
       </variable>
@@ -313,7 +313,7 @@
       </choose>
    </function>
    <function name="g:boldLineWidth" as="xs:double*">
-      <param name="elements" as="node()*"/>
+      <param name="elements" as="element()*"/>
       <variable name="result" as="xs:double*">
          <apply-templates select="$elements" mode="get_boldLineWidth"/>
       </variable>
@@ -327,7 +327,7 @@
       </choose>
    </function>
    <function name="g:type" as="xs:string*">
-      <param name="elements" as="node()*"/>
+      <param name="elements" as="element()*"/>
       <variable name="result" as="xs:string*">
          <apply-templates select="$elements" mode="get_type"/>
       </variable>
@@ -339,7 +339,7 @@
       </choose>
    </function>
    <function name="g:ledgerLines.direction" as="xs:integer*">
-      <param name="elements" as="node()*"/>
+      <param name="elements" as="element()*"/>
       <variable name="result" as="xs:integer*">
          <apply-templates select="$elements" mode="get_ledgerLines.direction"/>
       </variable>
@@ -351,7 +351,7 @@
       </choose>
    </function>
    <function name="g:ledgerLines.y1" as="xs:double*">
-      <param name="elements" as="node()*"/>
+      <param name="elements" as="element()*"/>
       <variable name="result" as="xs:double*">
          <apply-templates select="$elements" mode="get_ledgerLines.y1"/>
       </variable>
@@ -365,7 +365,7 @@
       </choose>
    </function>
    <function name="g:ledgerLines.y2" as="xs:double*">
-      <param name="elements" as="node()*"/>
+      <param name="elements" as="element()*"/>
       <variable name="result" as="xs:double*">
          <apply-templates select="$elements" mode="get_ledgerLines.y2"/>
       </variable>
@@ -379,7 +379,7 @@
       </choose>
    </function>
    <function name="g:ledgerLines.draw" as="xs:boolean*">
-      <param name="elements" as="node()*"/>
+      <param name="elements" as="element()*"/>
       <variable name="result" as="xs:boolean*">
          <apply-templates select="$elements" mode="get_ledgerLines.draw"/>
       </variable>
@@ -393,7 +393,7 @@
       </choose>
    </function>
    <function name="g:ledgerLines.protrusion" as="xs:double*">
-      <param name="elements" as="node()*"/>
+      <param name="elements" as="element()*"/>
       <variable name="result" as="xs:double*">
          <apply-templates select="$elements" mode="get_ledgerLines.protrusion"/>
       </variable>
@@ -407,7 +407,7 @@
       </choose>
    </function>
    <function name="g:flip" as="xs:integer*">
-      <param name="elements" as="node()*"/>
+      <param name="elements" as="element()*"/>
       <variable name="result" as="xs:integer*">
          <apply-templates select="$elements" mode="get_flip"/>
       </variable>
@@ -419,7 +419,7 @@
       </choose>
    </function>
    <function name="g:topNote" as="node()*">
-      <param name="elements" as="node()*"/>
+      <param name="elements" as="element()*"/>
       <variable name="result" as="node()*">
          <apply-templates select="$elements" mode="get_topNote"/>
       </variable>
@@ -433,7 +433,7 @@
       </choose>
    </function>
    <function name="g:bottomNote" as="node()*">
-      <param name="elements" as="node()*"/>
+      <param name="elements" as="element()*"/>
       <variable name="result" as="node()*">
          <apply-templates select="$elements" mode="get_bottomNote"/>
       </variable>
@@ -447,7 +447,7 @@
       </choose>
    </function>
    <function name="g:beam" as="node()*">
-      <param name="elements" as="node()*"/>
+      <param name="elements" as="element()*"/>
       <variable name="result" as="node()*">
          <apply-templates select="$elements" mode="get_beam"/>
       </variable>
@@ -461,7 +461,7 @@
       </choose>
    </function>
    <function name="g:length" as="xs:double*">
-      <param name="elements" as="node()*"/>
+      <param name="elements" as="element()*"/>
       <variable name="result" as="xs:double*">
          <apply-templates select="$elements" mode="get_length"/>
       </variable>
@@ -473,7 +473,7 @@
       </choose>
    </function>
    <function name="g:number" as="xs:integer*">
-      <param name="elements" as="node()*"/>
+      <param name="elements" as="element()*"/>
       <variable name="result" as="xs:integer*">
          <apply-templates select="$elements" mode="get_number"/>
       </variable>
@@ -485,7 +485,7 @@
       </choose>
    </function>
    <function name="g:offset" as="xs:double*">
-      <param name="elements" as="node()*"/>
+      <param name="elements" as="element()*"/>
       <variable name="result" as="xs:double*">
          <apply-templates select="$elements" mode="get_offset"/>
       </variable>
@@ -499,7 +499,7 @@
       </choose>
    </function>
    <function name="g:distance" as="xs:double*">
-      <param name="elements" as="node()*"/>
+      <param name="elements" as="element()*"/>
       <variable name="result" as="xs:double*">
          <apply-templates select="$elements" mode="get_distance"/>
       </variable>
@@ -513,7 +513,7 @@
       </choose>
    </function>
    <function name="g:radius" as="xs:double*">
-      <param name="elements" as="node()*"/>
+      <param name="elements" as="element()*"/>
       <variable name="result" as="xs:double*">
          <apply-templates select="$elements" mode="get_radius"/>
       </variable>
@@ -527,7 +527,7 @@
       </choose>
    </function>
    <function name="g:startSpread" as="xs:double*">
-      <param name="elements" as="node()*"/>
+      <param name="elements" as="element()*"/>
       <variable name="result" as="xs:double*">
          <apply-templates select="$elements" mode="get_startSpread"/>
       </variable>
@@ -541,7 +541,7 @@
       </choose>
    </function>
    <function name="g:endSpread" as="xs:double*">
-      <param name="elements" as="node()*"/>
+      <param name="elements" as="element()*"/>
       <variable name="result" as="xs:double*">
          <apply-templates select="$elements" mode="get_endSpread"/>
       </variable>
@@ -555,7 +555,7 @@
       </choose>
    </function>
    <function name="g:height" as="xs:double*">
-      <param name="elements" as="node()*"/>
+      <param name="elements" as="element()*"/>
       <variable name="result" as="xs:double*">
          <apply-templates select="$elements" mode="get_height"/>
       </variable>
@@ -569,7 +569,7 @@
       </choose>
    </function>
    <function name="g:centerThickness" as="xs:double*">
-      <param name="elements" as="node()*"/>
+      <param name="elements" as="element()*"/>
       <variable name="result" as="xs:double*">
          <apply-templates select="$elements" mode="get_centerThickness"/>
       </variable>
@@ -583,7 +583,7 @@
       </choose>
    </function>
    <function name="g:tipThickness" as="xs:double*">
-      <param name="elements" as="node()*"/>
+      <param name="elements" as="element()*"/>
       <variable name="result" as="xs:double*">
          <apply-templates select="$elements" mode="get_tipThickness"/>
       </variable>
@@ -597,7 +597,7 @@
       </choose>
    </function>
    <function name="g:swellingRate" as="xs:double*">
-      <param name="elements" as="node()*"/>
+      <param name="elements" as="element()*"/>
       <variable name="result" as="xs:double*">
          <apply-templates select="$elements" mode="get_swellingRate"/>
       </variable>
@@ -609,7 +609,7 @@
       </choose>
    </function>
    <function name="g:swellingRate1" as="xs:double*">
-      <param name="elements" as="node()*"/>
+      <param name="elements" as="element()*"/>
       <variable name="result" as="xs:double*">
          <apply-templates select="$elements" mode="get_swellingRate1"/>
       </variable>
@@ -621,7 +621,7 @@
       </choose>
    </function>
    <function name="g:swellingRate2" as="xs:double*">
-      <param name="elements" as="node()*"/>
+      <param name="elements" as="element()*"/>
       <variable name="result" as="xs:double*">
          <apply-templates select="$elements" mode="get_swellingRate2"/>
       </variable>
@@ -633,7 +633,7 @@
       </choose>
    </function>
    <function name="g:tilt" as="xs:double*">
-      <param name="elements" as="node()*"/>
+      <param name="elements" as="element()*"/>
       <variable name="result" as="xs:double*">
          <apply-templates select="$elements" mode="get_tilt"/>
       </variable>
@@ -645,7 +645,7 @@
       </choose>
    </function>
    <function name="g:shift" as="xs:double*">
-      <param name="elements" as="node()*"/>
+      <param name="elements" as="element()*"/>
       <variable name="result" as="xs:double*">
          <apply-templates select="$elements" mode="get_shift"/>
       </variable>
@@ -657,7 +657,7 @@
       </choose>
    </function>
    <function name="g:shoulder" as="xs:double*">
-      <param name="elements" as="node()*"/>
+      <param name="elements" as="element()*"/>
       <variable name="result" as="xs:double*">
          <apply-templates select="$elements" mode="get_shoulder"/>
       </variable>
@@ -669,7 +669,7 @@
       </choose>
    </function>
    <function name="g:curvature" as="xs:double*">
-      <param name="elements" as="node()*"/>
+      <param name="elements" as="element()*"/>
       <variable name="result" as="xs:double*">
          <apply-templates select="$elements" mode="get_curvature"/>
       </variable>
@@ -681,7 +681,7 @@
       </choose>
    </function>
    <function name="g:curvature1" as="xs:double*">
-      <param name="elements" as="node()*"/>
+      <param name="elements" as="element()*"/>
       <variable name="result" as="xs:double*">
          <apply-templates select="$elements" mode="get_curvature1"/>
       </variable>
@@ -693,7 +693,7 @@
       </choose>
    </function>
    <function name="g:curvature2" as="xs:double*">
-      <param name="elements" as="node()*"/>
+      <param name="elements" as="element()*"/>
       <variable name="result" as="xs:double*">
          <apply-templates select="$elements" mode="get_curvature2"/>
       </variable>
@@ -705,7 +705,7 @@
       </choose>
    </function>
    <function name="g:tipAngle" as="xs:double*">
-      <param name="elements" as="node()*"/>
+      <param name="elements" as="element()*"/>
       <variable name="result" as="xs:double*">
          <apply-templates select="$elements" mode="get_tipAngle"/>
       </variable>
@@ -717,7 +717,7 @@
       </choose>
    </function>
    <function name="g:tipAngle1" as="xs:double*">
-      <param name="elements" as="node()*"/>
+      <param name="elements" as="element()*"/>
       <variable name="result" as="xs:double*">
          <apply-templates select="$elements" mode="get_tipAngle1"/>
       </variable>
@@ -729,7 +729,7 @@
       </choose>
    </function>
    <function name="g:tipAngle2" as="xs:double*">
-      <param name="elements" as="node()*"/>
+      <param name="elements" as="element()*"/>
       <variable name="result" as="xs:double*">
          <apply-templates select="$elements" mode="get_tipAngle2"/>
       </variable>
@@ -741,7 +741,7 @@
       </choose>
    </function>
    <function name="g:textAnchor" as="xs:double*">
-      <param name="elements" as="node()*"/>
+      <param name="elements" as="element()*"/>
       <variable name="result" as="xs:double*">
          <apply-templates select="$elements" mode="get_textAnchor"/>
       </variable>
@@ -753,7 +753,7 @@
       </choose>
    </function>
    <function name="g:pattern" as="xs:string*">
-      <param name="elements" as="node()*"/>
+      <param name="elements" as="element()*"/>
       <variable name="result" as="xs:string*">
          <apply-templates select="$elements" mode="get_pattern"/>
       </variable>
@@ -3372,6 +3372,26 @@
          <apply-templates mode="draw"/>
       </svg:g>
    </template>
+   <template match="musx:hairpin" mode="get_OwnBoundingBox" priority="1">
+      <xsl:variable xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="y1"
+                    select="g:y1(.)"
+                    as="xs:double"/>
+      <xsl:variable xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="y2"
+                    select="g:y2(.)"
+                    as="xs:double"/>
+      <xsl:variable xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                    name="halfStartSpread"
+                    select="g:startSpread(.) div 2"
+                    as="xs:double"/>
+      <xsl:variable xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                    name="halfEndSpread"
+                    select="g:endSpread(.) div 2"
+                    as="xs:double"/>
+      <BoundingBox xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" left="{g:x1(.)}"
+                   right="{g:x2(.)}"
+                   top="{   min(($y1 - $halfStartSpread,$y2 - $halfEndSpread))}"
+                   bottom="{max(($y1 + $halfStartSpread,$y2 + $halfEndSpread))}"/>
+   </template>
    <template match="musx:hairpin" mode="draw">
       <svg:g fill="none" stroke="currentColor">
          <attribute name="class">
@@ -3379,19 +3399,25 @@
          </attribute>
          <apply-templates select="@*" mode="copy-svg-and-id-attributes"/>
          <xsl:variable xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="x1"
-                       select="g:x1(.)"/>
+                       select="g:x1(.)"
+                       as="xs:double"/>
          <xsl:variable xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="x2"
-                       select="g:x2(.)"/>
+                       select="g:x2(.)"
+                       as="xs:double"/>
          <xsl:variable xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="y1"
-                       select="g:y1(.)"/>
+                       select="g:y1(.)"
+                       as="xs:double"/>
          <xsl:variable xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="y2"
-                       select="g:y2(.)"/>
+                       select="g:y2(.)"
+                       as="xs:double"/>
          <xsl:variable xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                        name="halfStartSpread"
-                       select="g:startSpread(.) div 2"/>
+                       select="g:startSpread(.) div 2"
+                       as="xs:double"/>
          <xsl:variable xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                        name="halfEndSpread"
-                       select="g:endSpread(.) div 2"/>
+                       select="g:endSpread(.) div 2"
+                       as="xs:double"/>
          <svg:line xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" x1="{$x1}"
                    y1="{$y1 + $halfStartSpread}"
                    x2="{$x2}"
@@ -3603,11 +3629,14 @@
          </attribute>
          <apply-templates select="@*" mode="copy-svg-and-id-attributes"/>
          <xsl:variable xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="steps"
-                       select="tokenize(normalize-space(g:pattern(.)),'\s+')"/>
+                       select="tokenize(normalize-space(g:pattern(.)),'\s+')"
+                       as="xs:string*"/>
          <xsl:variable xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="staffSize"
-                       select="g:staffSize(.)"/>
+                       select="g:staffSize(.)"
+                       as="xs:double"/>
          <xsl:variable xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="distance"
-                       select="g:distance(.) div $staffSize"/>
+                       select="g:distance(.) div $staffSize"
+                       as="xs:double"/>
          <xsl:variable xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="symbol"
                        select="g:symbol(.)"/>
          <svg:g xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
@@ -3683,7 +3712,7 @@
       <variable name="children" as="node()*">
          <apply-templates mode="add-bounding-boxes" select="node()"/>
       </variable>
-      <variable name="allBoundingBoxes" as="node()*">
+      <variable name="allBoundingBoxes" as="element()*">
          <sequence select="$children/musx:BoundingBox"/>
          <apply-templates mode="get_OwnBoundingBox" select="."/>
       </variable>
@@ -3698,16 +3727,16 @@
       </copy>
    </template>
    <template match="node()|@*" mode="get_OwnBoundingBox" priority="-2"/>
-   <function name="g:OwnBoundingBox" as="node()*">
-      <param name="element" as="node()*"/>
+   <function name="g:OwnBoundingBox" as="element()*">
+      <param name="element" as="element()*"/>
       <apply-templates select="$element" mode="get_OwnBoundingBox"/>
    </function>
    <function name="g:staffSize" as="xs:double*">
-      <param name="element" as="node()*"/>
+      <param name="element" as="element()*"/>
       <sequence select="g:size($element/ancestor::musx:staff[last()])"/>
    </function>
    <key name="svgID" match="svg:*[@id]" use="@id"/>
-   <function name="g:svgSymbolBoundingBox" as="node()*">
+   <function name="g:svgSymbolBoundingBox" as="element()*">
       <param name="symbolURI" as="xs:string*"/>
       <for-each select="$symbolURI">
          <variable name="symbolID" select="substring-after(.,'#')" as="xs:string"/>

@@ -107,7 +107,7 @@
       </xsl:template>
       
       <xsl:template match="musx:*" mode="add-bounding-boxes" priority="1">
-        <xsl:variable name="children" as="element()*">
+        <xsl:variable name="children" as="node()*">
           <xsl:apply-templates mode="add-bounding-boxes" select="node()"/>
         </xsl:variable>
         <xsl:variable name="allBoundingBoxes" as="element()*">
