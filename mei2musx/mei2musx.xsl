@@ -6,7 +6,8 @@
     xmlns:synch="NS:SYNCH" xmlns="NS:MUSX" 
     xmlns:xlink="http://www.w3.org/1999/xlink"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
-    xmlns:lf="NS:LOCAL_FUNCTIONS">
+    xmlns:lf="NS:LOCAL_FUNCTIONS"
+    xmlns:musx="NS:MUSX">
   <xsl:include href="beams.xsl"/>
   <xsl:include href="notes.xsl"/>
 
@@ -297,9 +298,24 @@
     </group>
   </xsl:template>
   
+  <xsl:function name="musx:getDynamPosition" as="xs:double">
+    <xsl:param name="dynamElement" as="element()"/>
+    <xsl:variable name="positionAbove" select="-5" as="xs:double"/>
+    <xsl:variable name="positionBelow" select="14" as="xs:double"/>
+    <xsl:variable name="staffN" select="($dynamElement/@staff,$dynamElement/ancestor::mei:staff/@n)[1]" as="xs:string"/>
+    <xsl:sequence select="if ($dynamElement/@place)
+                          then if($dynamElement/@place='below') 
+                               then $positionBelow 
+                               else $positionAbove
+                            (: If this staff is carrying lyrics, then place dynamics above the staff. :)
+                          else if($dynamElement/ancestor::mei:section//mei:staff[@n=$staffN]//mei:syl)
+                               then $positionAbove
+                               else $positionBelow"></xsl:sequence>
+  </xsl:function>
+  
   <xsl:template mode="mei2musx" match="mei:hairpin">
     <!-- TODO: Proper y positioning (as well for mei:dynam, see below) -->
-    <hairpin start="{(@synch:id|@startid)[1]}" end="{(@synch:end.id|@endid)[1]}" y="S{if(@place='above') then '-5' else '14'}">
+    <hairpin start="{(@synch:id|@startid)[1]}" end="{(@synch:end.id|@endid)[1]}" y="S{musx:getDynamPosition(.)}">
       <xsl:variable name="opening" select="if(@opening) then @opening * 2 else 4"/>
       <xsl:attribute name="{if(@form = 'cres') then 'endSpread' else 'startSpread'}">
         <xsl:value-of select="concat('s',$opening)"/>
@@ -324,7 +340,7 @@
   
   <xsl:template mode="mei2musx" match="mei:dynam">
     <!-- TODO: Proper y positioning (as well for mei:hairpin, see above) -->
-    <symbolText start="{@synch:id}" class="dynam" y="S{if(@place='above') then '-5' else '14'}">
+    <symbolText start="{@synch:id}" class="dynam" y="S{musx:getDynamPosition(.)}">
       <xsl:apply-templates mode="mei2musx"/>
     </symbolText>
   </xsl:template>
