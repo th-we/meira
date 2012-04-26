@@ -3622,6 +3622,33 @@
          <apply-templates mode="draw"/>
       </svg:g>
    </template>
+   <template match="musx:keySignature" mode="get_OwnBoundingBox" priority="1">
+      <xsl:variable xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="x"
+                    select="g:x(.)"/>
+      <xsl:variable xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="y"
+                    select="g:y(.)"/>
+      <xsl:variable xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="size"
+                    select="g:size(.)"/>
+      <xsl:variable xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="staffSize"
+                    select="g:staffSize(.)"/>
+      <xsl:variable xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="symbolBBox"
+                    select="g:svgSymbolBoundingBox(g:symbol(.))"
+                    as="element()"/>
+      <xsl:variable xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" name="steps"
+                    as="xs:integer*">
+         <xsl:for-each select="tokenize(normalize-space(g:pattern(.)),'\s+')">
+            <xsl:sequence select=". cast as xs:integer"/>
+         </xsl:for-each>
+      </xsl:variable>
+      <xsl:message xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+      steps = <xsl:value-of select="count($steps)"/>
+      distance = <xsl:value-of select="g:distance(.)"/>
+      </xsl:message>
+      <BoundingBox xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" left="{$x}"
+                   right="{$x + count($steps)*g:distance(.) + ($symbolBBox/@right cast as xs:double)*$size}"
+                   top="{   $y + min($steps)*$staffSize + ($symbolBBox/@top    cast as xs:double)*$size}"
+                   bottom="{$y + max($steps)*$staffSize + ($symbolBBox/@bottom cast as xs:double)*$size}"/>
+   </template>
    <template match="musx:keySignature" mode="draw">
       <svg:g>
          <attribute name="class">

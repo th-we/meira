@@ -27,17 +27,28 @@
   </properties>
   
   <draw svg:fill="none" svg:stroke="currentColor">
-  	<xsl:variable name="x1" select="g:x1(.)"/>
-  	<xsl:variable name="x2" select="g:x2(.)"/>
-  	<xsl:variable name="y1" select="g:y1(.)"/>
-  	<xsl:variable name="y2" select="g:y2(.)"/>
-  	<xsl:variable name="halfStartSpread" select="g:startSpread(.) div 2"/>
-  	<xsl:variable name="halfEndSpread" select="g:endSpread(.) div 2"/>
+  	<xsl:variable name="x1" select="g:x1(.)" as="xs:double"/>
+    <xsl:variable name="x2" select="g:x2(.)" as="xs:double"/>
+    <xsl:variable name="y1" select="g:y1(.)" as="xs:double"/>
+    <xsl:variable name="y2" select="g:y2(.)" as="xs:double"/>
+    <xsl:variable name="halfStartSpread" select="g:startSpread(.) div 2" as="xs:double"/>
+    <xsl:variable name="halfEndSpread" select="g:endSpread(.) div 2" as="xs:double"/>
   	
   	<svg:line x1="{$x1}" y1="{$y1 + $halfStartSpread}" x2="{$x2}" y2="{$y2 + $halfEndSpread}"/> 
   	<svg:line x1="{$x1}" y1="{$y1 - $halfStartSpread}" x2="{$x2}" y2="{$y2 - $halfEndSpread}"/> 
   </draw>
-
+  
+  <OwnBoundingBox>
+    <xsl:variable name="y1" select="g:y1(.)" as="xs:double"/>
+    <xsl:variable name="y2" select="g:y2(.)" as="xs:double"/>
+    <xsl:variable name="halfStartSpread" select="g:startSpread(.) div 2" as="xs:double"/>
+    <xsl:variable name="halfEndSpread" select="g:endSpread(.) div 2" as="xs:double"/>
+    
+    <BoundingBox left="{g:x1(.)}" right="{g:x2(.)}" 
+                 top="{   min(($y1 - $halfStartSpread,$y2 - $halfEndSpread))}" 
+                 bottom="{max(($y1 + $halfStartSpread,$y2 + $halfEndSpread))}"/>
+  </OwnBoundingBox>
+  
 </element>
   
 </elementDefinition>

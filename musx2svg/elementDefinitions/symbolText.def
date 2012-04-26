@@ -68,6 +68,27 @@
 		<draw svg:transform="translate({g:x1(.)},{g:y(.)}) scale({g:size(.)})">
 			<xsl:sequence select="def:drawSymbols(text(), 0)"/>
 		</draw>
+	  
+	  <ownBoundingBox>
+	    <xsl:variable name="glyphBoundingBoxes">
+	      <xsl:for-each select="string-to-codepoints(string())">
+	        <!-- TODO: Modify this so that document() can also take the URI of a file with other font metadata -->
+	        <xsl:sequence select="key('unicode-glyph',.,document(concat($libDirectory,'/',$symbolFile)))/bbox"/>
+	      </xsl:for-each>
+	    </xsl:variable>
+	    <xsl:variable name="topValues">
+	      <xsl:for-each select="$glyphBoundingBoxes">
+	        <xsl:sequence select="number(@top)"/>
+	      </xsl:for-each>
+	    </xsl:variable>
+	    <xsl:variable name="bottomValues">
+	      <xsl:for-each select="$glyphBoundingBoxes">
+	        <xsl:sequence select="number(@bottom)"/>
+	      </xsl:for-each>
+	    </xsl:variable>
+	    <xsl:variable name="size" select="g:size(.)"/>
+	    <boundingBox left="{g:x1(.)}" right="{g:x2(.)}" top="{$size*min($topValues)}" bottom="{$size*max($bottomValues)}"/>
+	  </ownBoundingBox>
 </element>
 
 </elementDefinition>
