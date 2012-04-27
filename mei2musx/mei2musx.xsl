@@ -234,17 +234,16 @@
   <xsl:template mode="mei2musx" match="mei:staff">
     <xsl:variable name="measure" select="ancestor::mei:measure[last()]" as="element()"/>
     <group class="measure">
-      <!-- Display measure number -->
-      <svg y="S-2" x="p{-1 * $barlineSpace}">
-        <xsl:apply-templates mode="mei2musx" select="ancestor-or-self::*/@synch:id"/>
-        <svg:text font-size="3" text-anchor="end">
-          <xsl:value-of select="$measure/@n"/>
-        </svg:text>
-      </svg>
       <xsl:if test="string($measure/@left)!=('','invis')">
         <barline start="{$measure/@synch:id}">
           <xsl:apply-templates select="@right" mode="add-barline-type-attributes"/>
           <xsl:apply-templates select="@right" mode="add-barline-stroke-features"/>
+          <!-- Display measure number -->
+          <svg y="S-2">
+            <svg:text font-size="3" text-anchor="middle" stroke="none" fill="currentColor">
+              <xsl:value-of select="$measure/@n"/>
+            </svg:text>
+          </svg>
         </barline>
       </xsl:if>
       <xsl:apply-templates mode="mei2musx"/>
