@@ -242,14 +242,14 @@
         </svg:text>
       </svg>
       <xsl:if test="string($measure/@left)!=('','invis')">
-        <barline x="p{-.85 * $barlineSpace}" start="{$measure/@synch:id}">
+        <barline start="{$measure/@synch:id}">
           <xsl:apply-templates select="@right" mode="add-barline-type-attributes"/>
           <xsl:apply-templates select="@right" mode="add-barline-stroke-features"/>
         </barline>
       </xsl:if>
       <xsl:apply-templates mode="mei2musx"/>
       <xsl:if test="$measure/@right!='invis'">
-        <barline x="p{-.85 * $barlineSpace}" start="{$measure/@synch:end.id}">
+        <barline start="{$measure/@synch:end.id}">
           <xsl:apply-templates select="$measure/@right" mode="add-barline-type-attributes"/>
           <xsl:apply-templates select="$measure/@right" mode="add-barline-stroke-features"/>
         </barline>

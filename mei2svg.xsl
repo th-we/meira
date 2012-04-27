@@ -8,6 +8,7 @@
   <import href="preprocessor/addDurations.xsl"/>
   <import href="preprocessor/addSynchronicity.xsl"/>
   <import href="mei2musx/mei2musx.xsl"/>
+  <import href="formatter/createSubevents.xsl"/>
   <import href="formatter/accidentalFormatter.xsl"/>
   <import href="formatter/spacing.xsl"/>
   <import href="musx2svg/musx2svg.xsl"/>
@@ -33,8 +34,11 @@
     <variable name="musx">
       <apply-templates select="$MEIwithSynch" mode="mei2musx"/>
     </variable>
+    <variable name="musxWithSubevents">
+      <apply-templates select="$musx" mode="create-subevents"/>
+    </variable>
     <variable name="musxAccidentalsFormatted">
-      <apply-templates select="$musx" mode="accidentalFormatter"/>
+      <apply-templates select="$musxWithSubevents" mode="accidentalFormatter"/>
     </variable>
     <variable name="spacedMusx">
       <apply-templates select="$musxAccidentalsFormatted" mode="spacing"/>
@@ -62,6 +66,9 @@
       <when test="$outputStep = 'musx'">
         <sequence select="$musx"/>
       </when>
+      <when test="$outputStep = 'musxWithSubevents'">
+        <sequence select="$musxWithSubevents"/>
+      </when>
       <when test="$outputStep = 'musxAccidentalsFormatted'">
         <sequence select="$musxAccidentalsFormatted"/>
       </when>
@@ -75,8 +82,8 @@
         <message terminate="yes">
           ERROR: Invalid parameter outputStep = <value-of select="$outputStep"/>
           Valid parameters are: 
-          reducedMEI, MEIwithIDs, canonicalizedMEI, MEIwithDurations, 
-          MEIwithSynch, musx, musxAccidentalsFormatted, spacedMusx, svg
+          reducedMEI, MEIwithIDs, canonicalizedMEI, MEIwithDurations, MEIwithSynch, 
+          musx, musxWithSubevents, musxAccidentalsFormatted, spacedMusx, svg
         </message>
       </otherwise>
     </choose>
