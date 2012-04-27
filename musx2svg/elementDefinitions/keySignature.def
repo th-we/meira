@@ -55,11 +55,6 @@
       </xsl:for-each>
     </xsl:variable>
     
-    <xsl:message>
-      steps = <xsl:value-of select="count($steps)"/>
-      distance = <xsl:value-of select="g:distance(.)"/>
-    </xsl:message>
-    
     <!-- TODO: BoundingBox is too wide. Why? -->
     <BoundingBox left="{$x}" 
                  right="{$x + count($steps)*g:distance(.) + ($symbolBBox/@right cast as xs:double)*$size}"
