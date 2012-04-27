@@ -3640,10 +3640,6 @@
             <xsl:sequence select=". cast as xs:integer"/>
          </xsl:for-each>
       </xsl:variable>
-      <xsl:message xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-      steps = <xsl:value-of select="count($steps)"/>
-      distance = <xsl:value-of select="g:distance(.)"/>
-      </xsl:message>
       <BoundingBox xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" left="{$x}"
                    right="{$x + count($steps)*g:distance(.) + ($symbolBBox/@right cast as xs:double)*$size}"
                    top="{   $y + min($steps)*$staffSize + ($symbolBBox/@top    cast as xs:double)*$size}"
