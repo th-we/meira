@@ -9,26 +9,26 @@
   
   <xsl:template mode="mei2musx" match="mei:note">
     <note>
-      <xsl:apply-templates select="." mode="copy-id"/>
       <xsl:apply-templates select="." mode="add-y-attribute"/>
-      <xsl:apply-templates mode="mei2musx" select="@synch:id|*"/>
+      <xsl:apply-templates mode="mei2musx" select="@xml:id|@synch:id|*"/>
       <!-- If neither this note nor an ancestor has an @dur, throw root element into the select
            to have something to match the template for the fallback notehead -->
       <xsl:apply-templates select="(ancestor-or-self::mei:*[@dur]|/mei:*)[last()]" mode="add-head"/>
       <xsl:apply-templates select="self::*[not(parent::mei:chord)]" mode="add-stem"/>
-      <xsl:apply-templates mode="mei2musx" select="@accid|@artic|@dots"/>
+      <xsl:apply-templates mode="mei2musx" select="@dots"/>
     </note>
   </xsl:template>
   
   <xsl:template mode="mei2musx" match="mei:accid">
-    <accidental symbol="accidental.{@accid}"/>
+    <accidental symbol="accidental.{@accid}">
+      <xsl:apply-templates mode="mei2musx" select="@xml:id"/>
+    </accidental>
   </xsl:template>
   
-  <xsl:template mode="mei2musx" match="@artic">
-    <articulation symbol="articulation.{string()}"/>
-  </xsl:template>
   <xsl:template mode="mei2musx" match="mei:artic">
-    <xsl:apply-templates mode="mei2musx" select="@artic"/>
+    <articulation symbol="articulation.{@artic}">
+      <xsl:apply-templates mode="mei2musx" select="@xml:id"/>
+    </articulation>
   </xsl:template>
   
   <xsl:template match="mei:note" mode="add-y-attribute">
@@ -120,7 +120,7 @@
   
   <xsl:template mode="mei2musx" match="mei:chord">
     <chord>
-      <xsl:apply-templates mode="mei2musx" select="@synch:id|*"/>
+      <xsl:apply-templates mode="mei2musx" select="@xml:id|@synch:id|*"/>
       <xsl:apply-templates select="." mode="add-stem"/>
     </chord>
   </xsl:template>
@@ -176,15 +176,13 @@
   <xsl:template mode="mei2musx" match="mei:rest">
     <!-- TODO: Position rest according to layer/voice -->
     <rest symbol="rest.{@dur}" y="S4">
-      <xsl:apply-templates select="." mode="copy-id"/>
-      <xsl:apply-templates mode="mei2musx" select="@synch:id|*"/>
+      <xsl:apply-templates mode="mei2musx" select="@xml:id|@synch:id|*"/>
     </rest>
   </xsl:template>
   
   <xsl:template mode="mei2musx" match="mei:mRest">
     <rest symbol="rest.1" y="S4" end="{ancestor::mei:measure[last()]/@synch:end.id}">
-      <xsl:apply-templates select="." mode="copy-id"/>
-      <xsl:apply-templates mode="mei2musx" select="@synch:id|*"/>
+      <xsl:apply-templates mode="mei2musx" select="@xml:id|@synch:id|*"/>
     </rest>
   </xsl:template>
   

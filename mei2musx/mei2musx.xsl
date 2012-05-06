@@ -31,7 +31,6 @@
   <xsl:key name="synchedElement" match="mei:*[@synch:rounded]" use="'true'"/>
   <xsl:param name="stylesheet" select="'type=&quot;text/xsl&quot; href=&quot;xsl/musx2svg.xsl&quot;'"/>
   <xsl:param name="staffDistance" select="70" as="xs:double"/>
-  <xsl:param name="barlineSpace" select="10" as="xs:double"/>
   <xsl:param name="size" select="3" as="xs:double"/>
   <xsl:param name="margin" select="30" as="xs:double"/>
   <xsl:variable name="svgNS" select="'http://www.w3.org/2000/svg' cast as xs:anyURI" as="xs:anyURI"/>
@@ -74,14 +73,22 @@
     </musx>
   </xsl:template>
   
+  <xsl:template match="@xml:id" mode="mei2musx">
+    <xsl:attribute name="xml:id">
+      <xsl:value-of select="."/>
+    </xsl:attribute>
+  </xsl:template>
+  
   <xsl:template match="mei:group|mei:music|mei:body|mei:mdiv" mode="mei2musx">
-    <xsl:apply-templates mode="mei2musx"/>
+    <group class="{local-name()}">
+      <xsl:apply-templates select="@xml:id|mei:*" mode="mei2musx"/>
+    </group>
   </xsl:template>
   
   <xsl:template match="mei:section" mode="mei2musx">
     <xsl:variable name="section" select="." as="element()"/>
     <system start="{@synch:id}" end="{(//mei:measure)[last()]/@synch:end.id}" size="{$size}">
-      <barline/><!-- System barline -->
+      <barline function="systemic"/>
       <xsl:variable name="sortedStaffNs" as="xs:string*">
         <xsl:for-each select="distinct-values(.//mei:staff/@n)">
           <xsl:sort select="number(current())"/>
@@ -119,13 +126,6 @@
         </staff>
       </xsl:for-each>
     </system>
-  </xsl:template>
-  
-  <xsl:template match="*" mode="copy-id">
-    <xsl:attribute name="xml:id">
-      <!-- Hopefully this satisfies all XSLT processors -->
-      <xsl:value-of select="attribute::*[local-name()='xml:id']|@xml:id"/>
-    </xsl:attribute>
   </xsl:template>
   
   <xsl:template mode="mei2musx" match="@synch:id">
@@ -233,26 +233,24 @@
   
   <xsl:template mode="mei2musx" match="mei:staff">
     <xsl:variable name="measure" select="ancestor::mei:measure[last()]" as="element()"/>
-    <group class="measure">
-      <xsl:if test="string($measure/@left)!=('','invis')">
+    <group class="measure" start="{$measure/@synch:id}">
+      <!-- Display measure number -->
+      <svg y="S-2">
+        <svg:text font-size="3" text-anchor="middle" stroke="none" fill="currentColor">
+          <xsl:value-of select="$measure/@n"/>
+        </svg:text>
+      </svg>
+      <xsl:if test="$measure/@left">
         <barline start="{$measure/@synch:id}">
-          <xsl:apply-templates select="@right" mode="add-barline-type-attributes"/>
-          <xsl:apply-templates select="@right" mode="add-barline-stroke-features"/>
-          <!-- Display measure number -->
-          <svg y="S-2">
-            <svg:text font-size="3" text-anchor="middle" stroke="none" fill="currentColor">
-              <xsl:value-of select="$measure/@n"/>
-            </svg:text>
-          </svg>
+          <xsl:apply-templates select="@left" mode="add-barline-type-attributes"/>
+          <xsl:apply-templates select="@left" mode="add-barline-stroke-features"/>
         </barline>
       </xsl:if>
       <xsl:apply-templates mode="mei2musx"/>
-      <xsl:if test="$measure/@right!='invis'">
-        <barline start="{$measure/@synch:end.id}">
-          <xsl:apply-templates select="$measure/@right" mode="add-barline-type-attributes"/>
-          <xsl:apply-templates select="$measure/@right" mode="add-barline-stroke-features"/>
-        </barline>
-      </xsl:if>
+      <barline start="{$measure/@synch:end.id}">
+        <xsl:apply-templates select="$measure/@right" mode="add-barline-type-attributes"/>
+        <xsl:apply-templates select="$measure/@right" mode="add-barline-stroke-features"/>
+      </barline>
     </group>
   </xsl:template>
   
@@ -265,28 +263,31 @@
     </xsl:attribute>
   </xsl:function>
   
-  <xsl:template match="mei:measure/@right[string()=('dbl','dbldashed','dbldotted')]" mode="add-barline-type-attributes">
+  <xsl:template match="@right[string()=('dbl','dbldashed','dbldotted')]" mode="add-barline-type-attributes">
     <xsl:sequence select="lf:generateAttribute($nullNS,'type','double')"/>
   </xsl:template>
-  <xsl:template match="mei:measure/@right[string()='end']" mode="add-barline-type-attributes">
+  <xsl:template match="@right[string()='end']" mode="add-barline-type-attributes">
     <xsl:sequence select="lf:generateAttribute($nullNS,'type','end')"/>
   </xsl:template>
-  <xsl:template match="mei:measure/@right[string()='rptstart']" mode="add-barline-type-attributes">
+  <xsl:template match="@right[string()='rptstart']" mode="add-barline-type-attributes">
     <xsl:sequence select="lf:generateAttribute($nullNS,'type','repeatStart')"/>
   </xsl:template>
-  <xsl:template match="mei:measure/@right[string()='rptend']" mode="add-barline-type-attributes">
+  <xsl:template match="@right[string()='rptend']" mode="add-barline-type-attributes">
     <xsl:sequence select="lf:generateAttribute($nullNS,'type','repeatEnd')"/>
   </xsl:template>
-  <xsl:template match="mei:measure/@right" mode="add-barline-type-attributes" priority="-1"/>
+  <xsl:template match="@right" mode="add-barline-type-attributes" priority="-1"/>
   
-  <xsl:template match="mei:measure/@right[string()=('dashed','dbldashed')]" mode="add-barline-stroke-features">
+  <xsl:template match="@right[string()=('dashed','dbldashed')]" mode="add-barline-stroke-features">
     <xsl:sequence select="lf:generateAttribute($svgNS,'stroke-dasharray','12,8')"/>
   </xsl:template>
-  <xsl:template match="mei:measure/@right[string()=('dotted','dbldotted')]" mode="add-barline-stroke-features">
+  <xsl:template match="@right[string()=('dotted','dbldotted')]" mode="add-barline-stroke-features">
     <xsl:sequence select="lf:generateAttribute($svgNS,'stroke-dasharray','6,6')"/>
     <xsl:sequence select="lf:generateAttribute($svgNS,'stroke-linecap','round')"/>
   </xsl:template>
-  <xsl:template match="mei:measure/@right" mode="add-barline-stroke-features"/>
+  <xsl:template match="@right[string()=('invis')]" mode="add-barline-stroke-features">
+    <xsl:sequence select="lf:generateAttribute($svgNS,'display','none')"/>
+  </xsl:template>
+  <xsl:template match="@right" mode="add-barline-stroke-features"/>
   
   <!-- This groups elements so that they can be styled (e.g. hidden) or manipulated with Javascript as a whole. -->
   <xsl:template mode="mei2musx" match="mei:rdg|mei:del|mei:lem|mei:orig|mei:reg|mei:app">
@@ -315,6 +316,7 @@
   <xsl:template mode="mei2musx" match="mei:hairpin">
     <!-- TODO: Proper y positioning (as well for mei:dynam, see below) -->
     <hairpin start="{(@synch:id|@startid)[1]}" end="{(@synch:end.id|@endid)[1]}" y="S{musx:getDynamPosition(.)}">
+      <xsl:apply-templates select="@xml:id" mode="mei2musx"/>
       <xsl:variable name="opening" select="if(@opening) then @opening * 2 else 4"/>
       <xsl:attribute name="{if(@form = 'cres') then 'endSpread' else 'startSpread'}">
         <xsl:value-of select="concat('s',$opening)"/>
@@ -326,7 +328,9 @@
     <xsl:variable name="y" select="if(@curvedir='below') then '14' else '-5'"/>
     <!-- TODO: Proper height and y positioning (as well for mei:dynam, see below) -->
     <slur start="{(@synch:id,@startid)[1]}" end="{(@synch:end.id,@endid)[1]}" y1="S{$y}" y2="S{$y}" 
-      height="s{if(@curvedir='below') then '' else '-'}8"/>
+      height="s{if(@curvedir='below') then '' else '-'}8">
+      <xsl:apply-templates select="@xml:id" mode="mei2musx"/>
+    </slur>
   </xsl:template>
   
   <xsl:template mode="mei2musx" match="mei:tie">
@@ -334,13 +338,15 @@
       - Proper height
       - accept @tstamp instead of @startid
       - proper y positioning (as well for mei:dynam, see below) -->
-    <slur class="tie" start="{(@startid,@synch:id)[1]}" end="{(@endid,@synch:end.id)[1]}" height="s{if(@curvedir='below') then '' else '-'}3.5"/>
+    <slur class="tie" start="{(@startid,@synch:id)[1]}" end="{(@endid,@synch:end.id)[1]}" height="s{if(@curvedir='below') then '' else '-'}3.5">
+      <xsl:apply-templates select="@xml:id" mode="mei2musx"/>
+    </slur>
   </xsl:template>
   
   <xsl:template mode="mei2musx" match="mei:dynam">
     <!-- TODO: Proper y positioning (as well for mei:hairpin, see above) -->
     <symbolText start="{@synch:id}" class="dynam" y="S{musx:getDynamPosition(.)}">
-      <xsl:apply-templates mode="mei2musx"/>
+      <xsl:apply-templates select="@xml:id|node()" mode="mei2musx"/>
     </symbolText>
   </xsl:template>
   
@@ -348,6 +354,7 @@
   <!-- TODO: Canonicalize lyrics so that they always appear in a <verse> element with proper @n -->
   <xsl:template mode="mei2musx" match="mei:syl">
     <svg y="S{10 + 5*number(parent::mei:verse/@n)}">
+      <xsl:apply-templates select="@xml:id" mode="mei2musx"/>
       <svg:text font-size="5">
         <xsl:value-of select="."/>
         <xsl:if test="@wordpos=('i','m') or @con='d'">

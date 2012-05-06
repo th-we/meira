@@ -54,7 +54,7 @@
           <xsl:with-param name="dur" select="$minimumDur"/>
         </xsl:apply-templates>
       </xsl:attribute>
-      <xsl:apply-templates select="." mode="copy-id"/>
+      <xsl:apply-templates select="@xml:id" mode="mei2musx"/>
       <xsl:apply-templates select=".//@stem.dir[1]" mode="add-direction"/>
       <xsl:apply-templates mode="add-subbeams" select="*[self::mei:note or self::mei:chord][@dur &gt; $minimumDur]">
         <xsl:with-param name="alreadyDrawnDur" select="$minimumDur"/>
@@ -63,12 +63,12 @@
     <xsl:apply-templates mode="mei2musx"/>
   </xsl:template>
   
-  <xsl:template match="@stem.dir[.='up']">
+  <xsl:template match="@stem.dir[.='up']" mode="add-direction">
     <xsl:attribute name="direction">
       <xsl:value-of select="-1"/>
     </xsl:attribute>
   </xsl:template>
-  <xsl:template match="@stem.dir[.='down']">
+  <xsl:template match="@stem.dir[.='down']" mode="add-direction">
     <xsl:attribute name="direction">
       <xsl:value-of select="1"/>
     </xsl:attribute>
@@ -121,7 +121,7 @@
       <xsl:apply-templates mode="get-number-of-beams" select="(.//mei:note|.//mei:chord)[@dur][1]"/>
     </xsl:variable>
     <beam start="{.//*[self::mei:note or self::mei:chord][1]/@xml:id}" end="{.//*[self::mei:note or self::mei:chord][last()]/@xml:id}" number="{$numberOfBeams}">
-      <xsl:apply-templates select="." mode="copy-id"/>
+      <xsl:apply-templates select="@xml:id" mode="mei2musx"/>
       <subbeam x1="s2" x2="s-2" number="{@slash - $numberOfBeams}"/>
     </beam>
     <xsl:apply-templates mode="mei2musx"/>
