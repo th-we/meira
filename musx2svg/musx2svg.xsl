@@ -338,6 +338,18 @@
          <otherwise/>
       </choose>
    </function>
+   <function name="g:function" as="xs:string*">
+      <param name="elements" as="element()*"/>
+      <variable name="result" as="xs:string*">
+         <apply-templates select="$elements" mode="get_function"/>
+      </variable>
+      <choose>
+         <when test="count($result) != 0">
+            <sequence select="$result"/>
+         </when>
+         <otherwise/>
+      </choose>
+   </function>
    <function name="g:ledgerLines.direction" as="xs:integer*">
       <param name="elements" as="element()*"/>
       <variable name="result" as="xs:integer*">
@@ -933,12 +945,12 @@
       <copy-of select="g:size($staff) * number(substring(@size,2))"/>
    </template>
    <template mode="get_start"
-             match="musx:system|musx:svg|musx:clef|musx:rest|musx:barline|musx:note|musx:chord|musx:beam|musx:hairpin|musx:slur|musx:symbolText|musx:keySignature|musx:timeSignature"
+             match="musx:system|musx:svg|musx:clef|musx:rest|musx:barline|musx:note|musx:chord|musx:beam|musx:hairpin|musx:slur|musx:symbolText|musx:keySignature|musx:timeSignature|musx:articulation"
              priority="-1">
       <sequence select=".."/>
    </template>
    <template mode="get_start"
-             match="musx:system[@start]|musx:svg[@start]|musx:clef[@start]|musx:rest[@start]|musx:barline[@start]|musx:note[@start]|musx:chord[@start]|musx:beam[@start]|musx:hairpin[@start]|musx:slur[@start]|musx:symbolText[@start]|musx:keySignature[@start]|musx:timeSignature[@start]">
+             match="musx:system[@start]|musx:svg[@start]|musx:clef[@start]|musx:rest[@start]|musx:barline[@start]|musx:note[@start]|musx:chord[@start]|musx:beam[@start]|musx:hairpin[@start]|musx:slur[@start]|musx:symbolText[@start]|musx:keySignature[@start]|musx:timeSignature[@start]|musx:articulation[@start]">
       <sequence select="id(@start)"/>
    </template>
    <template mode="get_end" match="musx:system|musx:beam|musx:slur" priority="-1">
@@ -975,41 +987,41 @@
       <variable name="staff" select="ancestor::musx:staff[last()]" as="node()"/>
       <copy-of select="(g:x(g:start(.))) + (g:size($staff) * number(substring(@x1,2)))"/>
    </template>
-   <key name="get_y_system_staff_staffGroup_svg_clef_group_note_head_accidental_hairpin_keySignature_fraction"
+   <key name="get_y_system_staff_staffGroup_svg_clef_group_note_head_accidental_hairpin_keySignature_fraction_articulation"
         use="substring(@y,1,1)"
-        match="musx:system|musx:staff|musx:staffGroup|musx:svg|musx:clef|musx:group|musx:note|musx:head|musx:accidental|musx:hairpin|musx:keySignature|musx:fraction"/>
+        match="musx:system|musx:staff|musx:staffGroup|musx:svg|musx:clef|musx:group|musx:note|musx:head|musx:accidental|musx:hairpin|musx:keySignature|musx:fraction|musx:articulation"/>
    <template mode="get_y"
-             match="musx:system|musx:staff|musx:staffGroup|musx:svg|musx:clef|musx:group|musx:note|musx:head|musx:accidental|musx:hairpin|musx:keySignature|musx:fraction"
+             match="musx:system|musx:staff|musx:staffGroup|musx:svg|musx:clef|musx:group|musx:note|musx:head|musx:accidental|musx:hairpin|musx:keySignature|musx:fraction|musx:articulation"
              priority="-2">
       <copy-of select="(g:y(..)) + (0)"/>
    </template>
    <template mode="get_y"
-             match="musx:system[@y]|musx:staff[@y]|musx:staffGroup[@y]|musx:svg[@y]|musx:clef[@y]|musx:group[@y]|musx:note[@y]|musx:head[@y]|musx:accidental[@y]|musx:hairpin[@y]|musx:keySignature[@y]|musx:fraction[@y]"
+             match="musx:system[@y]|musx:staff[@y]|musx:staffGroup[@y]|musx:svg[@y]|musx:clef[@y]|musx:group[@y]|musx:note[@y]|musx:head[@y]|musx:accidental[@y]|musx:hairpin[@y]|musx:keySignature[@y]|musx:fraction[@y]|musx:articulation[@y]"
              priority="-1">
       <copy-of select="number(@y)"/>
    </template>
    <template mode="get_y"
-             match="key('get_y_system_staff_staffGroup_svg_clef_group_note_head_accidental_hairpin_keySignature_fraction','p')">
+             match="key('get_y_system_staff_staffGroup_svg_clef_group_note_head_accidental_hairpin_keySignature_fraction_articulation','p')">
       <variable name="page" select="ancestor-or-self::musx:page" as="node()"/>
       <copy-of select="(g:y(..)) + g:size($page) * number(substring(@y,2))"/>
    </template>
    <template mode="get_y"
-             match="key('get_y_system_staff_staffGroup_svg_clef_group_note_head_accidental_hairpin_keySignature_fraction','P')">
+             match="key('get_y_system_staff_staffGroup_svg_clef_group_note_head_accidental_hairpin_keySignature_fraction_articulation','P')">
       <variable name="page" select="ancestor-or-self::musx:page" as="node()"/>
       <copy-of select="g:y($page) + g:size($page) * number(substring(@y,2))"/>
    </template>
    <template mode="get_y"
-             match="key('get_y_system_staff_staffGroup_svg_clef_group_note_head_accidental_hairpin_keySignature_fraction','s')">
+             match="key('get_y_system_staff_staffGroup_svg_clef_group_note_head_accidental_hairpin_keySignature_fraction_articulation','s')">
       <variable name="staff" select="ancestor::musx:staff[last()]" as="node()"/>
       <copy-of select="(g:y(..)) + (g:size($staff) * number(substring(@y,2)))"/>
    </template>
    <template mode="get_y"
-             match="key('get_y_system_staff_staffGroup_svg_clef_group_note_head_accidental_hairpin_keySignature_fraction','S')">
+             match="key('get_y_system_staff_staffGroup_svg_clef_group_note_head_accidental_hairpin_keySignature_fraction_articulation','S')">
       <variable name="staff" select="ancestor::musx:staff[last()]" as="node()"/>
       <copy-of select="(g:y1($staff)) +            (g:size($staff) * number(substring(@y,2)))"/>
    </template>
    <template mode="get_y"
-             match="key('get_y_system_staff_staffGroup_svg_clef_group_note_head_accidental_hairpin_keySignature_fraction','L')">
+             match="key('get_y_system_staff_staffGroup_svg_clef_group_note_head_accidental_hairpin_keySignature_fraction_articulation','L')">
       <variable name="staff" select="ancestor::musx:staff[last()]" as="node()"/>
       <copy-of select="(g:y2($staff)) -            + 2 * g:size($staff) * (number(substring(@y,2)) - 1)"/>
    </template>
@@ -1041,101 +1053,101 @@
       <variable name="staff" select="ancestor::musx:staff[last()]" as="node()"/>
       <copy-of select="(g:x1(.)) + (g:size($staff) * number(substring(@x,2)))"/>
    </template>
-   <key name="get_y1_system_staff_staffGroup_svg_clef_transposeNumber_rest_group_note_head_accidental_flags_dots_beam_hairpin_symbolText_keySignature_timeSignature_fraction"
+   <key name="get_y1_system_staff_staffGroup_svg_clef_transposeNumber_rest_group_note_head_accidental_flags_dots_beam_hairpin_symbolText_keySignature_timeSignature_fraction_articulation"
         use="substring(@y1,1,1)"
-        match="musx:system|musx:staff|musx:staffGroup|musx:svg|musx:clef|musx:transposeNumber|musx:rest|musx:group|musx:note|musx:head|musx:accidental|musx:flags|musx:dots|musx:beam|musx:hairpin|musx:symbolText|musx:keySignature|musx:timeSignature|musx:fraction"/>
+        match="musx:system|musx:staff|musx:staffGroup|musx:svg|musx:clef|musx:transposeNumber|musx:rest|musx:group|musx:note|musx:head|musx:accidental|musx:flags|musx:dots|musx:beam|musx:hairpin|musx:symbolText|musx:keySignature|musx:timeSignature|musx:fraction|musx:articulation"/>
    <template mode="get_y1"
-             match="musx:system|musx:staff|musx:staffGroup|musx:svg|musx:clef|musx:transposeNumber|musx:rest|musx:group|musx:note|musx:head|musx:accidental|musx:flags|musx:dots|musx:beam|musx:hairpin|musx:symbolText|musx:keySignature|musx:timeSignature|musx:fraction"
+             match="musx:system|musx:staff|musx:staffGroup|musx:svg|musx:clef|musx:transposeNumber|musx:rest|musx:group|musx:note|musx:head|musx:accidental|musx:flags|musx:dots|musx:beam|musx:hairpin|musx:symbolText|musx:keySignature|musx:timeSignature|musx:fraction|musx:articulation"
              priority="-2">
       <copy-of select="(g:y(.)) + (0)"/>
    </template>
    <template mode="get_y1"
-             match="musx:system[@y1]|musx:staff[@y1]|musx:staffGroup[@y1]|musx:svg[@y1]|musx:clef[@y1]|musx:transposeNumber[@y1]|musx:rest[@y1]|musx:group[@y1]|musx:note[@y1]|musx:head[@y1]|musx:accidental[@y1]|musx:flags[@y1]|musx:dots[@y1]|musx:beam[@y1]|musx:hairpin[@y1]|musx:symbolText[@y1]|musx:keySignature[@y1]|musx:timeSignature[@y1]|musx:fraction[@y1]"
+             match="musx:system[@y1]|musx:staff[@y1]|musx:staffGroup[@y1]|musx:svg[@y1]|musx:clef[@y1]|musx:transposeNumber[@y1]|musx:rest[@y1]|musx:group[@y1]|musx:note[@y1]|musx:head[@y1]|musx:accidental[@y1]|musx:flags[@y1]|musx:dots[@y1]|musx:beam[@y1]|musx:hairpin[@y1]|musx:symbolText[@y1]|musx:keySignature[@y1]|musx:timeSignature[@y1]|musx:fraction[@y1]|musx:articulation[@y1]"
              priority="-1">
       <copy-of select="number(@y1)"/>
    </template>
    <template mode="get_y1"
-             match="key('get_y1_system_staff_staffGroup_svg_clef_transposeNumber_rest_group_note_head_accidental_flags_dots_beam_hairpin_symbolText_keySignature_timeSignature_fraction','p')">
+             match="key('get_y1_system_staff_staffGroup_svg_clef_transposeNumber_rest_group_note_head_accidental_flags_dots_beam_hairpin_symbolText_keySignature_timeSignature_fraction_articulation','p')">
       <variable name="page" select="ancestor-or-self::musx:page" as="node()"/>
       <copy-of select="(g:y(.)) + g:size($page) * number(substring(@y1,2))"/>
    </template>
    <template mode="get_y1"
-             match="key('get_y1_system_staff_staffGroup_svg_clef_transposeNumber_rest_group_note_head_accidental_flags_dots_beam_hairpin_symbolText_keySignature_timeSignature_fraction','P')">
+             match="key('get_y1_system_staff_staffGroup_svg_clef_transposeNumber_rest_group_note_head_accidental_flags_dots_beam_hairpin_symbolText_keySignature_timeSignature_fraction_articulation','P')">
       <variable name="page" select="ancestor-or-self::musx:page" as="node()"/>
       <copy-of select="g:y($page) + g:size($page) * number(substring(@y1,2))"/>
    </template>
    <template mode="get_y1"
-             match="key('get_y1_system_staff_staffGroup_svg_clef_transposeNumber_rest_group_note_head_accidental_flags_dots_beam_hairpin_symbolText_keySignature_timeSignature_fraction','s')">
+             match="key('get_y1_system_staff_staffGroup_svg_clef_transposeNumber_rest_group_note_head_accidental_flags_dots_beam_hairpin_symbolText_keySignature_timeSignature_fraction_articulation','s')">
       <variable name="staff" select="ancestor::musx:staff[last()]" as="node()"/>
       <copy-of select="(g:y(.)) + (g:size($staff) * number(substring(@y1,2)))"/>
    </template>
    <template mode="get_y1"
-             match="key('get_y1_system_staff_staffGroup_svg_clef_transposeNumber_rest_group_note_head_accidental_flags_dots_beam_hairpin_symbolText_keySignature_timeSignature_fraction','S')">
+             match="key('get_y1_system_staff_staffGroup_svg_clef_transposeNumber_rest_group_note_head_accidental_flags_dots_beam_hairpin_symbolText_keySignature_timeSignature_fraction_articulation','S')">
       <variable name="staff" select="ancestor::musx:staff[last()]" as="node()"/>
       <copy-of select="(g:y1($staff)) +            (g:size($staff) * number(substring(@y1,2)))"/>
    </template>
    <template mode="get_y1"
-             match="key('get_y1_system_staff_staffGroup_svg_clef_transposeNumber_rest_group_note_head_accidental_flags_dots_beam_hairpin_symbolText_keySignature_timeSignature_fraction','L')">
+             match="key('get_y1_system_staff_staffGroup_svg_clef_transposeNumber_rest_group_note_head_accidental_flags_dots_beam_hairpin_symbolText_keySignature_timeSignature_fraction_articulation','L')">
       <variable name="staff" select="ancestor::musx:staff[last()]" as="node()"/>
       <copy-of select="(g:y2($staff)) -            + 2 * g:size($staff) * (number(substring(@y1,2)) - 1)"/>
    </template>
-   <key name="get_y2_system_staffGroup_svg_clef_transposeNumber_rest_group_note_head_accidental_flags_dots_beam_hairpin_symbolText_keySignature_timeSignature_fraction"
+   <key name="get_y2_system_staffGroup_svg_clef_transposeNumber_rest_group_note_head_accidental_flags_dots_beam_hairpin_symbolText_keySignature_timeSignature_fraction_articulation"
         use="substring(@y2,1,1)"
-        match="musx:system|musx:staffGroup|musx:svg|musx:clef|musx:transposeNumber|musx:rest|musx:group|musx:note|musx:head|musx:accidental|musx:flags|musx:dots|musx:beam|musx:hairpin|musx:symbolText|musx:keySignature|musx:timeSignature|musx:fraction"/>
+        match="musx:system|musx:staffGroup|musx:svg|musx:clef|musx:transposeNumber|musx:rest|musx:group|musx:note|musx:head|musx:accidental|musx:flags|musx:dots|musx:beam|musx:hairpin|musx:symbolText|musx:keySignature|musx:timeSignature|musx:fraction|musx:articulation"/>
    <template mode="get_y2"
-             match="musx:system|musx:staffGroup|musx:svg|musx:clef|musx:transposeNumber|musx:rest|musx:group|musx:note|musx:head|musx:accidental|musx:flags|musx:dots|musx:beam|musx:hairpin|musx:symbolText|musx:keySignature|musx:timeSignature|musx:fraction"
+             match="musx:system|musx:staffGroup|musx:svg|musx:clef|musx:transposeNumber|musx:rest|musx:group|musx:note|musx:head|musx:accidental|musx:flags|musx:dots|musx:beam|musx:hairpin|musx:symbolText|musx:keySignature|musx:timeSignature|musx:fraction|musx:articulation"
              priority="-2">
       <copy-of select="(g:y(.)) + (0)"/>
    </template>
    <template mode="get_y2"
-             match="musx:system[@y2]|musx:staffGroup[@y2]|musx:svg[@y2]|musx:clef[@y2]|musx:transposeNumber[@y2]|musx:rest[@y2]|musx:group[@y2]|musx:note[@y2]|musx:head[@y2]|musx:accidental[@y2]|musx:flags[@y2]|musx:dots[@y2]|musx:beam[@y2]|musx:hairpin[@y2]|musx:symbolText[@y2]|musx:keySignature[@y2]|musx:timeSignature[@y2]|musx:fraction[@y2]"
+             match="musx:system[@y2]|musx:staffGroup[@y2]|musx:svg[@y2]|musx:clef[@y2]|musx:transposeNumber[@y2]|musx:rest[@y2]|musx:group[@y2]|musx:note[@y2]|musx:head[@y2]|musx:accidental[@y2]|musx:flags[@y2]|musx:dots[@y2]|musx:beam[@y2]|musx:hairpin[@y2]|musx:symbolText[@y2]|musx:keySignature[@y2]|musx:timeSignature[@y2]|musx:fraction[@y2]|musx:articulation[@y2]"
              priority="-1">
       <copy-of select="number(@y2)"/>
    </template>
    <template mode="get_y2"
-             match="key('get_y2_system_staffGroup_svg_clef_transposeNumber_rest_group_note_head_accidental_flags_dots_beam_hairpin_symbolText_keySignature_timeSignature_fraction','p')">
+             match="key('get_y2_system_staffGroup_svg_clef_transposeNumber_rest_group_note_head_accidental_flags_dots_beam_hairpin_symbolText_keySignature_timeSignature_fraction_articulation','p')">
       <variable name="page" select="ancestor-or-self::musx:page" as="node()"/>
       <copy-of select="(g:y(.)) + g:size($page) * number(substring(@y2,2))"/>
    </template>
    <template mode="get_y2"
-             match="key('get_y2_system_staffGroup_svg_clef_transposeNumber_rest_group_note_head_accidental_flags_dots_beam_hairpin_symbolText_keySignature_timeSignature_fraction','P')">
+             match="key('get_y2_system_staffGroup_svg_clef_transposeNumber_rest_group_note_head_accidental_flags_dots_beam_hairpin_symbolText_keySignature_timeSignature_fraction_articulation','P')">
       <variable name="page" select="ancestor-or-self::musx:page" as="node()"/>
       <copy-of select="g:y($page) + g:size($page) * number(substring(@y2,2))"/>
    </template>
    <template mode="get_y2"
-             match="key('get_y2_system_staffGroup_svg_clef_transposeNumber_rest_group_note_head_accidental_flags_dots_beam_hairpin_symbolText_keySignature_timeSignature_fraction','s')">
+             match="key('get_y2_system_staffGroup_svg_clef_transposeNumber_rest_group_note_head_accidental_flags_dots_beam_hairpin_symbolText_keySignature_timeSignature_fraction_articulation','s')">
       <variable name="staff" select="ancestor::musx:staff[last()]" as="node()"/>
       <copy-of select="(g:y(.)) + (g:size($staff) * number(substring(@y2,2)))"/>
    </template>
    <template mode="get_y2"
-             match="key('get_y2_system_staffGroup_svg_clef_transposeNumber_rest_group_note_head_accidental_flags_dots_beam_hairpin_symbolText_keySignature_timeSignature_fraction','S')">
+             match="key('get_y2_system_staffGroup_svg_clef_transposeNumber_rest_group_note_head_accidental_flags_dots_beam_hairpin_symbolText_keySignature_timeSignature_fraction_articulation','S')">
       <variable name="staff" select="ancestor::musx:staff[last()]" as="node()"/>
       <copy-of select="(g:y1($staff)) +            (g:size($staff) * number(substring(@y2,2)))"/>
    </template>
    <template mode="get_y2"
-             match="key('get_y2_system_staffGroup_svg_clef_transposeNumber_rest_group_note_head_accidental_flags_dots_beam_hairpin_symbolText_keySignature_timeSignature_fraction','L')">
+             match="key('get_y2_system_staffGroup_svg_clef_transposeNumber_rest_group_note_head_accidental_flags_dots_beam_hairpin_symbolText_keySignature_timeSignature_fraction_articulation','L')">
       <variable name="staff" select="ancestor::musx:staff[last()]" as="node()"/>
       <copy-of select="(g:y2($staff)) -            + 2 * g:size($staff) * (number(substring(@y2,2)) - 1)"/>
    </template>
-   <key name="get_size_system_staff_staffGroup_svg_clef_rest_group_staffBracket_barline_note_head_accidental_chord_stem_flags_dots_beam_subbeam_hairpin_slur_symbolText_keySignature_timeSignature_fraction"
+   <key name="get_size_system_staff_staffGroup_svg_clef_rest_group_staffBracket_barline_note_head_accidental_chord_stem_flags_dots_beam_subbeam_hairpin_slur_symbolText_keySignature_timeSignature_fraction_articulation"
         use="substring(@size,1,1)"
-        match="musx:system|musx:staff|musx:staffGroup|musx:svg|musx:clef|musx:rest|musx:group|musx:staffBracket|musx:barline|musx:note|musx:head|musx:accidental|musx:chord|musx:stem|musx:flags|musx:dots|musx:beam|musx:subbeam|musx:hairpin|musx:slur|musx:symbolText|musx:keySignature|musx:timeSignature|musx:fraction"/>
+        match="musx:system|musx:staff|musx:staffGroup|musx:svg|musx:clef|musx:rest|musx:group|musx:staffBracket|musx:barline|musx:note|musx:head|musx:accidental|musx:chord|musx:stem|musx:flags|musx:dots|musx:beam|musx:subbeam|musx:hairpin|musx:slur|musx:symbolText|musx:keySignature|musx:timeSignature|musx:fraction|musx:articulation"/>
    <template mode="get_size" priority="-2"
-             match="musx:system|musx:staff|musx:staffGroup|musx:svg|musx:clef|musx:rest|musx:group|musx:staffBracket|musx:barline|musx:note|musx:head|musx:accidental|musx:chord|musx:stem|musx:flags|musx:dots|musx:beam|musx:subbeam|musx:hairpin|musx:slur|musx:symbolText|musx:keySignature|musx:timeSignature|musx:fraction">
+             match="musx:system|musx:staff|musx:staffGroup|musx:svg|musx:clef|musx:rest|musx:group|musx:staffBracket|musx:barline|musx:note|musx:head|musx:accidental|musx:chord|musx:stem|musx:flags|musx:dots|musx:beam|musx:subbeam|musx:hairpin|musx:slur|musx:symbolText|musx:keySignature|musx:timeSignature|musx:fraction|musx:articulation">
       <copy-of select="(g:size(..)) * (1)"/>
    </template>
    <template mode="get_size"
-             match="musx:system[@size]|musx:staff[@size]|musx:staffGroup[@size]|musx:svg[@size]|musx:clef[@size]|musx:rest[@size]|musx:group[@size]|musx:staffBracket[@size]|musx:barline[@size]|musx:note[@size]|musx:head[@size]|musx:accidental[@size]|musx:chord[@size]|musx:stem[@size]|musx:flags[@size]|musx:dots[@size]|musx:beam[@size]|musx:subbeam[@size]|musx:hairpin[@size]|musx:slur[@size]|musx:symbolText[@size]|musx:keySignature[@size]|musx:timeSignature[@size]|musx:fraction[@size]"
+             match="musx:system[@size]|musx:staff[@size]|musx:staffGroup[@size]|musx:svg[@size]|musx:clef[@size]|musx:rest[@size]|musx:group[@size]|musx:staffBracket[@size]|musx:barline[@size]|musx:note[@size]|musx:head[@size]|musx:accidental[@size]|musx:chord[@size]|musx:stem[@size]|musx:flags[@size]|musx:dots[@size]|musx:beam[@size]|musx:subbeam[@size]|musx:hairpin[@size]|musx:slur[@size]|musx:symbolText[@size]|musx:keySignature[@size]|musx:timeSignature[@size]|musx:fraction[@size]|musx:articulation[@size]"
              priority="-1">
       <copy-of select="number(@size)"/>
    </template>
    <template mode="get_size"
-             match="key('get_size_system_staff_staffGroup_svg_clef_rest_group_staffBracket_barline_note_head_accidental_chord_stem_flags_dots_beam_subbeam_hairpin_slur_symbolText_keySignature_timeSignature_fraction','p')">
+             match="key('get_size_system_staff_staffGroup_svg_clef_rest_group_staffBracket_barline_note_head_accidental_chord_stem_flags_dots_beam_subbeam_hairpin_slur_symbolText_keySignature_timeSignature_fraction_articulation','p')">
       <variable name="page" select="ancestor::musx:page" as="node()"/>
       <copy-of select="g:size($page) * number(substring(@size,2))"/>
    </template>
    <template mode="get_size"
-             match="key('get_size_system_staff_staffGroup_svg_clef_rest_group_staffBracket_barline_note_head_accidental_chord_stem_flags_dots_beam_subbeam_hairpin_slur_symbolText_keySignature_timeSignature_fraction','s')">
+             match="key('get_size_system_staff_staffGroup_svg_clef_rest_group_staffBracket_barline_note_head_accidental_chord_stem_flags_dots_beam_subbeam_hairpin_slur_symbolText_keySignature_timeSignature_fraction_articulation','s')">
       <variable name="staff" select="ancestor::musx:staff" as="node()"/>
       <copy-of select="g:size($staff) * number(substring(@size,2))"/>
    </template>
@@ -1216,59 +1228,59 @@
       <variable name="staff" select="ancestor::musx:staff[last()]" as="node()"/>
       <copy-of select="(g:x(g:start(.))) + (g:size($staff) * number(substring(@x,2)))"/>
    </template>
-   <key name="get_x1_svg_clef_transposeNumber_staffBracket_barline_note_head_accidental_chord_stem_flags_keySignature_timeSignature_fraction"
+   <key name="get_x1_svg_clef_transposeNumber_staffBracket_barline_note_head_accidental_chord_stem_flags_keySignature_timeSignature_fraction_articulation"
         use="substring(@x1,1,1)"
-        match="musx:svg|musx:clef|musx:transposeNumber|musx:staffBracket|musx:barline|musx:note|musx:head|musx:accidental|musx:chord|musx:stem|musx:flags|musx:keySignature|musx:timeSignature|musx:fraction"/>
+        match="musx:svg|musx:clef|musx:transposeNumber|musx:staffBracket|musx:barline|musx:note|musx:head|musx:accidental|musx:chord|musx:stem|musx:flags|musx:keySignature|musx:timeSignature|musx:fraction|musx:articulation"/>
    <template mode="get_x1"
-             match="musx:svg|musx:clef|musx:transposeNumber|musx:staffBracket|musx:barline|musx:note|musx:head|musx:accidental|musx:chord|musx:stem|musx:flags|musx:keySignature|musx:timeSignature|musx:fraction"
+             match="musx:svg|musx:clef|musx:transposeNumber|musx:staffBracket|musx:barline|musx:note|musx:head|musx:accidental|musx:chord|musx:stem|musx:flags|musx:keySignature|musx:timeSignature|musx:fraction|musx:articulation"
              priority="-2">
       <copy-of select="(g:x(.)) + (0)"/>
    </template>
    <template mode="get_x1"
-             match="musx:svg[@x1]|musx:clef[@x1]|musx:transposeNumber[@x1]|musx:staffBracket[@x1]|musx:barline[@x1]|musx:note[@x1]|musx:head[@x1]|musx:accidental[@x1]|musx:chord[@x1]|musx:stem[@x1]|musx:flags[@x1]|musx:keySignature[@x1]|musx:timeSignature[@x1]|musx:fraction[@x1]"
+             match="musx:svg[@x1]|musx:clef[@x1]|musx:transposeNumber[@x1]|musx:staffBracket[@x1]|musx:barline[@x1]|musx:note[@x1]|musx:head[@x1]|musx:accidental[@x1]|musx:chord[@x1]|musx:stem[@x1]|musx:flags[@x1]|musx:keySignature[@x1]|musx:timeSignature[@x1]|musx:fraction[@x1]|musx:articulation[@x1]"
              priority="-1">
       <copy-of select="number(@x1)"/>
    </template>
    <template mode="get_x1"
-             match="key('get_x1_svg_clef_transposeNumber_staffBracket_barline_note_head_accidental_chord_stem_flags_keySignature_timeSignature_fraction','p')">
+             match="key('get_x1_svg_clef_transposeNumber_staffBracket_barline_note_head_accidental_chord_stem_flags_keySignature_timeSignature_fraction_articulation','p')">
       <variable name="page" select="ancestor-or-self::musx:page" as="node()"/>
       <copy-of select="(g:x(.)) + g:size($page) * number(substring(@x1,2))"/>
    </template>
    <template mode="get_x1"
-             match="key('get_x1_svg_clef_transposeNumber_staffBracket_barline_note_head_accidental_chord_stem_flags_keySignature_timeSignature_fraction','P')">
+             match="key('get_x1_svg_clef_transposeNumber_staffBracket_barline_note_head_accidental_chord_stem_flags_keySignature_timeSignature_fraction_articulation','P')">
       <variable name="page" select="ancestor-or-self::musx:page" as="node()"/>
       <copy-of select="g:x($page) + g:size($page) * number(substring(@x1,2))"/>
    </template>
    <template mode="get_x1"
-             match="key('get_x1_svg_clef_transposeNumber_staffBracket_barline_note_head_accidental_chord_stem_flags_keySignature_timeSignature_fraction','s')">
+             match="key('get_x1_svg_clef_transposeNumber_staffBracket_barline_note_head_accidental_chord_stem_flags_keySignature_timeSignature_fraction_articulation','s')">
       <variable name="staff" select="ancestor::musx:staff[last()]" as="node()"/>
       <copy-of select="(g:x(.)) + (g:size($staff) * number(substring(@x1,2)))"/>
    </template>
-   <key name="get_x2_svg_clef_transposeNumber_staffBracket_barline_note_head_accidental_chord_stem_flags_keySignature_timeSignature_fraction"
+   <key name="get_x2_svg_clef_transposeNumber_staffBracket_barline_note_head_accidental_chord_stem_flags_keySignature_timeSignature_fraction_articulation"
         use="substring(@x2,1,1)"
-        match="musx:svg|musx:clef|musx:transposeNumber|musx:staffBracket|musx:barline|musx:note|musx:head|musx:accidental|musx:chord|musx:stem|musx:flags|musx:keySignature|musx:timeSignature|musx:fraction"/>
+        match="musx:svg|musx:clef|musx:transposeNumber|musx:staffBracket|musx:barline|musx:note|musx:head|musx:accidental|musx:chord|musx:stem|musx:flags|musx:keySignature|musx:timeSignature|musx:fraction|musx:articulation"/>
    <template mode="get_x2"
-             match="musx:svg|musx:clef|musx:transposeNumber|musx:staffBracket|musx:barline|musx:note|musx:head|musx:accidental|musx:chord|musx:stem|musx:flags|musx:keySignature|musx:timeSignature|musx:fraction"
+             match="musx:svg|musx:clef|musx:transposeNumber|musx:staffBracket|musx:barline|musx:note|musx:head|musx:accidental|musx:chord|musx:stem|musx:flags|musx:keySignature|musx:timeSignature|musx:fraction|musx:articulation"
              priority="-2">
       <copy-of select="(g:x(.)) + (0)"/>
    </template>
    <template mode="get_x2"
-             match="musx:svg[@x2]|musx:clef[@x2]|musx:transposeNumber[@x2]|musx:staffBracket[@x2]|musx:barline[@x2]|musx:note[@x2]|musx:head[@x2]|musx:accidental[@x2]|musx:chord[@x2]|musx:stem[@x2]|musx:flags[@x2]|musx:keySignature[@x2]|musx:timeSignature[@x2]|musx:fraction[@x2]"
+             match="musx:svg[@x2]|musx:clef[@x2]|musx:transposeNumber[@x2]|musx:staffBracket[@x2]|musx:barline[@x2]|musx:note[@x2]|musx:head[@x2]|musx:accidental[@x2]|musx:chord[@x2]|musx:stem[@x2]|musx:flags[@x2]|musx:keySignature[@x2]|musx:timeSignature[@x2]|musx:fraction[@x2]|musx:articulation[@x2]"
              priority="-1">
       <copy-of select="number(@x2)"/>
    </template>
    <template mode="get_x2"
-             match="key('get_x2_svg_clef_transposeNumber_staffBracket_barline_note_head_accidental_chord_stem_flags_keySignature_timeSignature_fraction','p')">
+             match="key('get_x2_svg_clef_transposeNumber_staffBracket_barline_note_head_accidental_chord_stem_flags_keySignature_timeSignature_fraction_articulation','p')">
       <variable name="page" select="ancestor-or-self::musx:page" as="node()"/>
       <copy-of select="(g:x(.)) + g:size($page) * number(substring(@x2,2))"/>
    </template>
    <template mode="get_x2"
-             match="key('get_x2_svg_clef_transposeNumber_staffBracket_barline_note_head_accidental_chord_stem_flags_keySignature_timeSignature_fraction','P')">
+             match="key('get_x2_svg_clef_transposeNumber_staffBracket_barline_note_head_accidental_chord_stem_flags_keySignature_timeSignature_fraction_articulation','P')">
       <variable name="page" select="ancestor-or-self::musx:page" as="node()"/>
       <copy-of select="g:x($page) + g:size($page) * number(substring(@x2,2))"/>
    </template>
    <template mode="get_x2"
-             match="key('get_x2_svg_clef_transposeNumber_staffBracket_barline_note_head_accidental_chord_stem_flags_keySignature_timeSignature_fraction','s')">
+             match="key('get_x2_svg_clef_transposeNumber_staffBracket_barline_note_head_accidental_chord_stem_flags_keySignature_timeSignature_fraction_articulation','s')">
       <variable name="staff" select="ancestor::musx:staff[last()]" as="node()"/>
       <copy-of select="(g:x(.)) + (g:size($staff) * number(substring(@x2,2)))"/>
    </template>
@@ -1425,19 +1437,21 @@
       <variable name="staff" select="ancestor::musx:staff[last()]" as="node()"/>
       <copy-of select="(g:y2($staff)) -            + 2 * g:size($staff) * (number(substring(@y,2)) - 1)"/>
    </template>
-   <key name="get_width_rest_head" use="substring(@width,1,1)"
-        match="musx:rest|musx:head"/>
-   <template mode="get_width" priority="-2" match="musx:rest|musx:head">
+   <key name="get_width_rest_head_articulation" use="substring(@width,1,1)"
+        match="musx:rest|musx:head|musx:articulation"/>
+   <template mode="get_width" priority="-2" match="musx:rest|musx:head|musx:articulation">
       <copy-of select="(g:size(.)) * (number(g:svgSymbolBoundingBox(g:symbol(.))//@right))"/>
    </template>
-   <template mode="get_width" match="musx:rest[@width]|musx:head[@width]" priority="-1">
+   <template mode="get_width"
+             match="musx:rest[@width]|musx:head[@width]|musx:articulation[@width]"
+             priority="-1">
       <copy-of select="number(@width)"/>
    </template>
-   <template mode="get_width" match="key('get_width_rest_head','p')">
+   <template mode="get_width" match="key('get_width_rest_head_articulation','p')">
       <variable name="page" select="ancestor::musx:page" as="node()"/>
       <copy-of select="g:size($page) * number(substring(@width,2))"/>
    </template>
-   <template mode="get_width" match="key('get_width_rest_head','s')">
+   <template mode="get_width" match="key('get_width_rest_head_articulation','s')">
       <variable name="staff" select="ancestor::musx:staff" as="node()"/>
       <copy-of select="g:size($staff) * number(substring(@width,2))"/>
    </template>
@@ -1453,20 +1467,22 @@
    <template mode="get_step" match="musx:rest[@step]">
       <copy-of select="@step cast as xs:double"/>
    </template>
-   <template mode="get_symbol" match="musx:rest|musx:accidental|musx:keySignature"
+   <template mode="get_symbol"
+             match="musx:rest|musx:accidental|musx:keySignature|musx:articulation"
              priority="-1">
       <value-of select="concat($libDirectory,'/',$symbolFile,'#','')"/>
    </template>
    <template mode="get_symbol"
-             match="musx:rest[contains(@symbol,'.')]|musx:accidental[contains(@symbol,'.')]|musx:keySignature[contains(@symbol,'.')]"
+             match="musx:rest[contains(@symbol,'.')]|musx:accidental[contains(@symbol,'.')]|musx:keySignature[contains(@symbol,'.')]|musx:articulation[contains(@symbol,'.')]"
              priority="2">
       <sequence select="concat($libDirectory,'/',$symbolFile,'#',@symbol)"/>
    </template>
    <template mode="get_symbol"
-             match="musx:rest[@symbol]|musx:accidental[@symbol]|musx:keySignature[@symbol]">
+             match="musx:rest[@symbol]|musx:accidental[@symbol]|musx:keySignature[@symbol]|musx:articulation[@symbol]">
       <sequence select="concat($libDirectory,'/',$symbolFile,'#',local-name(),'.',@symbol)"/>
    </template>
-   <template mode="get_OwnBoundingBox" match="musx:rest|musx:accidental|musx:keySignature"
+   <template mode="get_OwnBoundingBox"
+             match="musx:rest|musx:accidental|musx:keySignature|musx:articulation"
              priority="-1">
       <variable name="symbolBBox" select="g:svgSymbolBoundingBox(g:symbol(.))" as="node()*"/>
       <if test="$symbolBBox">
@@ -1694,6 +1710,12 @@
    </template>
    <template mode="get_type" match="musx:barline[@type]">
       <copy-of select="@type cast as xs:string"/>
+   </template>
+   <template mode="get_function" match="musx:barline" priority="-1">
+      <copy-of select="'normal'"/>
+   </template>
+   <template mode="get_function" match="musx:barline[@function]">
+      <copy-of select="@function cast as xs:string"/>
    </template>
    <template mode="get_ledgerLines.direction" match="musx:note" priority="-1">
       <copy-of select="if (g:step(.) lt 0)                                                   then -1                                                   else 1"/>
@@ -2763,6 +2785,31 @@
       <variable name="staff" select="ancestor::musx:staff" as="node()"/>
       <copy-of select="g:size($staff) * number(substring(@width,2))"/>
    </template>
+   <key name="get_x_articulation" use="substring(@x,1,1)" match="musx:articulation"/>
+   <template mode="get_x" match="musx:articulation" priority="-2">
+      <copy-of select="(g:x(g:start(.))) + (.5*g:width(ancestor::musx:note[1]/musx:head[1]))"/>
+   </template>
+   <template mode="get_x" match="musx:articulation[@x]" priority="-1">
+      <copy-of select="number(@x)"/>
+   </template>
+   <template mode="get_x" match="key('get_x_articulation','p')">
+      <variable name="page" select="ancestor-or-self::musx:page" as="node()"/>
+      <copy-of select="(g:x(g:start(.))) + g:size($page) * number(substring(@x,2))"/>
+   </template>
+   <template mode="get_x" match="key('get_x_articulation','P')">
+      <variable name="page" select="ancestor-or-self::musx:page" as="node()"/>
+      <copy-of select="g:x($page) + g:size($page) * number(substring(@x,2))"/>
+   </template>
+   <template mode="get_x" match="key('get_x_articulation','s')">
+      <variable name="staff" select="ancestor::musx:staff[last()]" as="node()"/>
+      <copy-of select="(g:x(g:start(.))) + (g:size($staff) * number(substring(@x,2)))"/>
+   </template>
+   <template mode="get_direction" match="musx:articulation" priority="-1">
+      <copy-of select="-1*g:direction(ancestor::musx:note[1])"/>
+   </template>
+   <template mode="get_direction" match="musx:articulation[@direction]">
+      <copy-of select="@direction cast as xs:integer"/>
+   </template>
    <template match="musx:page" mode="draw">
       <svg:g>
          <attribute name="class">
@@ -3641,9 +3688,9 @@
          </xsl:for-each>
       </xsl:variable>
       <BoundingBox xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" left="{$x}"
-                   right="{$x + count($steps)*g:distance(.) + ($symbolBBox/@right cast as xs:double)*$size}"
-                   top="{   $y + min($steps)*$staffSize + ($symbolBBox/@top    cast as xs:double)*$size}"
-                   bottom="{$y + max($steps)*$staffSize + ($symbolBBox/@bottom cast as xs:double)*$size}"/>
+                   right="{$x + count($steps)*g:distance(.) + $symbolBBox/@right*$size}"
+                   top="{   $y + min($steps)*$staffSize + $symbolBBox/@top*$size}"
+                   bottom="{$y + max($steps)*$staffSize + $symbolBBox/@bottom*$size}"/>
    </template>
    <template match="musx:keySignature" mode="draw">
       <svg:g>
@@ -3693,6 +3740,18 @@
             <value-of select="normalize-space(concat('fraction ',@class))"/>
          </attribute>
          <apply-templates select="@*" mode="copy-svg-and-id-attributes"/>
+         <apply-templates mode="draw"/>
+      </svg:g>
+   </template>
+   <template match="musx:articulation" mode="draw">
+      <svg:g>
+         <attribute name="class">
+            <value-of select="normalize-space(concat('articulation ',@class))"/>
+         </attribute>
+         <apply-templates select="@*" mode="copy-svg-and-id-attributes"/>
+         <svg:use xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                  transform="translate({g:x(.)},{g:y(.)}) scale({g:size(.)})"
+                  xlink:href="{g:symbol(.)}"/>
          <apply-templates mode="draw"/>
       </svg:g>
    </template>
