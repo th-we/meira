@@ -50,7 +50,10 @@
     <!-- What's better - anchor="g:size(g:topStaff(.))", or like this: -->
     <scaleFactor name="size" anchor="g:size(..)" lacuna="1"/>
     
+    <!-- type can be normal, double, repeatLeft, repeatRight, repeatDouble and end. -->
     <string name="type" lacuna="normal"/>
+    <!-- @function can be set to "systemic" for barlines that connect staffs at the system start. -->
+    <string name="function" lacuna="normal"/>
   </properties>
 
 
