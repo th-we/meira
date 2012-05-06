@@ -87,7 +87,7 @@
   
   <xsl:template match="mei:section" mode="mei2musx">
     <xsl:variable name="section" select="." as="element()"/>
-    <system start="{@synch:id}" end="{(//mei:measure)[last()]/@synch:end.id}" size="{$size}">
+    <system start="{@synch:id}" end="{(.//mei:measure)[last()]/@synch:end.id}" size="{$size}">
       <barline function="systemic"/>
       <xsl:variable name="sortedStaffNs" as="xs:string*">
         <xsl:for-each select="distinct-values(.//mei:staff/@n)">
