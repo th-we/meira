@@ -26,6 +26,7 @@
   <includeDefinition href="symbolText.def"/>
   <includeDefinition href="keySignature.def"/>
   <includeDefinition href="timeSignature.def"/>
+  <includeDefinition href="articulation.def"/>
   
   <draw/>
 

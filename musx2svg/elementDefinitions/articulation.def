@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<elementDefinition
+  xmlns="NS:DEF"
+  xmlns:svg="http://www.w3.org/2000/svg"
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+  xmlns:g="NS:GET">
+  
+  <element name="articulation">
+    <properties>
+      <elementReference name="start" lacuna=".."/>
+      
+      <!-- Origin of articulation marks should be their horizontal center. By default, they should be centered on the notehead. -->
+      <coordinate name="x" orientation="x" anchor="g:x(g:start(.))" lacuna=".5*g:width(ancestor::musx:note[1]/musx:head[1])"/>
+      <!-- TODO: Calculate proper y position based on direction etc. -->
+      <coordinate name="y" orientation="y" anchor="g:y(..)" lacuna="0"/>
+      
+      <coordinate name="x1" orientation="x" anchor="g:x(.)" lacuna="0"/>
+      <coordinate name="x2" orientation="x" anchor="g:x(.)" lacuna="0"/>
+      
+      <coordinate name="y1" orientation="y" anchor="g:y(.)" lacuna="0"/>
+      <coordinate name="y2" orientation="y" anchor="g:y(.)" lacuna="0"/>
+      
+      <scaleFactor name="size" anchor="g:size(..)" lacuna="1"/>
+      
+      <scaleFactor name="width" anchor="g:size(.)" lacuna="number(g:svgSymbolBoundingBox(g:symbol(.))//@right)"/>
+
+      <!-- In the simplest case, the direction of an articulation is reverse to that of the stem,
+           i.e. if stem goes down, direction is placed above.
+           TODO: Handle more complex cases, e.g. where there are multiple layers per staff -->
+      <integer name="direction" lacuna="-1*g:direction(ancestor::musx:note[1])"/>
+      
+      <symbol name="symbol" lacuna="''"/>
+    </properties>
+    
+    <draw>
+      <svg:use transform="translate({g:x(.)},{g:y(.)}) scale({g:size(.)})"
+        xlink:href="{g:symbol(.)}"/>
+    </draw>
+  </element>
+  
+</elementDefinition> 
