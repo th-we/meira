@@ -33,6 +33,8 @@
   <xsl:param name="staffDistance" select="70" as="xs:double"/>
   <xsl:param name="size" select="3" as="xs:double"/>
   <xsl:param name="margin" select="30" as="xs:double"/>
+  <!-- TODO: textScaleFactor is an arbitrary value. Any more solid choices? -->
+  <xsl:param name="textScaleFactor" select=".4" as="xs:double"/>
   <xsl:variable name="svgNS" select="'http://www.w3.org/2000/svg' cast as xs:anyURI" as="xs:anyURI"/>
   <xsl:variable name="nullNS" select="'' cast as xs:anyURI" as="xs:anyURI"/>
   
@@ -355,8 +357,9 @@
   <xsl:template mode="mei2musx" match="mei:syl">
     <svg y="S{10 + 5*number(parent::mei:verse/@n)}">
       <xsl:apply-templates select="@xml:id" mode="mei2musx"/>
-      <svg:text font-size="5">
-        <xsl:value-of select="."/>
+      <svg:text transform="scale({$textScaleFactor})">
+        <xsl:apply-templates select="@*" mode="set-text-rendering-attributes"/>
+        <xsl:apply-templates select="node()" mode="mei2musx"/>
         <xsl:if test="@wordpos=('i','m') or @con='d'">
           <xsl:value-of select="'-'"/>
         </xsl:if>
@@ -364,4 +367,74 @@
     </svg>
   </xsl:template>
   
+  <xsl:template mode="mei2musx" match="mei:rend">
+    <svg:tspan>
+      <xsl:apply-templates select="@*" mode="set-text-rendering-attributes"/>
+      <xsl:apply-templates select="node()" mode="mei2musx"/>
+    </svg:tspan>
+  </xsl:template>
+  
+  <xsl:template match="@*" mode="set-text-rendering-attributes"/>
+  <xsl:template match="@fontfam" mode="set-text-rendering-attributes">
+    <xsl:attribute name="font-family">
+      <xsl:value-of select="."/>
+    </xsl:attribute>
+  </xsl:template>
+  <!-- QUESTION: What is @fontname meant to be? -->
+  
+  <xsl:template match="@fontstyle[.=('normal','oblique')]" mode="set-text-rendering-attributes">
+    <xsl:sequence select="lf:generateAttribute($nullNS,'font-style',.)"/>
+  </xsl:template>
+  <xsl:template match="@fontstyle[.='ital']" mode="set-text-rendering-attributes">
+    <xsl:sequence select="lf:generateAttribute($nullNS,'font-style','italic')"/>
+  </xsl:template>
+  
+  <xsl:template match="@fontweight[.='bold']" mode="set-text-rendering-attributes">
+    <xsl:sequence select="lf:generateAttribute($nullNS,'font-weight',.)"/>
+  </xsl:template>
+  
+  <!-- TODO: What is the reference scale for @fontsize? -->
+  <xsl:template match="@fontsize" mode="set-text-rendering-attributes">
+    <xsl:sequence select="lf:generateAttribute($nullNS,'font-size',.)"/>
+  </xsl:template>
+  
+  <!-- TODO: dblunderline is not supported by SVG. Draw it with graphics primitives? -->
+  <xsl:template match="@rend[.=('dblunderline','underline')]" mode="set-text-rendering-attributes">
+    <xsl:sequence select="lf:generateAttribute($nullNS,'text-decoration','underline')"/>
+  </xsl:template>
+  <xsl:template match="@rend[.='strike']" mode="set-text-rendering-attributes">
+    <xsl:sequence select="lf:generateAttribute($nullNS,'text-decoration','line-through')"/>
+  </xsl:template>
+  <xsl:template match="@rend[.='sub']" mode="set-text-rendering-attributes">
+    <xsl:sequence select="lf:generateAttribute($nullNS,'baseline-shift','sub')"/>
+  </xsl:template>
+  <xsl:template match="@rend[.='sup']" mode="set-text-rendering-attributes">
+    <xsl:sequence select="lf:generateAttribute($nullNS,'baseline-shift','super')"/>
+  </xsl:template>
+  <xsl:template match="@rend[.='smcaps']" mode="set-text-rendering-attributes">
+    <xsl:sequence select="lf:generateAttribute($nullNS,'font-variant','small-caps')"/>
+  </xsl:template>
+  <!-- TODO: - draw box for @rend=("box","circle");
+             - handle @rend=("quote","bslash","fslash") -->
+  
+  <xsl:template match="mei:dir" mode="mei2musx">
+    <svg start="{(@startid,@synch:id)[1]}">
+      <xsl:attribute name="y">
+        <xsl:apply-templates mode="add-vertical-dir-position" select="."/>
+      </xsl:attribute>
+      <svg:text transform="scale({$textScaleFactor})">
+        <xsl:apply-templates select="@*" mode="set-text-rendering-attributes"/>
+        <xsl:apply-templates select="node()" mode="mei2musx"/>
+      </svg:text>
+    </svg>
+  </xsl:template>
+  <xsl:template match="mei:dir" mode="add-vertical-dir-position">
+    <xsl:value-of select="'S-5'"/>
+  </xsl:template>
+  <xsl:template match="mei:dir[@place='below']" mode="add-vertical-dir-position">
+    <xsl:value-of select="'S14'"/>
+  </xsl:template>
+  <xsl:template match="mei:dir[@place='within']" mode="add-vertical-dir-position">
+    <xsl:value-of select="'S6'"/>
+  </xsl:template>
 </xsl:stylesheet>
