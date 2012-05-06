@@ -70,7 +70,7 @@
       <value-of select="concat((ancestor-or-self::*/@start)[last()],'_staff_end')"/>
     </attribute>
   </template>
-  <template match="musx:barline[@function='systemic']" mode="create-special-startend-attributes">
+  <template match="musx:barline[@function='systemic']" mode="create-special-startend-attributes" priority="1">
     <attribute name="start">
       <value-of select="concat((ancestor-or-self::*/@start)[last()],'_staff')"/>
     </attribute>
