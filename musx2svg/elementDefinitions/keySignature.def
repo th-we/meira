@@ -55,11 +55,16 @@
       </xsl:for-each>
     </xsl:variable>
     
-    <!-- TODO: BoundingBox is too wide. Why? -->
-    <BoundingBox left="{$x}" 
+    <!-- This "cast as" makes Saxon crash -->
+    <!--    <BoundingBox left="{$x}" 
                  right="{$x + count($steps)*g:distance(.) + ($symbolBBox/@right cast as xs:double)*$size}"
                  top="{   $y + min($steps)*$staffSize + ($symbolBBox/@top    cast as xs:double)*$size}"
-                 bottom="{$y + max($steps)*$staffSize + ($symbolBBox/@bottom cast as xs:double)*$size}"/>
+                 bottom="{$y + max($steps)*$staffSize + ($symbolBBox/@bottom cast as xs:double)*$size}"/>-->
+    <!-- TODO: BoundingBox is too wide. Why? -->
+    <BoundingBox left="{$x}" 
+                 right="{$x + count($steps)*g:distance(.) + $symbolBBox/@right*$size}"
+                 top="{   $y + min($steps)*$staffSize + $symbolBBox/@top*$size}"
+                 bottom="{$y + max($steps)*$staffSize + $symbolBBox/@bottom*$size}"/>
   </OwnBoundingBox>
 </element>
 
