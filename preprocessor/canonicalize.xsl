@@ -4,7 +4,13 @@
 
   <xsl:output exclude-result-prefixes="#all"/>
   <xsl:key name="tieByStartid" match="mei:tie" use="@startid"/>
-
+  <xsl:key name="notes-by-staff-and-layer" match="mei:note" 
+    use="concat(
+      ancestor::mei:staff/@n[last()],
+      '$',
+      ancestor::mei:layer/@n[last()]
+    )"/>
+  
   <!-- TODO: This is by far not complete 
     Missing conversions:
     - keysig (below are basics)
@@ -153,6 +159,29 @@
     </xsl:copy>
   </xsl:template>
   
+  <!-- We can add a missing @plist to beamSpans that are on the same layer in the same staff.
+       It needs @startid and @endid, though. As <beamSpan>s have a "musical" @dur (the same type as notes/rests),
+       @tstamp/@dur can't be used for general <beamSpan>s. So we don't support it for now.-->
+  <xsl:template match="mei:beamSpan[not(@plist) and 
+                                     id(@startid)/ancestor::staff/@n[last()]
+                                    =id(@endid  )/ancestor::staff/@n[last()]]" mode="canonicalize">
+    <xsl:variable name="startNote" select="id(@startid)" as="element()"/>
+    <xsl:variable name="endNote"   select="id(@endid)"   as="element()"/>
+    <xsl:variable name="beamNotes" select="key('notes-by-staff-and-layer',concat(
+        (ancestor::mei:staff/@n,@staff)[last()],
+        '$',
+        (ancestor::mei:layer/@n,@layer)[last()]
+      ))[preceding::*=$startNote and following::*=$endNote]"/>
+    <xsl:copy>
+      <xsl:attribute name="plist">
+        <xsl:for-each select="($startNote,$beamNotes,$endNote)">
+          <xsl:value-of select="concat(@xml:id,' ')"/>
+        </xsl:for-each>
+      </xsl:attribute>
+      <xsl:apply-templates select="@*|node()" mode="canonicalize"/>
+    </xsl:copy>
+  </xsl:template>
+  
   <xsl:template mode="turn-attributes-into-element" 
       match="@tie[
         string()='i' and not(
@@ -164,7 +193,7 @@
     <xsl:variable name="staffN" select="ancestor::mei:staff/@n"/>
     <xsl:variable name="layerN" select="ancestor::mei:layer/@n"/>
     <mei:tie startid="{../@xml:id}" 
-      endid="{../following::mei:note[@tie='t' and ancestor::mei:staff/@n=$staffN and ancestor::mei:layer/@n=$layerN][1]/@xml:id}"/>
+      endid="{../following::mei:note[@tie='t' and .=key('notes-by-staff-and-layer',concat($staffN,'$',$layerN))][1]/@xml:id}"/>
   </xsl:template> 
 
   <!-- QUESTION: Is there an attribute version of <dynam> that we need to canonicalize? -->
