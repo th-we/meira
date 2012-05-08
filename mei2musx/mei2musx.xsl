@@ -34,7 +34,7 @@
   <xsl:param name="size" select="3" as="xs:double"/>
   <xsl:param name="margin" select="30" as="xs:double"/>
   <!-- TODO: textScaleFactor is an arbitrary value. Any more solid choices? -->
-  <xsl:param name="textScaleFactor" select=".4" as="xs:double"/>
+  <xsl:param name="textScaleFactor" select=".3" as="xs:double"/>
   <xsl:variable name="svgNS" select="'http://www.w3.org/2000/svg' cast as xs:anyURI" as="xs:anyURI"/>
   <xsl:variable name="nullNS" select="'' cast as xs:anyURI" as="xs:anyURI"/>
   
@@ -222,7 +222,7 @@
                  f G-2  -5  -1  -4   0  -3   1
                    C 1  -2   2  -1   3   0   4
                    F 4   1   5   2   6   3   7',
-                 mei:keySig/@accid
+                 $meiKeySig/@accid
               ),
               (: We only take the first letter of @shape because it could be 'GG' :)
               substring($meiClef/@shape,1,1)            
@@ -237,7 +237,7 @@
     <xsl:variable name="measure" select="ancestor::mei:measure[last()]" as="element()"/>
     <group class="measure" start="{$measure/@synch:id}">
       <!-- Display measure number -->
-      <svg y="S-2">
+      <svg y="S-2" x="s-5">
         <svg:text font-size="3" text-anchor="middle" stroke="none" fill="currentColor">
           <xsl:value-of select="$measure/@n"/>
         </svg:text>
@@ -417,7 +417,7 @@
   <!-- TODO: - draw box for @rend=("box","circle");
              - handle @rend=("quote","bslash","fslash") -->
   
-  <xsl:template match="mei:dir" mode="mei2musx">
+  <xsl:template match="mei:dir|mei:tempo" mode="mei2musx">
     <svg start="{(@startid,@synch:id)[1]}">
       <xsl:attribute name="y">
         <xsl:apply-templates mode="add-vertical-dir-position" select="."/>
@@ -428,13 +428,13 @@
       </svg:text>
     </svg>
   </xsl:template>
-  <xsl:template match="mei:dir" mode="add-vertical-dir-position">
+  <xsl:template match="mei:dir|mei:tempo" mode="add-vertical-dir-position">
     <xsl:value-of select="'S-5'"/>
   </xsl:template>
-  <xsl:template match="mei:dir[@place='below']" mode="add-vertical-dir-position">
+  <xsl:template match="mei:*[@place='below']" mode="add-vertical-dir-position">
     <xsl:value-of select="'S14'"/>
   </xsl:template>
-  <xsl:template match="mei:dir[@place='within']" mode="add-vertical-dir-position">
+  <xsl:template match="mei:*[@place='within']" mode="add-vertical-dir-position">
     <xsl:value-of select="'S6'"/>
   </xsl:template>
 </xsl:stylesheet>
