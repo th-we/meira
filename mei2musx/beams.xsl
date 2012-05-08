@@ -56,11 +56,11 @@
          The first event in $events is a potential start, 
          and all events immediately following other events for which the already drawn beam is sufficient -->
     <xsl:for-each select="$eventIndexesWithSubbeam[.-1 = (0,$eventIndexesWithoutSubbeam)]">
-      <xsl:variable name="startIndex" select="."/>
+      <xsl:variable name="startIndex" select="." as="xs:integer"/>
       <xsl:variable name="endIndex" select="$eventIndexesWithSubbeam[. ge $startIndex 
-                                                                     and .+1 = ($eventIndexesWithoutSubbeam,count($events)+1)][1]"/>
+                                                                     and .+1 = ($eventIndexesWithoutSubbeam,count($events)+1)][1]" as="xs:integer"/>
       <xsl:variable name="beamedEvents" select="for $i in $eventIndexesWithSubbeam[. ge $startIndex and . le $endIndex]
-                                                return $events[$i]"/>
+                                                return $events[$i]" as="node()+"/>
       
       <xsl:variable name="minimumDur" select="min($beamedEvents/@dur) cast as xs:integer" as="xs:integer"/>
       <subbeam start="{$beamedEvents[1]/@xml:id}" end="{$beamedEvents[last()]/@xml:id}" number="{musx:getNumberOfBeams($minimumDur div $alreadyDrawnDur * 4,0)}">
