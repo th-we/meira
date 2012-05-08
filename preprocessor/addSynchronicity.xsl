@@ -24,6 +24,10 @@
     </copy>
   </template>
   
+  <template mode="addSynchronicity" match="mei:scoreDef|mei:staffDef">
+    <copy-of select="."/>
+  </template>
+  
   <template match="@*|node()" mode="add-tstamp-synch">
     <copy>
       <apply-templates select="@*|node()" mode="add-tstamp-synch"/>
@@ -135,7 +139,7 @@
     </if>
   </template>
 
-  <template mode="addSynchronicity" match="mei:note|mei:chord|mei:rest|mei:mRest|mei:mSpace">
+  <template mode="addSynchronicity" match="mei:note|mei:chord|mei:rest|mei:mRest|mei:mSpace|mei:clef">
     <param name="synch" as="xs:integer*"/>
     <copy>
       <apply-templates mode="write-synch" select=".">

@@ -116,7 +116,7 @@
           <xsl:variable name="clefElement" as="element()">
             <xsl:apply-templates select="$firstStaffN" mode="get-current-clef-element"/>
           </xsl:variable>
-          <clef symbol="clef.{$clefElement/@shape}" y="L{$clefElement/@line}" x="s{1}"/>
+          <clef symbol="clef.{$clefElement/@shape}" y="L{$clefElement/@line}"/>
           <xsl:apply-templates mode="add-key-signature" select="$section">
             <xsl:with-param name="meiClef" select="$clefElement" as="element()"/>
           </xsl:apply-templates>
@@ -256,6 +256,10 @@
         <xsl:apply-templates select="$measure/@right" mode="add-barline-stroke-features"/>
       </barline>
     </group>
+  </xsl:template>
+  
+  <xsl:template match="mei:clef[not(ancestor::mei:scoreDef or ancestor::mei:staffDef)]" mode="mei2musx">
+    <clef symbol="clef.{@shape}" y="L{@line}" start="{@synch:id}"/>
   </xsl:template>
   
   <xsl:function name="lf:generateAttribute">
