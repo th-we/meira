@@ -199,37 +199,39 @@
   </xsl:template>
 
   <xsl:template mode="add-key-signature" match="*">
-    <xsl:param name="meiKeySig" as="element()">
+    <xsl:param name="meiKeySig" as="element()?">
       <xsl:apply-templates select="." mode="get-current-key-signature-element"/>
     </xsl:param>
     <xsl:param name="meiClef" as="element()">
       <xsl:apply-templates select="." mode="get-current-clef-element"/>
     </xsl:param>
-    <keySignature symbol="accidental.{$meiKeySig/@accid}" y="L{$meiClef/@line}">
-      <!-- $clefSpace tells us how much space the preceding clef takes up -->
-      <xsl:attribute name="pattern">
-        <!-- Extract pattern from table
-          - first with substring-after get the section that follows "s" for sharps and "f" for flats 
-          - then, again with substring-after get section that belongs to the current clef (G, C or F; GG has same pattern as G
-          - then with substring get the first $n 4-char "table cells" which represent the pattern -->
-        <xsl:value-of select="           
-          substring(
-            substring-after(
+    <xsl:if test="$meiKeySig">
+      <keySignature symbol="accidental.{$meiKeySig/@accid}" y="L{$meiClef/@line}">
+        <!-- $clefSpace tells us how much space the preceding clef takes up -->
+        <xsl:attribute name="pattern">
+          <!-- Extract pattern from table
+            - first with substring-after get the section that follows "s" for sharps and "f" for flats 
+            - then, again with substring-after get section that belongs to the current clef (G, C or F; GG has same pattern as G
+            - then with substring get the first $n 4-char "table cells" which represent the pattern -->
+          <xsl:value-of select="           
+            substring(
               substring-after(
-                's G-6  -3  -7  -4  -1  -5  -2
-                   C-3   0  -4  -1   2  -2   1
-                   F 0   3  -1   2   5   1   4
-                 f G-2  -5  -1  -4   0  -3   1
-                   C 1  -2   2  -1   3   0   4
-                   F 4   1   5   2   6   3   7',
-                 $meiKeySig/@accid
-              ),
-              (: We only take the first letter of @shape because it could be 'GG' :)
-              substring($meiClef/@shape,1,1)            
-            ), 1, ($meiKeySig/@n cast as xs:integer)*4
-          )"/>
-         </xsl:attribute>
-    </keySignature>
+                substring-after(
+                  's G-6  -3  -7  -4  -1  -5  -2
+                     C-3   0  -4  -1   2  -2   1
+                     F 0   3  -1   2   5   1   4
+                   f G-2  -5  -1  -4   0  -3   1
+                     C 1  -2   2  -1   3   0   4
+                     F 4   1   5   2   6   3   7',
+                   $meiKeySig/@accid
+                ),
+                (: We only take the first letter of @shape because it could be 'GG' :)
+                substring($meiClef/@shape,1,1)            
+              ), 1, ($meiKeySig/@n cast as xs:integer)*4
+            )"/>
+           </xsl:attribute>
+      </keySignature>
+    </xsl:if>
     <!-- TODO: Handle more complex ("mixed") patterns -->
   </xsl:template>
   
