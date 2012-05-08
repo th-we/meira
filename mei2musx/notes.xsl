@@ -7,6 +7,9 @@
     xmlns:synch="NS:SYNCH"
     xmlns:xs="http://www.w3.org/2001/XMLSchema">
   
+  <xsl:key name="beamsByEventID" match="mei:beamSpan" use="tokenize(@plist,'\s+')"/>
+  <xsl:key name="beamsByEventID" match="mei:beam|mei:fTrem" use="(descendant::mei:note,descendant::mei:chord)/@xml:id"/>
+  
   <xsl:template mode="mei2musx" match="mei:note">
     <note>
       <xsl:apply-templates select="." mode="add-y-attribute"/>
@@ -127,9 +130,9 @@
   
   <xsl:template match="mei:note|mei:chord" mode="add-stem">
     <stem>
-      <xsl:apply-templates select="." mode="add-beam-attributes"/>
+      <xsl:apply-templates select="key('beamsByEventID',@xml:id)" mode="add-beam-attribute"/>
       <xsl:apply-templates select="@stem.dir" mode="add-direction"/>
-      <xsl:apply-templates select="." mode="add-flags"/>
+      <xsl:apply-templates select=".[not(key('beamsByEventID',@xml:id))]" mode="add-flags"/>
     </stem>
   </xsl:template>
   <!-- Prevent stems on whole notes
@@ -142,6 +145,9 @@
 	</xsl:template>
   
   <xsl:template match="mei:*[ancestor::mei:beam or ancestor::mei:fTrem]" mode="add-flags" priority="1"/>
+  <!-- QUESTION: Why doesn't this work:
+    <xsl:template match="key('beamsByEventID',@xml:id)" mode="add-flags" priority="1"/> -->
+  
   <!-- This is easier and maybe faster than recursively counting how many times one has to divide by two 
        until the value is 4. (This approach is taken in beam.xsl where the number of beams is calculated
        based on a parameter, not by matching a dur attribute) -->
@@ -163,15 +169,11 @@
   <xsl:template match="mei:*" mode="add-flags" priority="-1"/>
   
   <!-- TODO: Recognize beamspans -->
-  <xsl:template match="mei:*[ancestor::mei:beam or ancestor::mei:fTrem]" mode="add-beam-attributes">
+  <xsl:template match="mei:beam|mei:fTrem|mei:beamSpan" mode="add-beam-attribute">
     <xsl:attribute name="beam">
-      <xsl:value-of select="(ancestor::mei:beam|ancestor::mei:fTrem)/@xml:id"/>
-    </xsl:attribute>
-    <xsl:attribute name="xml:id">
-      <xsl:value-of select="concat(@xml:id,'_stem')"/>
+      <xsl:value-of select="@xml:id"/>
     </xsl:attribute>
   </xsl:template>
-  <xsl:template match="mei:*" mode="add-beam-attributes" priority="-1"/>
   
   <xsl:template mode="mei2musx" match="mei:rest">
     <!-- TODO: Position rest according to layer/voice -->
