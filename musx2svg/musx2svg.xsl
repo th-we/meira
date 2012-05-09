@@ -3546,7 +3546,7 @@
                        as="xs:double"/>
          <xsl:variable xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:v="NS:VECTOR"
                        name="h"
-                       select="g:height(.)"
+                       select="g:height(.)*g:direction(.)"
                        as="xs:double"/>
          <xsl:variable xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:v="NS:VECTOR"
                        name="s"

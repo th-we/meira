@@ -78,7 +78,7 @@
       <xsl:apply-templates select="@*" mode="turn-attributes-into-element"/>
       <xsl:apply-templates mode="canonicalize"/>
     </mei:note>
-    <xsl:apply-templates select="@tie" mode="create-tie-element"/>-->
+    <xsl:apply-templates select="@tie" mode="create-tie-element"/>
   </xsl:template>
 
   <!-- Have @dur on all notes and chords -->

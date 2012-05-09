@@ -118,7 +118,7 @@
     <xsl:variable name="d" select="v:sub($Er,$El)" as="xs:double+"/>
     
     <xsl:variable name="t" select="g:tilt(.)" as="xs:double"/>
-    <xsl:variable name="h" select="g:height(.)" as="xs:double"/>
+    <xsl:variable name="h" select="g:height(.)*g:direction(.)" as="xs:double"/>
     <xsl:variable name="s" select="g:shoulder(.)" as="xs:double"/>
     
     <xsl:variable name="v" select="($t*$d[2],$d[1])" as="xs:double+"/>
