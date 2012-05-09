@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <xsl:stylesheet version="2.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:mei="http://www.music-encoding.org/ns/mei" xmlns:svg="http://www.w3.org/2000/svg">
+  xmlns:mei="http://www.music-encoding.org/ns/mei" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
   <xsl:output exclude-result-prefixes="#all"/>
   <xsl:key name="tieByStartid" match="mei:tie" use="@startid"/>
@@ -10,6 +10,7 @@
       '$',
       ancestor::mei:layer/@n[last()]
     )"/>
+<!--  <xsl:param name="correctIDREFs" select="'true'"/>-->
   
   <!-- TODO: This is by far not complete 
     Missing conversions:
@@ -36,6 +37,16 @@
   <xsl:template mode="canonicalize" match="@*">
     <xsl:copy-of select="."/>
   </xsl:template>
+
+  <!-- Very often, one finds false use of attributes that used to be of type IDREF but now are of type anyURI.
+       We correct this if parameter "correctIDREFs" is set to "true" (which is the default) -->
+  <!-- TODO: There are more attributes that might falsely be recorded as IDREF instead of anyURI -->
+<!--  <xsl:key name="IDREFsToCorrect" match="@*[name()=('plist','startid','endid','copyof')][not(contains(.,'#'))]" use="$correctIDREFs"/>
+  <xsl:template mode="canonicalize" match="key('IDREFsToCorrect','true')">
+    <xsl:attribute name="{name()}" namespace="{namespace-uri()}">
+      <xsl:value-of select="concat('#',replace(normalize-space(),' ',' #'))"/>
+    </xsl:attribute>
+  </xsl:template>-->
 
   <xsl:template match="mei:staffDef|mei:scoreDef" mode="canonicalize">
     <xsl:variable name="clefAttributes" select="(@clef.shape,@clef.line,@clef.dis,@clef.dis.place)"/>
@@ -67,7 +78,7 @@
       <xsl:apply-templates select="@*" mode="turn-attributes-into-element"/>
       <xsl:apply-templates mode="canonicalize"/>
     </mei:note>
-    <xsl:apply-templates select="@tie[string()='i']" mode="turn-attributes-into-element"/>
+    <xsl:apply-templates select="@tie" mode="create-tie-element"/>-->
   </xsl:template>
 
   <!-- Have @dur on all notes and chords -->
@@ -146,7 +157,9 @@
   
   <xsl:template match="mei:syl[not(parent::mei:verse)]" mode="canonicalize">
     <mei:verse n="{count(preceding-sibling::mei:syl) + 1}">
-      <xsl:copy-of select="."/>
+      <xsl:copy>
+        <xsl:apply-templates select="@*|node()" mode="canonicalize"/>
+      </xsl:copy>
     </mei:verse>
   </xsl:template>
   
@@ -155,7 +168,7 @@
       <xsl:attribute name="n">
         <xsl:value-of select="count(preceding-sibling::mei:verse) + 1"/>
       </xsl:attribute>
-      <xsl:copy-of select="@*|node()"/>
+      <xsl:apply-templates select="@*|node()" mode="canonicalize"/>
     </xsl:copy>
   </xsl:template>
   
@@ -182,7 +195,8 @@
     </xsl:copy>
   </xsl:template>
   
-  <xsl:template mode="turn-attributes-into-element" 
+  <xsl:template mode="create-tie-element" match="@*"/> 
+  <xsl:template mode="create-tie-element" 
       match="@tie[
         string()='i' and not(
           (: only create new tie element if there isn't already one :)
@@ -192,8 +206,11 @@
       ]">
     <xsl:variable name="staffN" select="ancestor::mei:staff/@n"/>
     <xsl:variable name="layerN" select="ancestor::mei:layer/@n"/>
+<!-- QUESTION: Why doesn't this work?
     <mei:tie startid="{../@xml:id}" 
-      endid="{../following::mei:note[@tie='t' and .=key('notes-by-staff-and-layer',concat($staffN,'$',$layerN))][1]/@xml:id}"/>
+      endid="{following::mei:note[@tie='t'][.=key('notes-by-staff-and-layer',concat($staffN,'$',$layerN))][1]/@xml:id}"/>-->
+    <mei:tie startid="{../@xml:id}" 
+      endid="{following::mei:note[@tie='t' and ancestor::mei:staff/@n=$staffN and ancestor::mei:layer/@n=$layerN][1]/@xml:id}"/>
   </xsl:template> 
 
   <!-- QUESTION: Is there an attribute version of <dynam> that we need to canonicalize? -->
