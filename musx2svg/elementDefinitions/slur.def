@@ -31,7 +31,10 @@
     <coordinate name="y" orientation="y" anchor="g:y1(.)" lacuna="0"/>
     
     <scaleFactor name="size" anchor="g:size(..)" lacuna="1"/>
-    <scaleFactor name="height" anchor="g:size(.)" lacuna="1"/>
+    <scaleFactor name="maxHeight" anchor="g:size(.)" lacuna="8"/> 
+    <scaleFactor name="height" anchor="g:size(.)" lacuna="
+      for $length in (g:x2(.) - g:x1(.)) div g:size(.)
+      return g:maxHeight(.) div g:size(.) * $length div ($length + 30)"/>
     
     <scaleFactor name="centerThickness" anchor="g:size(.)" lacuna=".5"/>
     <scaleFactor name="tipThickness" anchor="g:centerThickness(.)" lacuna=".618"/>
@@ -39,7 +42,7 @@
     <number name="swellingRate1" lacuna="g:swellingRate(.)"/>
     <number name="swellingRate2" lacuna="g:swellingRate(.)"/>
     
-    <number name="tilt" lacuna="1"/>
+    <number name="tilt" lacuna=".618"/>
     <number name="shift" lacuna="0"/>
     <number name="shoulder" lacuna=".618"/>
     <number name="curvature" lacuna=".5"/>
@@ -62,7 +65,7 @@
     
     <xsl:sequence select="if ($slurNotes)
                           then if (count(distinct-values($slurDirections))=1)
-                               then $slurDirections[1]
+                               then -$slurDirections[1]
                                else -g:calculateDirection($slurNotes)
                           else -1"/>
   </xsl:function>
@@ -70,6 +73,11 @@
   <xsl:function name="g:slurNotes" as="node()*">
     <xsl:param name="slurElement" as="node()"/>
     
+    <xsl:choose>
+      <xsl:when test="$slurElement/@class='tie'">
+        <xsl:sequence select="id($slurElement/(@start,@end),$slurElement)"/>
+      </xsl:when>
+    </xsl:choose>
     <!-- TODO: Implement this -->
   </xsl:function>
   

@@ -566,6 +566,20 @@
          </otherwise>
       </choose>
    </function>
+   <function name="g:maxHeight" as="xs:double*">
+      <param name="elements" as="element()*"/>
+      <variable name="result" as="xs:double*">
+         <apply-templates select="$elements" mode="get_maxHeight"/>
+      </variable>
+      <choose>
+         <when test="count($result) != 0">
+            <sequence select="$result"/>
+         </when>
+         <otherwise>
+            <copy-of select="1"/>
+         </otherwise>
+      </choose>
+   </function>
    <function name="g:height" as="xs:double*">
       <param name="elements" as="element()*"/>
       <variable name="result" as="xs:double*">
@@ -2491,9 +2505,24 @@
       <variable name="staff" select="ancestor::musx:staff[last()]" as="node()"/>
       <copy-of select="(g:y2($staff)) -            + 2 * g:size($staff) * (number(substring(@y2,2)) - 1)"/>
    </template>
+   <key name="get_maxHeight_slur" use="substring(@maxHeight,1,1)" match="musx:slur"/>
+   <template mode="get_maxHeight" priority="-2" match="musx:slur">
+      <copy-of select="(g:size(.)) * (8)"/>
+   </template>
+   <template mode="get_maxHeight" match="musx:slur[@maxHeight]" priority="-1">
+      <copy-of select="number(@maxHeight)"/>
+   </template>
+   <template mode="get_maxHeight" match="key('get_maxHeight_slur','p')">
+      <variable name="page" select="ancestor::musx:page" as="node()"/>
+      <copy-of select="g:size($page) * number(substring(@maxHeight,2))"/>
+   </template>
+   <template mode="get_maxHeight" match="key('get_maxHeight_slur','s')">
+      <variable name="staff" select="ancestor::musx:staff" as="node()"/>
+      <copy-of select="g:size($staff) * number(substring(@maxHeight,2))"/>
+   </template>
    <key name="get_height_slur" use="substring(@height,1,1)" match="musx:slur"/>
    <template mode="get_height" priority="-2" match="musx:slur">
-      <copy-of select="(g:size(.)) * (1)"/>
+      <copy-of select="(g:size(.)) * (       for $length in (g:x2(.) - g:x1(.)) div g:size(.)       return g:maxHeight(.) div g:size(.) * $length div ($length + 30))"/>
    </template>
    <template mode="get_height" match="musx:slur[@height]" priority="-1">
       <copy-of select="number(@height)"/>
@@ -2557,7 +2586,7 @@
       <copy-of select="@swellingRate2 cast as xs:double"/>
    </template>
    <template mode="get_tilt" match="musx:slur" priority="-1">
-      <copy-of select="1"/>
+      <copy-of select=".618"/>
    </template>
    <template mode="get_tilt" match="musx:slur[@tilt]">
       <copy-of select="@tilt cast as xs:double"/>
@@ -3484,13 +3513,18 @@
       <!-- TODO: Document this! -->
     <xsl:variable name="slurDirections" select="g:direction($slurNotes)" as="xs:integer*"/>
     
-      <xsl:sequence select="if ($slurNotes)                           then if (count(distinct-values($slurDirections))=1)                                then $slurDirections[1]                                else -g:calculateDirection($slurNotes)                           else -1"/>
+      <xsl:sequence select="if ($slurNotes)                           then if (count(distinct-values($slurDirections))=1)                                then -$slurDirections[1]                                else -g:calculateDirection($slurNotes)                           else -1"/>
   </xsl:function>
    <xsl:function xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:v="NS:VECTOR"
                  name="g:slurNotes"
                  as="node()*">
       <xsl:param name="slurElement" as="node()"/>
     
+      <xsl:choose>
+         <xsl:when test="$slurElement/@class='tie'">
+            <xsl:sequence select="id($slurElement/(@start,@end),$slurElement)"/>
+         </xsl:when>
+      </xsl:choose>
       <!-- TODO: Implement this -->
   </xsl:function>
    <xsl:function xmlns="NS:DEF" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:v="NS:VECTOR"

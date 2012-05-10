@@ -336,9 +336,8 @@
     <xsl:variable name="y" select="if(@curvedir='below') then '14' else '-5'"/>
     <!-- TODO: - Proper height and y positioning (as well for mei:dynam, see below) 
                - @direction="-1" if there are lyrics on this staff -->
-    <slur start="{(@synch:id,@startid)[1]}" end="{(@synch:end.id,@endid)[1]}" y1="S{$y}" y2="S{$y}" 
-      height="s8">
-      <xsl:apply-templates select="@xml:id|@curvedir" mode="mei2musx"/>
+    <slur start="{(@synch:id,@startid)[1]}" end="{(@synch:end.id,@endid)[1]}" y1="S{$y}" y2="S{$y}">
+        <xsl:apply-templates select="@xml:id|@curvedir" mode="mei2musx"/>
     </slur>
   </xsl:template>
   
@@ -347,7 +346,7 @@
       - Proper height
       - accept @tstamp instead of @startid
       - proper y positioning (as well for mei:dynam, see below) -->
-    <slur class="tie" start="{(@startid,@synch:id)[1]}" end="{(@endid,@synch:end.id)[1]}" height="s3.5">
+    <slur class="tie" start="{(@startid,@synch:id)[1]}" end="{(@endid,@synch:end.id)[1]}">
       <xsl:apply-templates select="@xml:id|@curvedir" mode="mei2musx"/>
     </slur>
   </xsl:template>
