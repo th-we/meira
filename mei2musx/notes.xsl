@@ -7,7 +7,7 @@
     xmlns:synch="NS:SYNCH"
     xmlns:xs="http://www.w3.org/2001/XMLSchema">
   
-  <xsl:key name="beamsByEventID" match="mei:beamSpan" use="tokenize(@plist,'\s*#')"/>
+  <xsl:key name="beamsByEventID" match="mei:beamSpan" use="tokenize(@plist,'\s+')"/>
   <xsl:key name="beamsByEventID" match="mei:beam|mei:fTrem" use="(descendant::mei:note,descendant::mei:chord)/@xml:id"/>
   
   <xsl:template mode="mei2musx" match="mei:note">

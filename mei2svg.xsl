@@ -7,6 +7,7 @@
   <import href="preprocessor/canonicalize.xsl"/>
   <import href="preprocessor/addDurations.xsl"/>
   <import href="preprocessor/addSynchronicity.xsl"/>
+  <import href="preprocessor/anyuri2idref.xsl"/>
   <import href="mei2musx/mei2musx.xsl"/>
   <import href="formatter/createSubevents.xsl"/>
   <import href="formatter/accidentalFormatter.xsl"/>
@@ -31,8 +32,11 @@
     <variable name="MEIwithSynch">
       <apply-templates select="$MEIwithDurations" mode="addSynchronicity"/>
     </variable>
+    <variable name="MEIwithIDREFs">
+      <apply-templates select="$MEIwithSynch" mode="anyuri2idref"/>
+    </variable>
     <variable name="musx">
-      <apply-templates select="$MEIwithSynch" mode="mei2musx"/>
+      <apply-templates select="$MEIwithIDREFs" mode="mei2musx"/>
     </variable>
     <variable name="musxWithSubevents">
       <apply-templates select="$musx" mode="create-subevents"/>
@@ -63,6 +67,9 @@
       <when test="$outputStep = 'MEIwithSynch'">
         <sequence select="$MEIwithSynch"/>
       </when>
+      <when test="$outputStep = 'MEIwithIDREFs'">
+        <sequence select="$MEIwithSynch"/>
+      </when>
       <when test="$outputStep = 'musx'">
         <sequence select="$musx"/>
       </when>
@@ -83,7 +90,7 @@
           ERROR: Invalid parameter outputStep = <value-of select="$outputStep"/>
           Valid parameters are: 
           reducedMEI, MEIwithIDs, canonicalizedMEI, MEIwithDurations, MEIwithSynch, 
-          musx, musxWithSubevents, musxAccidentalsFormatted, spacedMusx, svg
+          MEIwithIDREFs, musx, musxWithSubevents, musxAccidentalsFormatted, spacedMusx, svg
         </message>
       </otherwise>
     </choose>

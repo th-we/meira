@@ -26,7 +26,7 @@
       <!-- For <beam>: -->
       <xsl:sequence select=".//mei:note[not(ancestor::mei:chord)]|.//mei:chord"/>
       <!-- For <beamSpan> -->
-      <xsl:for-each select="id(distinct-values((@startid, tokenize(@plist,'\s*#'), @endid)))">
+      <xsl:for-each select="id(distinct-values((@startid, tokenize(@plist,'\s+'), @endid)))">
         <xsl:sort select="@synch:rounded" data-type="number"/>
         <xsl:copy-of select="."/>
       </xsl:for-each>
