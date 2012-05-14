@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<stylesheet version="2.0"
-    xmlns="http://www.w3.org/1999/XSL/Transform"
-    xmlns:xsl="http://www.w3.org/1999/XSL/Transform-alternate"
+<xsl:stylesheet version="2.0"
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns="http://www.w3.org/1999/XSL/Transform-alternate"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:def="NS:DEF"
     xmlns:g="NS:GET">
-  <import href="../shared/matchingHelper.xsl"/>
-  <namespace-alias stylesheet-prefix="xsl" result-prefix=""/>
+  <xsl:import href="../shared/matchingHelper.xsl"/>
+  <xsl:namespace-alias stylesheet-prefix="" result-prefix="xsl"/>
   
-  <template match="def:string" mode="generic-default">
+  <xsl:template match="def:string" mode="generic-default">
     <copy-of select="''"/>
-  </template>
-  <template match="def:string" mode="add-as-type-attribute">
-    <attribute name="as">xs:string*</attribute>
-  </template>
+  </xsl:template>
+  <xsl:template match="def:string" mode="add-as-type-attribute">
+    <xsl:attribute name="as">xs:string*</xsl:attribute>
+  </xsl:template>
   
-  <template match="def:string" mode="create-getter-templates">
-    <param name="elementNames" as="xs:string*"/>
+  <xsl:template match="def:string" mode="create-getter-templates">
+    <xsl:param name="elementNames" as="xs:string*"/>
     
     <!-- Elements without {@name} attribute (=> defaults) -->
-    <xsl:template mode="get_{@name}" match="{g:matchPattern($elementNames)}" priority="-1">
-      <xsl:copy-of select="'{@lacuna}'"/>
-    </xsl:template>
+    <template mode="get_{@name}" match="{g:matchPattern($elementNames)}" priority="-1">
+      <copy-of select="'{@lacuna}'"/>
+    </template>
     
-    <xsl:template mode="get_{@name}" match="{g:matchPattern($elementNames,concat('[@',@name,']'))}">
-      <xsl:copy-of select="@{@name} cast as xs:string"/>
-    </xsl:template>
-  </template>
+    <template mode="get_{@name}" match="{g:matchPattern($elementNames,concat('[@',@name,']'))}">
+      <copy-of select="@{@name} cast as xs:string"/>
+    </template>
+  </xsl:template>
   
-</stylesheet>
+</xsl:stylesheet>

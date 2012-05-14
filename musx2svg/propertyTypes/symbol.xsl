@@ -1,55 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<stylesheet version="2.0"
-    xmlns="http://www.w3.org/1999/XSL/Transform"
-    xmlns:xsl="http://www.w3.org/1999/XSL/Transform-alternate"
+<xsl:stylesheet version="2.0"
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns="http://www.w3.org/1999/XSL/Transform-alternate"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:svg="http://www.w3.org/2000/svg"
     xmlns:def="NS:DEF"
     xmlns:g="NS:GET"
     xmlns:musx="NS:MUSX">
-  <import href="../shared/matchingHelper.xsl"/>
-  <namespace-alias stylesheet-prefix="xsl" result-prefix=""/>
+  <xsl:import href="../shared/matchingHelper.xsl"/>
+  <xsl:namespace-alias stylesheet-prefix="" result-prefix="xsl"/>
   
-  <template match="def:symbol" mode="generic-default"/>
-  <template match="def:symbol" mode="add-as-type-attribute">
-    <attribute name="as">xs:string*</attribute>
-  </template>
+  <xsl:template match="def:symbol" mode="generic-default"/>
+  <xsl:template match="def:symbol" mode="add-as-type-attribute">
+    <xsl:attribute name="as">xs:string*</xsl:attribute>
+  </xsl:template>
   
-  <template match="def:symbol" mode="create-getter-templates">
-    <param name="elementNames" as="xs:string*"/>
+  <xsl:template match="def:symbol" mode="create-getter-templates">
+    <xsl:param name="elementNames" as="xs:string*"/>
 
     <!-- Elements without @{@name} attribute (=> defaults) -->
-    <xsl:template mode="get_{@name}" match="{g:matchPattern($elementNames)}" priority="-1">
-    	<xsl:value-of select="concat($libDirectory,'/',$symbolFile,'#',{@lacuna})"/>
-    </xsl:template>
+    <template mode="get_{@name}" match="{g:matchPattern($elementNames)}" priority="-1">
+    	<value-of select="concat($libDirectory,'/',$symbolFile,'#',{@lacuna})"/>
+    </template>
     
-    <variable name="dot">
-      <text>'.'</text>
-    </variable>
+    <xsl:variable name="dot">
+      <xsl:text>'.'</xsl:text>
+    </xsl:variable>
     <!-- element with @{@name} attribute that has a dot in it (like "rest.quarter") -->
-    <xsl:template mode="get_{@name}" match="{g:matchPattern($elementNames, concat('[contains(@',@name,',',$dot,')]'))}"
+    <template mode="get_{@name}" match="{g:matchPattern($elementNames, concat('[contains(@',@name,',',$dot,')]'))}"
         priority="2">
-    	<xsl:sequence select="concat($libDirectory,'/',$symbolFile,'#',@{@name})"/>
-    </xsl:template>
+    	<sequence select="concat($libDirectory,'/',$symbolFile,'#',@{@name})"/>
+    </template>
     <!-- element with @{@name} attribute that does not have a dot in it (like "quarter", without "rest." before) -->
-    <xsl:template mode="get_{@name}" match="{g:matchPattern($elementNames, concat('[@',@name,']'))}">
-    	<xsl:sequence select="concat($libDirectory,'/',$symbolFile,'#',local-name(),'.',@{@name})"/>
-    </xsl:template>
+    <template mode="get_{@name}" match="{g:matchPattern($elementNames, concat('[@',@name,']'))}">
+    	<sequence select="concat($libDirectory,'/',$symbolFile,'#',local-name(),'.',@{@name})"/>
+    </template>
     
-    <xsl:template mode="get_OwnBoundingBox" match="{g:matchPattern($elementNames)}" priority="-1">
-      <xsl:variable name="symbolBBox" select="g:svgSymbolBoundingBox(g:{@name}(.))" as="node()*"/>
-      <xsl:if test="$symbolBBox">
-        <xsl:variable name="size" select="g:size(.)"/>
-        <xsl:variable name="x" select="g:x(.)"/>
-        <xsl:variable name="y" select="g:y(.)"/>
+    <template mode="get_OwnBoundingBox" match="{g:matchPattern($elementNames)}" priority="-1">
+      <variable name="symbolBBox" select="g:svgSymbolBoundingBox(g:{@name}(.))" as="node()*"/>
+      <if test="$symbolBBox">
+        <variable name="size" select="g:size(.)"/>
+        <variable name="x" select="g:x(.)"/>
+        <variable name="y" select="g:y(.)"/>
         
         <musx:BoundingBox
           left="{{  $x + $size*number($symbolBBox/@left)}}"
           right="{{ $x + $size*number($symbolBBox/@right)}}"
           top="{{   $y + $size*number($symbolBBox/@top)}}"
           bottom="{{$y + $size*number($symbolBBox/@bottom)}}"/>
-      </xsl:if>
-    </xsl:template>
+      </if>
+    </template>
     
-  </template>
-</stylesheet>
+  </xsl:template>
+</xsl:stylesheet>
