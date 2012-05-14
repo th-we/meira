@@ -81,6 +81,10 @@
     </xsl:attribute>
   </xsl:template>
   
+  <xsl:template match="@color" mode="mei2musx">
+    <xsl:sequence select="lf:generateAttribute($svgNS,'color',replace(.,'^x','#'))"/>
+  </xsl:template>
+  
   <xsl:template match="mei:group|mei:music|mei:body|mei:mdiv" mode="mei2musx">
     <group class="{local-name()}">
       <xsl:apply-templates select="@xml:id|mei:*" mode="mei2musx"/>
@@ -131,9 +135,7 @@
   </xsl:template>
   
   <xsl:template mode="mei2musx" match="@synch:id">
-    <xsl:attribute name="start">
-      <xsl:value-of select="string()"/>
-    </xsl:attribute>
+    <xsl:sequence select="lf:generateAttribute($nullNS,'start',string())"/>
   </xsl:template>
   
   <!-- TODO: Find an appropriate replacement for this template -->
@@ -160,9 +162,7 @@
   </xsl:template>
   
   <xsl:template match="mei:*[@meter.sym]" mode="add-timesignature-symbols" priority="1">
-    <xsl:attribute name="symbol">
-      <xsl:value-of select="concat('metersymbol.',@meter.sym)"/>
-    </xsl:attribute>
+    <xsl:sequence select="lf:generateAttribute($nullNS,'symbol',concat('metersymbol.',@meter.sym))"/>
   </xsl:template>
   
   <xsl:template match="mei:*[@meter.count and @meter.unit]" mode="add-timesignature-symbols">
@@ -323,6 +323,7 @@
   
   <xsl:template mode="mei2musx" match="mei:hairpin">
     <!-- TODO: Proper y positioning (as well for mei:dynam, see below) -->
+    <!-- QUESTION: Should @startid/@endid be used preferably? -->
     <hairpin start="{(@synch:id|@startid)[1]}" end="{(@synch:end.id|@endid)[1]}" y="S{musx:getDynamPosition(.)}">
       <xsl:apply-templates select="@xml:id" mode="mei2musx"/>
       <xsl:variable name="opening" select="if(@opening) then @opening * 2 else 4"/>
@@ -389,9 +390,7 @@
   
   <xsl:template match="@*" mode="set-text-rendering-attributes"/>
   <xsl:template match="@fontfam" mode="set-text-rendering-attributes">
-    <xsl:attribute name="font-family">
-      <xsl:value-of select="."/>
-    </xsl:attribute>
+    <xsl:sequence select="lf:generateAttribute($nullNS,'font-family',.)"/>
   </xsl:template>
   <!-- QUESTION: What is @fontname meant to be? -->
   
