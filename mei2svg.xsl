@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<stylesheet xmlns="http://www.w3.org/1999/XSL/Transform"
-  version="2.0">
+<stylesheet version="2.0"
+    xmlns="http://www.w3.org/1999/XSL/Transform"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:mei2svg="NS:MEI2SVG">
   
   <import href="preprocessor/reduceToMdiv.xsl"/>
   <import href="preprocessor/add-ids.xsl"/>
@@ -14,84 +16,71 @@
   <import href="formatter/spacing.xsl"/>
   <import href="musx2svg/musx2svg.xsl"/>
   
-  <param name="outputStep" select="'svg'"/>
+  <variable name="steps" select="('reducedMEI','MEIwithIDs','canonicalizedMEI',
+      'MEIwithDurations','MEIwithSynch','MEIwithIDREFs','musx','musxWithSubevents',
+      'musxAccidentalsFormatted','spacedMusx','svg')" as="xs:string+"/>
+  
+  <param name="firstStep" select="$steps[1]" as="xs:string"/>
+  <param name="outputStep" select="$steps[last()]" as="xs:string"/>
   
   <template match="/" priority="10">
-    <variable name="reducedMEI">
-      <apply-templates select="." mode="reduceToMdiv"/>
-    </variable>
-    <variable name="MEIwithIDs">
-      <apply-templates select="$reducedMEI" mode="add-ids"/>
-    </variable>
-    <variable name="canonicalizedMEI">
-      <apply-templates select="$MEIwithIDs" mode="canonicalize"/>
-    </variable>
-    <variable name="MEIwithDurations">
-      <apply-templates select="$canonicalizedMEI" mode="addDurations"/>
-    </variable>
-    <variable name="MEIwithSynch">
-      <apply-templates select="$MEIwithDurations" mode="addSynchronicity"/>
-    </variable>
-    <variable name="MEIwithIDREFs">
-      <apply-templates select="$MEIwithSynch" mode="anyuri2idref"/>
-    </variable>
-    <variable name="musx">
-      <apply-templates select="$MEIwithIDREFs" mode="mei2musx"/>
-    </variable>
-    <variable name="musxWithSubevents">
-      <apply-templates select="$musx" mode="create-subevents"/>
-    </variable>
-    <variable name="musxAccidentalsFormatted">
-      <apply-templates select="$musxWithSubevents" mode="accidentalFormatter"/>
-    </variable>
-    <variable name="spacedMusx">
-      <apply-templates select="$musxAccidentalsFormatted" mode="spacing"/>
-    </variable>
-    <variable name="svg">
-      <apply-templates select="$spacedMusx" mode="musx2svg"/>
+    <param name="currentStep" select="$firstStep" as="xs:string"/>
+    
+    <variable name="intermediateDocument" as="document-node()">
+      <document>
+        <choose>
+          <when test="$currentStep = 'reducedMEI'">
+            <apply-templates select="." mode="reduceToMdiv"/>
+          </when>
+          <when test="$currentStep = 'MEIwithIDs'">
+            <apply-templates select="." mode="add-ids"/>
+          </when>
+          <when test="$currentStep = 'canonicalizedMEI'">
+            <apply-templates select="." mode="canonicalize"/>
+          </when>
+          <when test="$currentStep = 'MEIwithDurations'">
+            <apply-templates select="." mode="addDurations"/>
+          </when>
+          <when test="$currentStep = 'MEIwithSynch'">
+            <apply-templates select="." mode="addSynchronicity"/>
+          </when>
+          <when test="$currentStep = 'MEIwithIDREFs'">
+            <apply-templates select="." mode="anyuri2idref"/>
+          </when>
+          <when test="$currentStep = 'musx'">
+            <apply-templates select="." mode="mei2musx"/>
+          </when>
+          <when test="$currentStep = 'musxWithSubevents'">
+            <apply-templates select="." mode="create-subevents"/>
+          </when>
+          <when test="$currentStep = 'musxAccidentalsFormatted'">
+            <apply-templates select="." mode="accidentalFormatter"/>
+          </when>
+          <when test="$currentStep = 'spacedMusx'">
+            <apply-templates select="." mode="spacing"/>
+          </when>
+          <when test="$currentStep = 'svg'">
+            <apply-templates select="." mode="musx2svg"/>
+          </when>
+          <otherwise>
+            <message terminate="yes"> ERROR: Invalid parameter outputStep = <value-of select="$outputStep"/>
+              Possible values are:
+              <value-of select="$steps" separator="', '"/>
+            </message>
+          </otherwise>
+        </choose>
+      </document>
     </variable>
     
     <choose>
-      <when test="$outputStep = 'reducedMEI'">
-        <sequence select="$reducedMEI"/>
-      </when>
-      <when test="$outputStep = 'MEIwithIDs'">
-        <sequence select="$MEIwithIDs"/>
-      </when>
-      <when test="$outputStep = 'canonicalizedMEI'">
-        <sequence select="$canonicalizedMEI"/>
-      </when>
-      <when test="$outputStep = 'MEIwithDurations'">
-        <sequence select="$MEIwithDurations"/>
-      </when>
-      <when test="$outputStep = 'MEIwithSynch'">
-        <sequence select="$MEIwithSynch"/>
-      </when>
-      <when test="$outputStep = 'MEIwithIDREFs'">
-        <sequence select="$MEIwithSynch"/>
-      </when>
-      <when test="$outputStep = 'musx'">
-        <sequence select="$musx"/>
-      </when>
-      <when test="$outputStep = 'musxWithSubevents'">
-        <sequence select="$musxWithSubevents"/>
-      </when>
-      <when test="$outputStep = 'musxAccidentalsFormatted'">
-        <sequence select="$musxAccidentalsFormatted"/>
-      </when>
-      <when test="$outputStep = 'spacedMusx'">
-        <sequence select="$spacedMusx"/>
-      </when>
-      <when test="$outputStep = 'svg'">
-        <sequence select="$svg"/>
+      <when test="$currentStep = $outputStep">
+        <sequence select="$intermediateDocument"/>
       </when>
       <otherwise>
-        <message terminate="yes">
-          ERROR: Invalid parameter outputStep = <value-of select="$outputStep"/>
-          Valid parameters are: 
-          reducedMEI, MEIwithIDs, canonicalizedMEI, MEIwithDurations, MEIwithSynch, 
-          MEIwithIDREFs, musx, musxWithSubevents, musxAccidentalsFormatted, spacedMusx, svg
-        </message>
+        <variable name="nextStepIndex" select="index-of($steps,$currentStep)+1"/>
+        <apply-templates select="$intermediateDocument">
+          <with-param name="currentStep" select="$steps[$nextStepIndex]" as="xs:string"/>
+        </apply-templates>
       </otherwise>
     </choose>
   </template>
