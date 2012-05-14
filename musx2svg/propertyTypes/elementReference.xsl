@@ -25,7 +25,17 @@
     
     <!-- Element with @{@name} attribute -->
     <template mode="get_{@name}" match="{g:matchPattern($elementNames, concat('[@',@name,']'))}">
-      <sequence select="id(@{@name})"/>
+      <variable name="referencedElement" select="id(@{@name})" as="element()?"/>
+      <choose>
+        <when test="$referencedElement">
+          <sequence select="$referencedElement"/>
+        </when>
+        <otherwise>
+          <message terminate="yes">
+            <value-of select="local-name()"/> element <value-of select="@xml:id"/> references non-existent element <value-of select="@{@name}"/>
+          </message>
+        </otherwise>
+      </choose>
     </template>
   </xsl:template>
   
