@@ -601,6 +601,20 @@
          </xsl:otherwise>
       </xsl:choose>
    </xsl:function>
+   <xsl:function name="g:slurNotes" as="node()*">
+      <xsl:param name="elements" as="element()*"/>
+      <xsl:variable name="result" as="node()*">
+         <xsl:apply-templates select="$elements" mode="get_slurNotes"/>
+      </xsl:variable>
+      <xsl:choose>
+         <xsl:when test="count($result) != 0">
+            <xsl:sequence select="$result"/>
+         </xsl:when>
+         <xsl:otherwise>
+            <xsl:sequence select="$elements/.."/>
+         </xsl:otherwise>
+      </xsl:choose>
+   </xsl:function>
    <xsl:function name="g:maxHeight" as="xs:double*">
       <xsl:param name="elements" as="element()*"/>
       <xsl:variable name="result" as="xs:double*">
@@ -888,31 +902,31 @@
       <xsl:variable name="staff" select="ancestor::musx:staff[last()]" as="node()"/>
       <xsl:copy-of select="(0) + (g:size($staff) * number(substring(@x1,2)))"/>
    </xsl:template>
-   <xsl:key name="get_x2_page_system_staff_staffGroup_rest_group_hairpin_slur"
+   <xsl:key name="get_x2_page_system_staff_staffGroup_rest_group_hairpin"
             use="substring(@x2,1,1)"
-            match="musx:page|musx:system|musx:staff|musx:staffGroup|musx:rest|musx:group|musx:hairpin|musx:slur"/>
+            match="musx:page|musx:system|musx:staff|musx:staffGroup|musx:rest|musx:group|musx:hairpin"/>
    <xsl:template mode="get_x2"
-                 match="musx:page|musx:system|musx:staff|musx:staffGroup|musx:rest|musx:group|musx:hairpin|musx:slur"
+                 match="musx:page|musx:system|musx:staff|musx:staffGroup|musx:rest|musx:group|musx:hairpin"
                  priority="-2">
       <xsl:copy-of select="(g:x(g:end(.))) + (0)"/>
    </xsl:template>
    <xsl:template mode="get_x2"
-                 match="musx:page[@x2]|musx:system[@x2]|musx:staff[@x2]|musx:staffGroup[@x2]|musx:rest[@x2]|musx:group[@x2]|musx:hairpin[@x2]|musx:slur[@x2]"
+                 match="musx:page[@x2]|musx:system[@x2]|musx:staff[@x2]|musx:staffGroup[@x2]|musx:rest[@x2]|musx:group[@x2]|musx:hairpin[@x2]"
                  priority="-1">
       <xsl:copy-of select="number(@x2)"/>
    </xsl:template>
    <xsl:template mode="get_x2"
-                 match="key('get_x2_page_system_staff_staffGroup_rest_group_hairpin_slur','p')">
+                 match="key('get_x2_page_system_staff_staffGroup_rest_group_hairpin','p')">
       <xsl:variable name="page" select="ancestor-or-self::musx:page" as="node()"/>
       <xsl:copy-of select="(g:x(g:end(.))) + g:size($page) * number(substring(@x2,2))"/>
    </xsl:template>
    <xsl:template mode="get_x2"
-                 match="key('get_x2_page_system_staff_staffGroup_rest_group_hairpin_slur','P')">
+                 match="key('get_x2_page_system_staff_staffGroup_rest_group_hairpin','P')">
       <xsl:variable name="page" select="ancestor-or-self::musx:page" as="node()"/>
       <xsl:copy-of select="g:x($page) + g:size($page) * number(substring(@x2,2))"/>
    </xsl:template>
    <xsl:template mode="get_x2"
-                 match="key('get_x2_page_system_staff_staffGroup_rest_group_hairpin_slur','s')">
+                 match="key('get_x2_page_system_staff_staffGroup_rest_group_hairpin','s')">
       <xsl:variable name="staff" select="ancestor::musx:staff[last()]" as="node()"/>
       <xsl:copy-of select="(g:x(g:end(.))) + (g:size($staff) * number(substring(@x2,2)))"/>
    </xsl:template>
@@ -1066,31 +1080,31 @@
          </xsl:otherwise>
       </xsl:choose>
    </xsl:template>
-   <xsl:key name="get_x1_system_staff_staffGroup_rest_group_hairpin_slur"
+   <xsl:key name="get_x1_system_staff_staffGroup_rest_group_hairpin"
             use="substring(@x1,1,1)"
-            match="musx:system|musx:staff|musx:staffGroup|musx:rest|musx:group|musx:hairpin|musx:slur"/>
+            match="musx:system|musx:staff|musx:staffGroup|musx:rest|musx:group|musx:hairpin"/>
    <xsl:template mode="get_x1"
-                 match="musx:system|musx:staff|musx:staffGroup|musx:rest|musx:group|musx:hairpin|musx:slur"
+                 match="musx:system|musx:staff|musx:staffGroup|musx:rest|musx:group|musx:hairpin"
                  priority="-2">
       <xsl:copy-of select="(g:x(g:start(.))) + (0)"/>
    </xsl:template>
    <xsl:template mode="get_x1"
-                 match="musx:system[@x1]|musx:staff[@x1]|musx:staffGroup[@x1]|musx:rest[@x1]|musx:group[@x1]|musx:hairpin[@x1]|musx:slur[@x1]"
+                 match="musx:system[@x1]|musx:staff[@x1]|musx:staffGroup[@x1]|musx:rest[@x1]|musx:group[@x1]|musx:hairpin[@x1]"
                  priority="-1">
       <xsl:copy-of select="number(@x1)"/>
    </xsl:template>
    <xsl:template mode="get_x1"
-                 match="key('get_x1_system_staff_staffGroup_rest_group_hairpin_slur','p')">
+                 match="key('get_x1_system_staff_staffGroup_rest_group_hairpin','p')">
       <xsl:variable name="page" select="ancestor-or-self::musx:page" as="node()"/>
       <xsl:copy-of select="(g:x(g:start(.))) + g:size($page) * number(substring(@x1,2))"/>
    </xsl:template>
    <xsl:template mode="get_x1"
-                 match="key('get_x1_system_staff_staffGroup_rest_group_hairpin_slur','P')">
+                 match="key('get_x1_system_staff_staffGroup_rest_group_hairpin','P')">
       <xsl:variable name="page" select="ancestor-or-self::musx:page" as="node()"/>
       <xsl:copy-of select="g:x($page) + g:size($page) * number(substring(@x1,2))"/>
    </xsl:template>
    <xsl:template mode="get_x1"
-                 match="key('get_x1_system_staff_staffGroup_rest_group_hairpin_slur','s')">
+                 match="key('get_x1_system_staff_staffGroup_rest_group_hairpin','s')">
       <xsl:variable name="staff" select="ancestor::musx:staff[last()]" as="node()"/>
       <xsl:copy-of select="(g:x(g:start(.))) + (g:size($staff) * number(substring(@x1,2)))"/>
    </xsl:template>
@@ -2624,16 +2638,70 @@
       <xsl:variable name="staff" select="ancestor::musx:staff" as="node()"/>
       <xsl:copy-of select="g:size($staff) * number(substring(@endSpread,2))"/>
    </xsl:template>
+   <xsl:template mode="get_slurNotes" match="musx:slur" priority="-1">
+      <xsl:sequence select="g:calculateSlurNotes(.)"/>
+   </xsl:template>
+   <xsl:template mode="get_slurNotes" match="musx:slur[@slurNotes]">
+      <xsl:variable name="referencedElement" select="id(@slurNotes)" as="element()?"/>
+      <xsl:choose>
+         <xsl:when test="$referencedElement">
+            <xsl:sequence select="$referencedElement"/>
+         </xsl:when>
+         <xsl:otherwise>
+            <xsl:message terminate="yes">
+               <xsl:value-of select="local-name()"/> element <xsl:value-of select="@xml:id"/> references non-existent element <xsl:value-of select="@slurNotes"/>
+            </xsl:message>
+         </xsl:otherwise>
+      </xsl:choose>
+   </xsl:template>
+   <xsl:key name="get_x1_slur" use="substring(@x1,1,1)" match="musx:slur"/>
+   <xsl:template mode="get_x1" match="musx:slur" priority="-2">
+      <xsl:copy-of select="(g:x(g:start(.))) + ((: Why doesn't .=key('class','tie') work? :)                 if(. intersect key('class','tie'))                 then g:width(g:start(.)/musx:head) (: TODO: more sophisticated handling for ties :)                 else g:width(g:start(.)/musx:head)*.5                     (: If there is no head, g:width(.) will return the size                         property of the element referenced by start(.) :))"/>
+   </xsl:template>
+   <xsl:template mode="get_x1" match="musx:slur[@x1]" priority="-1">
+      <xsl:copy-of select="number(@x1)"/>
+   </xsl:template>
+   <xsl:template mode="get_x1" match="key('get_x1_slur','p')">
+      <xsl:variable name="page" select="ancestor-or-self::musx:page" as="node()"/>
+      <xsl:copy-of select="(g:x(g:start(.))) + g:size($page) * number(substring(@x1,2))"/>
+   </xsl:template>
+   <xsl:template mode="get_x1" match="key('get_x1_slur','P')">
+      <xsl:variable name="page" select="ancestor-or-self::musx:page" as="node()"/>
+      <xsl:copy-of select="g:x($page) + g:size($page) * number(substring(@x1,2))"/>
+   </xsl:template>
+   <xsl:template mode="get_x1" match="key('get_x1_slur','s')">
+      <xsl:variable name="staff" select="ancestor::musx:staff[last()]" as="node()"/>
+      <xsl:copy-of select="(g:x(g:start(.))) + (g:size($staff) * number(substring(@x1,2)))"/>
+   </xsl:template>
+   <xsl:key name="get_x2_slur" use="substring(@x2,1,1)" match="musx:slur"/>
+   <xsl:template mode="get_x2" match="musx:slur" priority="-2">
+      <xsl:copy-of select="(g:x(g:end(.))) + ((: Why doesn't .=key('class','tie') work? :)                 if(. intersect key('class','tie'))                 then 0 (: TODO: More sophisticated handling for ties :)                 else g:width(g:end(.)/musx:head)*.5                     (: If there is no head, g:width(.) will return the size                      property of the element referenced by start(.) :))"/>
+   </xsl:template>
+   <xsl:template mode="get_x2" match="musx:slur[@x2]" priority="-1">
+      <xsl:copy-of select="number(@x2)"/>
+   </xsl:template>
+   <xsl:template mode="get_x2" match="key('get_x2_slur','p')">
+      <xsl:variable name="page" select="ancestor-or-self::musx:page" as="node()"/>
+      <xsl:copy-of select="(g:x(g:end(.))) + g:size($page) * number(substring(@x2,2))"/>
+   </xsl:template>
+   <xsl:template mode="get_x2" match="key('get_x2_slur','P')">
+      <xsl:variable name="page" select="ancestor-or-self::musx:page" as="node()"/>
+      <xsl:copy-of select="g:x($page) + g:size($page) * number(substring(@x2,2))"/>
+   </xsl:template>
+   <xsl:template mode="get_x2" match="key('get_x2_slur','s')">
+      <xsl:variable name="staff" select="ancestor::musx:staff[last()]" as="node()"/>
+      <xsl:copy-of select="(g:x(g:end(.))) + (g:size($staff) * number(substring(@x2,2)))"/>
+   </xsl:template>
    <xsl:key name="get_y1_slur" use="substring(@y1,1,1)" match="musx:slur"/>
    <xsl:template mode="get_y1" match="musx:slur" priority="-2">
-      <xsl:copy-of select="(         if(g:start(.)/self::musx:note)         then (g:y(g:start(.)))         else g:y((g:slurNotes(.),..)[1])) + (0)"/>
+      <xsl:copy-of select="(for $start in g:start(.)                 return if($start/self::musx:note)                        then g:y($start)                        else g:y((g:slurNotes(.),..)[1])) + (for $start in g:start(.)                        (: g:direction() defaults to 0 if supplied with no argument.                           Therefore, if start isn't a note, we will not have a vertical slur offset :)                 return - g:direction($start/self::musx:note) * g:size($start) * (if(. intersect key('class','tie'))                                                                                  then .7                                                                                  else 2))"/>
    </xsl:template>
    <xsl:template mode="get_y1" match="musx:slur[@y1]" priority="-1">
       <xsl:copy-of select="number(@y1)"/>
    </xsl:template>
    <xsl:template mode="get_y1" match="key('get_y1_slur','p')">
       <xsl:variable name="page" select="ancestor-or-self::musx:page" as="node()"/>
-      <xsl:copy-of select="(         if(g:start(.)/self::musx:note)         then (g:y(g:start(.)))         else g:y((g:slurNotes(.),..)[1])) + g:size($page) * number(substring(@y1,2))"/>
+      <xsl:copy-of select="(for $start in g:start(.)                 return if($start/self::musx:note)                        then g:y($start)                        else g:y((g:slurNotes(.),..)[1])) + g:size($page) * number(substring(@y1,2))"/>
    </xsl:template>
    <xsl:template mode="get_y1" match="key('get_y1_slur','P')">
       <xsl:variable name="page" select="ancestor-or-self::musx:page" as="node()"/>
@@ -2641,7 +2709,7 @@
    </xsl:template>
    <xsl:template mode="get_y1" match="key('get_y1_slur','s')">
       <xsl:variable name="staff" select="ancestor::musx:staff[last()]" as="node()"/>
-      <xsl:copy-of select="(         if(g:start(.)/self::musx:note)         then (g:y(g:start(.)))         else g:y((g:slurNotes(.),..)[1])) + (g:size($staff) * number(substring(@y1,2)))"/>
+      <xsl:copy-of select="(for $start in g:start(.)                 return if($start/self::musx:note)                        then g:y($start)                        else g:y((g:slurNotes(.),..)[1])) + (g:size($staff) * number(substring(@y1,2)))"/>
    </xsl:template>
    <xsl:template mode="get_y1" match="key('get_y1_slur','S')">
       <xsl:variable name="staff" select="ancestor::musx:staff[last()]" as="node()"/>
@@ -2653,14 +2721,14 @@
    </xsl:template>
    <xsl:key name="get_y2_slur" use="substring(@y2,1,1)" match="musx:slur"/>
    <xsl:template mode="get_y2" match="musx:slur" priority="-2">
-      <xsl:copy-of select="(         if(g:end(.)/self::musx:note)         then g:y(g:end(.))         else g:y((..,g:slurNotes)[last()])) + (0)"/>
+      <xsl:copy-of select="(for $end in g:end(.)                 return if($end/self::musx:note)                        then g:y($end)                        else g:y((..,g:slurNotes(.))[last()])) + (for $end in g:end(.)                       (: g:direction() defaults to 0 if supplied with no argument.                          Therefore, if end isn't a note, we will not have a vertical slur offset :)                 return if(. intersect key('class','tie'))                        then for $start in g:start(.)                             return - g:direction($start/self::musx:note) * g:size($start)                        else - g:direction($end/self::musx:note) * g:size($end) * 2)"/>
    </xsl:template>
    <xsl:template mode="get_y2" match="musx:slur[@y2]" priority="-1">
       <xsl:copy-of select="number(@y2)"/>
    </xsl:template>
    <xsl:template mode="get_y2" match="key('get_y2_slur','p')">
       <xsl:variable name="page" select="ancestor-or-self::musx:page" as="node()"/>
-      <xsl:copy-of select="(         if(g:end(.)/self::musx:note)         then g:y(g:end(.))         else g:y((..,g:slurNotes)[last()])) + g:size($page) * number(substring(@y2,2))"/>
+      <xsl:copy-of select="(for $end in g:end(.)                 return if($end/self::musx:note)                        then g:y($end)                        else g:y((..,g:slurNotes(.))[last()])) + g:size($page) * number(substring(@y2,2))"/>
    </xsl:template>
    <xsl:template mode="get_y2" match="key('get_y2_slur','P')">
       <xsl:variable name="page" select="ancestor-or-self::musx:page" as="node()"/>
@@ -2668,7 +2736,7 @@
    </xsl:template>
    <xsl:template mode="get_y2" match="key('get_y2_slur','s')">
       <xsl:variable name="staff" select="ancestor::musx:staff[last()]" as="node()"/>
-      <xsl:copy-of select="(         if(g:end(.)/self::musx:note)         then g:y(g:end(.))         else g:y((..,g:slurNotes)[last()])) + (g:size($staff) * number(substring(@y2,2)))"/>
+      <xsl:copy-of select="(for $end in g:end(.)                 return if($end/self::musx:note)                        then g:y($end)                        else g:y((..,g:slurNotes(.))[last()])) + (g:size($staff) * number(substring(@y2,2)))"/>
    </xsl:template>
    <xsl:template mode="get_y2" match="key('get_y2_slur','S')">
       <xsl:variable name="staff" select="ancestor::musx:staff[last()]" as="node()"/>
@@ -2680,7 +2748,7 @@
    </xsl:template>
    <xsl:key name="get_maxHeight_slur" use="substring(@maxHeight,1,1)" match="musx:slur"/>
    <xsl:template mode="get_maxHeight" priority="-2" match="musx:slur">
-      <xsl:copy-of select="(g:size(.)) * (8)"/>
+      <xsl:copy-of select="(g:size(.)) * (10)"/>
    </xsl:template>
    <xsl:template mode="get_maxHeight" match="musx:slur[@maxHeight]" priority="-1">
       <xsl:copy-of select="number(@maxHeight)"/>
@@ -2695,7 +2763,7 @@
    </xsl:template>
    <xsl:key name="get_height_slur" use="substring(@height,1,1)" match="musx:slur"/>
    <xsl:template mode="get_height" priority="-2" match="musx:slur">
-      <xsl:copy-of select="(g:size(.)) * (       for $length in (g:x2(.) - g:x1(.)) div g:size(.)       return g:maxHeight(.) div g:size(.) * $length div ($length + 30))"/>
+      <xsl:copy-of select="(g:size(.)) * (       for $length in (g:x2(.) - g:x1(.)) div g:size(.)       return g:maxHeight(.) div g:size(.) * $length div ($length + 50))"/>
    </xsl:template>
    <xsl:template mode="get_height" match="musx:slur[@height]" priority="-1">
       <xsl:copy-of select="number(@height)"/>
@@ -2771,7 +2839,7 @@
       <xsl:copy-of select="@shift cast as xs:double"/>
    </xsl:template>
    <xsl:template mode="get_shoulder" match="musx:slur" priority="-1">
-      <xsl:copy-of select=".618"/>
+      <xsl:copy-of select="         for $startShoulder in .6,             $length in (g:x2(.) - g:x1(.)) div g:size(.)             return $startShoulder + (1-$startShoulder)*$length*$length div (100*$length + $length*$length)"/>
    </xsl:template>
    <xsl:template mode="get_shoulder" match="musx:slur[@shoulder]">
       <xsl:copy-of select="@shoulder cast as xs:double"/>
@@ -3550,20 +3618,54 @@
    <xsl:function xmlns="NS:DEF" xmlns:v="NS:VECTOR" name="g:slurDirection" as="xs:integer">
       <xsl:param name="slur" as="node()"/>
       <xsl:variable name="slurNotes" select="g:slurNotes($slur)" as="node()*"/>
-      <!-- TODO: Document this! -->
-    <xsl:variable name="slurDirections" select="g:direction($slurNotes)" as="xs:integer*"/>
-    
-      <xsl:sequence select="if ($slurNotes)                           then if (count(distinct-values($slurDirections))=1)                                then -$slurDirections[1]                                else -g:calculateDirection($slurNotes)                           else -1"/>
+      <!--    <xsl:message>
+      slur notes: <xsl:copy-of select="$slurNotes"/>
+    </xsl:message>-->
+    <!-- TODO: Document this! -->
+    <xsl:variable name="stemDirections" select="g:direction($slurNotes)" as="xs:integer*"/>
+      <!-- If there are multiple voices, the slur gets the same direction as the noteheads,
+         otherwise it goes into the opposite direction. That's why we're checking for other layers. -->
+    <xsl:variable name="slurNotesWithConcurrentLayer"
+                    select="         $slurNotes[ancestor::musx:group[@class='layer'][1]/../count(musx:group[@class='layer']) gt 1]"
+                    as="element()*"/>
+   
+      <xsl:variable name="relevantStemDirection" as="xs:integer"
+                    select="         if ($slurNotes)         then if (count(distinct-values($stemDirections))=1 or $slurNotesWithConcurrentLayer)              then (g:direction($slurNotesWithConcurrentLayer[1]),$stemDirections)[1]              else g:calculateDirection($slurNotes)         else 1"/>
+      <xsl:sequence select="if ($slurNotesWithConcurrentLayer)                           then  $relevantStemDirection                           else -$relevantStemDirection"/>
+      <xsl:message>
+      slurNotesWithConcurrentLayer: <xsl:value-of select="$slurNotesWithConcurrentLayer/@xml:id"/>
+      </xsl:message>
   </xsl:function>
-   <xsl:function xmlns="NS:DEF" xmlns:v="NS:VECTOR" name="g:slurNotes" as="node()*">
-      <xsl:param name="slurElement" as="node()"/>
+   <xsl:function xmlns="NS:DEF" xmlns:v="NS:VECTOR" name="g:calculateSlurNotes" as="element()*">
+      <xsl:param name="slurElement" as="element()"/>
+    
+      <xsl:variable name="startElement" select="g:start($slurElement)" as="element()"/>
+      <xsl:variable name="endElement" select="g:end($slurElement)" as="element()"/>
+    
+      <xsl:variable name="startEvent" as="element()?">
+         <xsl:apply-templates select="$startElement" mode="get-start-event"/>
+      </xsl:variable>
+      <xsl:variable name="endEvent" as="element()?">
+         <xsl:apply-templates select="$startElement" mode="get-start-event"/>
+      </xsl:variable>
     
       <xsl:choose>
-         <xsl:when test="$slurElement/@class='tie'">
-            <xsl:sequence select="id($slurElement/(@start,@end),$slurElement)"/>
+         <xsl:when test="$slurElement = key('class','tie',$slurElement)">
+            <xsl:sequence select="($startElement,$endElement)"/>
+         </xsl:when>
+         <xsl:when test="$startElement/self::musx:note and $endElement/self::musx:note">
+            <xsl:sequence select="($startElement,                                (: QUESTION: Why doesn't $startElement/following::musx:note[following::musx:note = $endElement] work? :)                                $startElement/following::musx:note intersect $endElement/preceding::musx:note,                                $endElement)"/>
+         </xsl:when>
+         <xsl:when test="$startEvent and $endEvent">
+        <!-- TODO: Only select notes of relevant voice => Transfer layer information from MEI. -->
+        <xsl:variable name="staffID" select="$slurElement/ancestor::musx:staff[1]/generate-id()"/>
+            <xsl:message>calculate slur notes for slur <xsl:value-of select="$slurElement/@xml:id"/>
+            </xsl:message>
+            <xsl:for-each select="($startEvent,                                $startEvent/following::musx:event intersect $endEvent/preceding::musx:event,                                $endEvent)">
+               <xsl:sequence select="key('elements-by-staff-and-start-event',concat($staffID,'$',generate-id()))[self::musx:note]"/>
+            </xsl:for-each>
          </xsl:when>
       </xsl:choose>
-      <!-- TODO: Implement this -->
   </xsl:function>
    <xsl:function xmlns="NS:DEF" xmlns:v="NS:VECTOR" name="v:sub">
       <xsl:param name="v1" as="xs:double+"/>
