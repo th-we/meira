@@ -85,7 +85,7 @@
     <xsl:sequence select="lf:generateAttribute($svgNS,'color',replace(.,'^x','#'))"/>
   </xsl:template>
   
-  <xsl:template match="mei:group|mei:music|mei:body|mei:mdiv" mode="mei2musx">
+  <xsl:template match="mei:group|mei:music|mei:body|mei:mdiv|mei:layer" mode="mei2musx">
     <group class="{local-name()}">
       <xsl:apply-templates select="@xml:id|mei:*" mode="mei2musx"/>
     </group>
@@ -334,11 +334,11 @@
   </xsl:template>
   
   <xsl:template mode="mei2musx" match="mei:slur">
-    <xsl:variable name="y" select="if(@curvedir='below') then '14' else '-5'"/>
+    <!--<xsl:variable name="y" select="if(@curvedir='below') then '14' else '-5'"/>-->
     <!-- TODO: - Proper height and y positioning (as well for mei:dynam, see below) 
                - @direction="-1" if there are lyrics on this staff -->
-    <slur start="{(@synch:id,@startid)[1]}" end="{(@synch:end.id,@endid)[1]}" y1="S{$y}" y2="S{$y}">
-        <xsl:apply-templates select="@xml:id|@curvedir" mode="mei2musx"/>
+    <slur start="{(@startid,@synch:id)[1]}" end="{(@endid,@synch:end.id)[1]}">
+      <xsl:apply-templates select="@xml:id|@curvedir" mode="mei2musx"/>
     </slur>
   </xsl:template>
   
@@ -361,11 +361,19 @@
   
   <xsl:template mode="mei2musx" match="mei:dynam">
     <!-- TODO: Proper y positioning (as well for mei:hairpin, see above) -->
-    <symbolText start="{@synch:id}" class="dynam" y="S{musx:getDynamPosition(.)}">
+    <symbolText class="dynam" y="S{musx:getDynamPosition(.)}">
+      <xsl:apply-templates select="." mode="add-start-attribute"/>
       <xsl:apply-templates select="@xml:id|node()" mode="mei2musx"/>
     </symbolText>
   </xsl:template>
   
+  <xsl:template match="*[@startid or @synch:id]" mode="add-start-attribute">
+    <xsl:attribute name="start">
+      <xsl:value-of select="(@startid,@synch:id)[1]"/>
+    </xsl:attribute>
+  </xsl:template>
+  <xsl:template match="*" mode="add-start-attribute"/>
+
   <!-- TODO: Implement lyrics properly -->
   <!-- TODO: Canonicalize lyrics so that they always appear in a <verse> element with proper @n -->
   <xsl:template mode="mei2musx" match="mei:syl">
@@ -430,7 +438,8 @@
              - handle @rend=("quote","bslash","fslash") -->
   
   <xsl:template match="mei:dir|mei:tempo" mode="mei2musx">
-    <svg start="{(@startid,@synch:id)[1]}">
+    <svg>
+      <xsl:apply-templates select="." mode="add-start-attribute"/>
       <xsl:attribute name="y">
         <xsl:apply-templates mode="add-vertical-dir-position" select="."/>
       </xsl:attribute>
