@@ -10,31 +10,64 @@
   <properties>
     <elementReference name="start" lacuna=".."/>
     <elementReference name="end" lacuna=".."/>
+    <elementReference name="slurNotes" lacuna="g:calculateSlurNotes(.)"/>
     
     <!-- TODO: Slur endpoints need to be positioned more differenciatedly -->
-    <coordinate name="x1" orientation="x" anchor="g:x(g:start(.))" lacuna="0"/>
-    <coordinate name="x2" orientation="x" anchor="g:x(g:end(.))" lacuna="0"/>
+    <coordinate name="x1" orientation="x" anchor="g:x(g:start(.))" 
+        lacuna="(: Why doesn't .=key('class','tie') work? :)
+                if(. intersect key('class','tie'))
+                then g:width(g:start(.)/musx:head) (: TODO: more sophisticated handling for ties :)
+                else g:width(g:start(.)/musx:head)*.5
+                    (: If there is no head, g:width(.) will return the size 
+                       property of the element referenced by start(.) :)"/>
+    <coordinate name="x2" orientation="x" anchor="g:x(g:end(.))"
+        lacuna="(: Why doesn't .=key('class','tie') work? :)
+                if(. intersect key('class','tie'))
+                then 0 (: TODO: More sophisticated handling for ties :)
+                else g:width(g:end(.)/musx:head)*.5
+                    (: If there is no head, g:width(.) will return the size 
+                    property of the element referenced by start(.) :)"/>
+    <!--    <coordinate name="x1" orientation="x" anchor="g:x(g:start(.))" lacuna="0"/>    
+    <coordinate name="x2" orientation="x" anchor="g:x(g:end(.))" lacuna="0"/>-->    
     <!-- TODO: lacunas for y attributes, depending on note direction -->
 <!--    <coordinate name="y1" orientation="y" anchor="g:y((g:slurNotes(.),..)[1])" lacuna="0"/>
     <coordinate name="y2" orientation="y" anchor="g:y((..,g:slurNotes)[last()])" lacuna="0"/>-->
     
-    <coordinate name="y1" orientation="y" anchor="
-        if(g:start(.)/self::musx:note)
-        then (g:y(g:start(.)))
-        else g:y((g:slurNotes(.),..)[1])" lacuna="0"/>
-    <coordinate name="y2" orientation="y" anchor="
-        if(g:end(.)/self::musx:note)
-        then g:y(g:end(.))
-        else g:y((..,g:slurNotes)[last()])" lacuna="0"/>
+    <coordinate name="y1" orientation="y" 
+        anchor="for $start in g:start(.)
+                return if($start/self::musx:note)
+                       then g:y($start)
+                       else g:y((g:slurNotes(.),..)[1])" 
+        lacuna="for $start in g:start(.)
+                       (: g:direction() defaults to 0 if supplied with no argument.
+                          Therefore, if start isn't a note, we will not have a vertical slur offset :)
+                return - g:direction($start/self::musx:note) * g:size($start) * (if(. intersect key('class','tie'))
+                                                                                 then .7
+                                                                                 else 2)"/>
+    <coordinate name="y2" orientation="y" 
+        anchor="for $end in g:end(.)
+                return if($end/self::musx:note)
+                       then g:y($end)
+                       else g:y((..,g:slurNotes(.))[last()])" 
+        lacuna="for $end in g:end(.)
+                      (: g:direction() defaults to 0 if supplied with no argument.
+                         Therefore, if end isn't a note, we will not have a vertical slur offset :)
+                return if(. intersect key('class','tie'))
+                       then for $start in g:start(.)
+                            return - g:direction($start/self::musx:note) * g:size($start)
+                       else - g:direction($end/self::musx:note) * g:size($end) * 2"/>
+<!--    <coordinate name="y1" orientation="y" anchor="g:y(g:start(.))" lacuna="0"/>
+    <coordinate name="y2" orientation="y" anchor="g:y(g:end(.))" lacuna="0"/>-->
     
     <coordinate name="x" orientation="x" anchor="g:x1(.)" lacuna="0"/>
     <coordinate name="y" orientation="y" anchor="g:y1(.)" lacuna="0"/>
     
     <scaleFactor name="size" anchor="g:size(..)" lacuna="1"/>
-    <scaleFactor name="maxHeight" anchor="g:size(.)" lacuna="8"/> 
+    <scaleFactor name="maxHeight" anchor="g:size(.)" lacuna="10"/>
+    <!-- TODO: Make formula more configuarable, especially make "+ 50" variable -->
     <scaleFactor name="height" anchor="g:size(.)" lacuna="
       for $length in (g:x2(.) - g:x1(.)) div g:size(.)
-      return g:maxHeight(.) div g:size(.) * $length div ($length + 30)"/>
+      return g:maxHeight(.) div g:size(.) * $length div ($length + 50)"/>
     
     <scaleFactor name="centerThickness" anchor="g:size(.)" lacuna=".5"/>
     <scaleFactor name="tipThickness" anchor="g:centerThickness(.)" lacuna=".618"/>
@@ -44,11 +77,17 @@
     
     <number name="tilt" lacuna=".618"/>
     <number name="shift" lacuna="0"/>
-    <number name="shoulder" lacuna=".618"/>
+    <!-- QUESTION: Is this a reasonable calculation for shoulder? -->
+    <number name="shoulder" lacuna="
+        for $startShoulder in .6,
+            $length in (g:x2(.) - g:x1(.)) div g:size(.)
+            return $startShoulder + (1-$startShoulder)*$length*$length div (100*$length + $length*$length)"/>
     <number name="curvature" lacuna=".5"/>
+    <!--<number name="curvature" lacuna=".5 + (g:shoulder(.) - .618) div .764"/>-->
     <number name="curvature1" lacuna="g:curvature(.)"/>
     <number name="curvature2" lacuna="g:curvature(.)"/>
     <number name="tipAngle" lacuna=".618"/>
+    <!--<number name="tipAngle" lacuna="g:shoulder(.)"/>-->
     <number name="tipAngle1" lacuna="g:tipAngle(.)"/>
     <number name="tipAngle2" lacuna="g:tipAngle(.)"/>
     
@@ -60,25 +99,64 @@
   <xsl:function name="g:slurDirection" as="xs:integer">
     <xsl:param name="slur" as="node()"/>
     <xsl:variable name="slurNotes" select="g:slurNotes($slur)" as="node()*"/>
+<!--    <xsl:message>
+      slur notes: <xsl:copy-of select="$slurNotes"/>
+    </xsl:message>-->
     <!-- TODO: Document this! -->
-    <xsl:variable name="slurDirections" select="g:direction($slurNotes)" as="xs:integer*"/>
-    
-    <xsl:sequence select="if ($slurNotes)
-                          then if (count(distinct-values($slurDirections))=1)
-                               then -$slurDirections[1]
-                               else -g:calculateDirection($slurNotes)
-                          else -1"/>
+    <xsl:variable name="stemDirections" select="g:direction($slurNotes)" as="xs:integer*"/>
+    <!-- If there are multiple voices, the slur gets the same direction as the noteheads,
+         otherwise it goes into the opposite direction. That's why we're checking for other layers. -->
+    <xsl:variable name="slurNotesWithConcurrentLayer" select="
+        $slurNotes[ancestor::musx:group[@class='layer'][1]/../count(musx:group[@class='layer']) gt 1]" as="element()*"/>
+   
+    <xsl:variable name="relevantStemDirection" as="xs:integer" select="
+        if ($slurNotes)
+        then if (count(distinct-values($stemDirections))=1 or $slurNotesWithConcurrentLayer)
+             then (g:direction($slurNotesWithConcurrentLayer[1]),$stemDirections)[1]
+             else g:calculateDirection($slurNotes)
+        else 1"/>
+    <xsl:sequence select="if ($slurNotesWithConcurrentLayer)
+                          then  $relevantStemDirection
+                          else -$relevantStemDirection"/>
+    <xsl:message>
+      slurNotesWithConcurrentLayer: <xsl:value-of select="$slurNotesWithConcurrentLayer/@xml:id"/>
+    </xsl:message>
   </xsl:function>
   
-  <xsl:function name="g:slurNotes" as="node()*">
-    <xsl:param name="slurElement" as="node()"/>
+  <xsl:function name="g:calculateSlurNotes" as="element()*">
+    <xsl:param name="slurElement" as="element()"/>
+    
+    <xsl:variable name="startElement" select="g:start($slurElement)" as="element()"/>
+    <xsl:variable name="endElement" select="g:end($slurElement)" as="element()"/>
+    
+    <xsl:variable name="startEvent" as="element()?">
+      <xsl:apply-templates select="$startElement" mode="get-start-event"/>
+    </xsl:variable>
+    <xsl:variable name="endEvent" as="element()?">
+      <xsl:apply-templates select="$startElement" mode="get-start-event"/>
+    </xsl:variable>
     
     <xsl:choose>
-      <xsl:when test="$slurElement/@class='tie'">
-        <xsl:sequence select="id($slurElement/(@start,@end),$slurElement)"/>
+      <xsl:when test="$slurElement = key('class','tie',$slurElement)">
+        <xsl:sequence select="($startElement,$endElement)"/>
+      </xsl:when>
+      <xsl:when test="$startElement/self::musx:note and $endElement/self::musx:note">
+        <xsl:sequence select="($startElement,
+                               (: QUESTION: Why doesn't $startElement/following::musx:note[following::musx:note = $endElement] work? :)
+                               $startElement/following::musx:note intersect $endElement/preceding::musx:note,
+                               $endElement)"/>
+      </xsl:when>
+      <xsl:when test="$startEvent and $endEvent">
+        <!-- TODO: Only select notes of relevant voice => Transfer layer information from MEI. -->
+        <xsl:variable name="staffID" select="$slurElement/ancestor::musx:staff[1]/generate-id()"/>
+        <xsl:message>calculate slur notes for slur <xsl:value-of select="$slurElement/@xml:id"/></xsl:message>
+        <xsl:for-each select="($startEvent,
+                               $startEvent/following::musx:event intersect $endEvent/preceding::musx:event,
+                               $endEvent)">
+          <xsl:sequence select="key('elements-by-staff-and-start-event',concat($staffID,'$',generate-id()))[self::musx:note]"/>
+        </xsl:for-each>
       </xsl:when>
     </xsl:choose>
-    <!-- TODO: Implement this -->
   </xsl:function>
   
   <!-- relativeCoordinate is inappropriate here, introduce a new type -->
