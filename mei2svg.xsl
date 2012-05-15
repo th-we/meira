@@ -10,6 +10,7 @@
   <import href="preprocessor/addDurations.xsl"/>
   <import href="preprocessor/addSynchronicity.xsl"/>
   <import href="preprocessor/anyuri2idref.xsl"/>
+  <import href="preprocessor/addPlists.xsl"/>
   <import href="mei2musx/mei2musx.xsl"/>
   <import href="formatter/createSubevents.xsl"/>
   <import href="formatter/accidentalFormatter.xsl"/>
@@ -17,14 +18,16 @@
   <import href="musx2svg/musx2svg.xsl"/>
   
   <variable name="steps" select="('reducedMEI','MEIwithIDs','canonicalizedMEI',
-      'MEIwithDurations','MEIwithSynch','MEIwithIDREFs','musx','musxWithSubevents',
-      'musxAccidentalsFormatted','spacedMusx','svg')" as="xs:string+"/>
+      'MEIwithDurations','MEIwithSynch','MEIwithIDREFs','MEIwithPlists','musx',
+      'musxWithSubevents','musxAccidentalsFormatted','spacedMusx','svg')" as="xs:string+"/>
   
   <param name="firstStep" select="$steps[1]" as="xs:string"/>
   <param name="outputStep" select="$steps[last()]" as="xs:string"/>
   
   <template match="/" priority="10">
     <param name="currentStep" select="$firstStep" as="xs:string"/>
+    
+    <message>Generating <value-of select="$currentStep"/>...</message>
     
     <variable name="intermediateDocument" as="document-node()">
       <document>
@@ -46,6 +49,9 @@
           </when>
           <when test="$currentStep = 'MEIwithIDREFs'">
             <apply-templates select="." mode="anyuri2idref"/>
+          </when>
+          <when test="$currentStep = 'MEIwithPlists'">
+            <apply-templates select="." mode="add-plists"/>
           </when>
           <when test="$currentStep = 'musx'">
             <apply-templates select="." mode="mei2musx"/>
@@ -75,6 +81,7 @@
     <choose>
       <when test="$currentStep = $outputStep">
         <sequence select="$intermediateDocument"/>
+        <message>Done.</message>
       </when>
       <otherwise>
         <variable name="nextStepIndex" select="index-of($steps,$currentStep)+1"/>
