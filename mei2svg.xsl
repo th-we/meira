@@ -17,6 +17,7 @@
   <import href="formatter/accidentalFormatter.xsl"/>
   <import href="formatter/spacing.xsl"/>
   <import href="musx2svg/musx2svg.xsl"/>
+  <import href="postprocessor/svgCleaner.xsl"/>
   
   
   <!-- Additional imports to fix base-path problem -->
@@ -35,11 +36,10 @@
   
   
   <output exclude-result-prefixes="svg"/>
-  <namespace-alias stylesheet-prefix="svg" result-prefix=""/>
   
   <variable name="steps" select="('reducedMEI','MEIwithIDs','canonicalizedMEI',
       'MEIwithDurations','MEIwithSynch','MEIwithIDREFs','MEIwithPlists','musx',
-      'musxWithSubevents','musxAccidentalsFormatted','spacedMusx','svg')" as="xs:string+"/>
+      'musxWithSubevents','musxAccidentalsFormatted','spacedMusx','svg','cleanedSvg')" as="xs:string+"/>
   
   <param name="firstStep" select="$steps[1]" as="xs:string"/>
   <param name="outputStep" select="$steps[last()]" as="xs:string"/>
@@ -87,6 +87,9 @@
           </when>
           <when test="$currentStep = 'svg'">
             <apply-templates select="." mode="musx2svg"/>
+          </when>
+          <when test="$currentStep = 'cleanedSvg'">
+            <apply-templates select="." mode="clean-svg"/>
           </when>
           <otherwise>
             <message terminate="yes"> ERROR: Invalid parameter outputStep = <value-of select="$outputStep"/>
