@@ -46,7 +46,7 @@
 	<!--  -->
 	<!--  -->
 	<!--  -->
-	<xsl:import href="internals.xsl"/>
+	<!--<xsl:import href="internals.xsl"/>-->
 	<!--  -->
 	<!--  -->
 	<!--  -->

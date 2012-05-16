@@ -8,9 +8,9 @@
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:lf="NS:LOCAL_FUNCTIONS"
     xmlns:musx="NS:MUSX">
-  <xsl:include href="beams.xsl"/>
+  <!--<xsl:include href="beams.xsl"/>
   <xsl:include href="notes.xsl"/>
-
+-->
   <!--!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     This stylesheet relies on a preprocessed MEI file that has
     (among other things) IDs on all elements.

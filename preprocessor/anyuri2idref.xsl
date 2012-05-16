@@ -17,7 +17,7 @@
        anyURI to IDREF because it saves us trouble later not having to deal with the hash.
        CAUTION: This creates invalid MEI and is only useful inside mei2musx -->
   
-  <template match="@plist|@startid|@endied" mode="anyuri2idref">
+  <template match="@plist|@startid|@endid" mode="anyuri2idref">
     <attribute name="{name()}">
       <value-of select="for $token in tokenize(.,'\s+')
                         return replace($token,'^#','')"/>

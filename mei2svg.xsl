@@ -2,6 +2,7 @@
 <stylesheet version="2.0"
     xmlns="http://www.w3.org/1999/XSL/Transform"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:svg="http://www.w3.org/2000/svg"
     xmlns:mei2svg="NS:MEI2SVG">
   
   <import href="preprocessor/reduceToMdiv.xsl"/>
@@ -17,13 +18,32 @@
   <import href="formatter/spacing.xsl"/>
   <import href="musx2svg/musx2svg.xsl"/>
   
+  
+  <!-- Additional imports to fix base-path problem -->
+  <import href="preprocessor/fraction.xsl"/>
+  <import href="preprocessor/contentChronologyKeys.xsl"/>
+  
+  <import href="musx2svg/math/math.xsl"/>
+  <import href="musx2svg/math/internals.xsl"/>
+  <import href="musx2svg/math/internals.logging.xsl"/>
+  <import href="musx2svg/math/strings.xsl"/>
+  
+  <import href="formatter/update.xsl"/>
+  
+  <include href="mei2musx/beams.xsl"/>
+  <include href="mei2musx/notes.xsl"/>
+  
+  
+  <output exclude-result-prefixes="svg"/>
+  <namespace-alias stylesheet-prefix="svg" result-prefix=""/>
+  
   <variable name="steps" select="('reducedMEI','MEIwithIDs','canonicalizedMEI',
       'MEIwithDurations','MEIwithSynch','MEIwithIDREFs','MEIwithPlists','musx',
       'musxWithSubevents','musxAccidentalsFormatted','spacedMusx','svg')" as="xs:string+"/>
   
   <param name="firstStep" select="$steps[1]" as="xs:string"/>
   <param name="outputStep" select="$steps[last()]" as="xs:string"/>
-  
+
   <template match="/" priority="10">
     <param name="currentStep" select="$firstStep" as="xs:string"/>
     

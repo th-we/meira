@@ -11,7 +11,7 @@
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 version="2.0"
                 exclude-result-prefixes="xs def g musx svg">
-   <xsl:import href="math/math.xsl"/>
+   <!--<xsl:import href="math/math.xsl"/>-->
    <xsl:param name="libDirectory"
               select="if (/musx:musx) then /musx:musx/musx:musxHead/musx:libDirectory/@xlink:href else 'lib'"
               as="xs:string"/>

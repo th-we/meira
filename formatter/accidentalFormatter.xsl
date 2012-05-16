@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <stylesheet xmlns="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:update="NS:UPDATE" xmlns:musx="NS:MUSX" version="2.0">
-  <import href="update.xsl"/>
+  <!--<import href="update.xsl"/>-->
 
   <!-- TODO: - Arrange accidentals in "C-Shape" (see Gieseking)
              - Check whether there are noteheads flipped to the left and move accidentals further left accordingly -->

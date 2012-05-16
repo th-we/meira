@@ -44,7 +44,7 @@
 	<!--  -->
 	<!--  -->
 	<!--  -->
-	<xsl:import href="internals.logging.xsl"/>
+	<!--<xsl:import href="internals.logging.xsl"/>-->
 	<!--  -->
 	<!--  -->
 	<!--  -->

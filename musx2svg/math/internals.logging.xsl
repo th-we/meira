@@ -44,7 +44,7 @@
 	<!--  -->
 	<!--  -->
 	<!--  -->
-	<xsl:import href="strings.xsl"/>
+	<!--<xsl:import href="strings.xsl"/>-->
 	<!--  -->
 	<!--  -->
 	<!--  -->

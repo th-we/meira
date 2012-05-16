@@ -7,9 +7,9 @@
     xmlns:xsb="http://www.expedimentum.org/XSLT/SB"
     xmlns:g="NS:GET">
 
-<import href="../musx2svg/math/math.xsl"/>
+<!--<import href="../musx2svg/math/math.xsl"/>-->
 <!-- This stylesheet has the bounding box templates -->
-<import href="../musx2svg/musx2svg.xsl"/>
+<!--<import href="../musx2svg/musx2svg.xsl"/>-->
   
 <param name="spacingBase" select="1.618" as="xs:double"/>
 <param name="referenceNote.duration" select=".25" as="xs:double"/>

@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <stylesheet xmlns="http://www.w3.org/1999/XSL/Transform" xmlns:mei="http://www.music-encoding.org/ns/mei" xmlns:duration="NS:DURATION" xmlns:synch="NS:SYNCH" xmlns:frac="NS:FRAC" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="2.0">
   
-  <import href="fraction.xsl"/>
-  <import href="contentChronologyKeys.xsl"/>
+  <!--<import href="fraction.xsl"/>
+  <import href="contentChronologyKeys.xsl"/>-->
   
   <param name="floatToFractionPrecision" select="100" as="xs:integer"/>
   
