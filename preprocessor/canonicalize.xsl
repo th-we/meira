@@ -217,5 +217,17 @@
 
   <xsl:template match="@*" mode="turn-attributes-into-element"/>
 
-
+  <!-- Add @staff to <slur>s that aren't inside a staff if we can derive @staff from @startid/@endid. -->
+  <xsl:template match="mei:slur[not(@staff or ancestor::mei:staff)][@startid or @endid]" mode="canonicalize">
+    <xsl:copy>
+      <!-- We're using for-each here because if we don't find a proper @n, we're not adding @staff -->
+      <xsl:for-each select="(id((replace(@startid,'^#',''),replace(@endid,'^#','')))//ancestor-or-self::mei:staff/@n)[1]">
+        <xsl:attribute name="staff">
+          <xsl:value-of select="."/>
+        </xsl:attribute>
+      </xsl:for-each>
+      <xsl:apply-templates select="@*|node()" mode="canonicalize"/>
+    </xsl:copy>
+  </xsl:template>
+  
 </xsl:stylesheet>
