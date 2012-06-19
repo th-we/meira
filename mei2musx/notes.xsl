@@ -13,13 +13,23 @@
   <xsl:template mode="mei2musx" match="mei:note">
     <note>
       <xsl:apply-templates select="." mode="add-y-attribute"/>
-      <xsl:apply-templates mode="mei2musx" select="@xml:id|@synch:id|*"/>
+      <xsl:apply-templates mode="mei2musx" select="@xml:id|@synch:id|@grace|*"/>
       <!-- If neither this note nor an ancestor has an @dur, throw root element into the select
            to have something to match the template for the fallback notehead -->
       <xsl:apply-templates select="(ancestor-or-self::mei:*[@dur]|/mei:*)[last()]" mode="add-head"/>
       <xsl:apply-templates select="self::*[not(parent::mei:chord)]" mode="add-stem"/>
       <xsl:apply-templates mode="mei2musx" select="@dots"/>
     </note>
+  </xsl:template>  
+  
+  <xsl:template match="@grace" mode="mei2musx">
+    <xsl:attribute name="x">
+      <xsl:value-of select="'s-3'"/>
+    </xsl:attribute>
+    <!-- TODO: This has funny effects -->
+    <xsl:attribute name="size">
+      <xsl:value-of select="'s.7'"/>
+    </xsl:attribute>
   </xsl:template>
   
   <xsl:template mode="mei2musx" match="mei:accid">
