@@ -47,6 +47,7 @@
     <musx>
       <musxHead>
         <libDirectory xlink:href="lib"/>
+        <xsl:apply-templates select="//mei:symbolTable" mode="mei2musx"/>
       </musxHead>
       <eventList>
         <!-- Add a special event that we use for attaching the clef, key and time signatures to -->
@@ -360,10 +361,13 @@
   </xsl:template>
   
   <xsl:template mode="mei2musx" match="mei:dynam">
-    <!-- TODO: Proper y positioning (as well for mei:hairpin, see above) -->
+    <!-- TODO: 
+         - Proper y positioning (as well for mei:hairpin, see above) 
+         - Check for <rend> and non-symbolText glyphs; use <svg:text> in that case -->
     <symbolText class="dynam" y="S{musx:getDynamPosition(.)}">
       <xsl:apply-templates select="." mode="add-start-attribute"/>
-      <xsl:apply-templates select="@xml:id|node()" mode="mei2musx"/>
+      <xsl:apply-templates select="@xml:id" mode="mei2musx"/>
+      <xsl:value-of select="."/>
     </symbolText>
   </xsl:template>
   
@@ -457,5 +461,54 @@
   </xsl:template>
   <xsl:template match="mei:*[@place='within']" mode="add-vertical-dir-position">
     <xsl:value-of select="'S6'"/>
+  </xsl:template>
+  
+  <xsl:template match="mei:symbolTable" mode="mei2musx">
+    <svg:defs>
+      <xsl:apply-templates mode="mei2musx"/>
+    </svg:defs>
+  </xsl:template>
+  
+  <xsl:template match="mei:symbolDef" mode="mei2musx">
+    <svg:g transform="scale(1,-1)" stroke="currentColor" fill="none" stroke-width=".2" id="{@xml:id}">
+      <xsl:apply-templates mode="mei2musx"/>
+    </svg:g>
+  </xsl:template>
+
+  <!-- TODO: Handle "standalone" lines and ones with @startid/@endid -->
+  <xsl:template match="mei:line[parent::mei:symbolDef]" mode="mei2musx" name="createLine">
+    <svg:line>
+      <xsl:apply-templates select="@x|@y|@x2|@y2" mode="add-line-attributes"/>
+    </svg:line>
+  </xsl:template>
+  
+  <xsl:template match="@*" mode="add-line-attributes">
+    <xsl:copy-of select="."/>
+  </xsl:template>
+  <xsl:template match="@x|@y" mode="add-line-attributes">
+    <xsl:attribute name="{local-name()}1">
+      <xsl:value-of select="."/>
+    </xsl:attribute>
+  </xsl:template>
+  
+  <!-- TODO: Handle standalone curves and ones with @bulge/@startid/@endid -->
+<!--  <xsl:template match="mei:curve[parent::mei:symbolDef][@x][@y][@bezier][@x2][@y2]" mode="mei2musx">
+    <svg:path d="M{@x} {@y} C{@bezier} {@x2} {@y2}"/>
+  </xsl:template>-->
+  <xsl:template match="mei:curve[parent::mei:symbolDef][@startho or @ho][@startvo or @vo][@bezier][@endho][@endvo]" mode="mei2musx">
+    <xsl:variable name="c" select="for $coordinate in tokenize(normalize-space(@bezier),'\s+')
+                                   return $coordinate cast as xs:double" as="xs:double*"/>
+    <xsl:variable name="x1" select="(@startho,@ho)[1] cast as xs:double"/>
+    <xsl:variable name="y1" select="(@startvo,@vo)[1] cast as xs:double"/>
+    <xsl:variable name="x2" select="(@endho)[1] cast as xs:double"/>
+    <xsl:variable name="y2" select="(@endvo)[1] cast as xs:double"/>
+    <svg:path d="M{$x1} {$y1} C{$x1+$c[1]} {$y1+$c[2]} {$x2+$c[3]} {$y2+$c[4]} {$x2} {$y2}"/>
+  </xsl:template>
+  
+  <xsl:template match="mei:symbol" mode="mei2musx">
+    <svg>
+      <xsl:apply-templates select="." mode="add-start-attribute"/>
+      <svg:use xlink:href="{@ref}"/>
+    </svg>
   </xsl:template>
 </xsl:stylesheet>
