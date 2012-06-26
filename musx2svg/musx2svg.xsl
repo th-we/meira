@@ -11,24 +11,30 @@
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 version="2.0"
                 exclude-result-prefixes="xs def g musx svg">
-   <!--<xsl:import href="math/math.xsl"/>-->
+   <xsl:import href="math/math.xsl"/>
    <xsl:param name="libDirectory"
               select="if (/musx:musx) then /musx:musx/musx:musxHead/musx:libDirectory/@xlink:href else 'lib'"
               as="xs:string"/>
    <xsl:param name="musicFont" select="'musicSymbols'" as="xs:string"/>
    <xsl:param name="symbolFile" select="'symbols.svg'" as="xs:string"/>
    <xsl:key name="class" match="*" use="tokenize(@class,'\s+')"/>
-   <xsl:key name="elements-by-staff-and-event" match="*">
-      <xsl:variable name="startEvent">
-         <xsl:apply-templates mode="get-start-event" select="."/>
-      </xsl:variable>
-      <xsl:variable name="staff" select="ancestor::musx:staff[1]"/>
-      <xsl:value-of select="concat($staff/generate-id(),'$',$startEvent/generate-id())"/>
-   </xsl:key>
+   <xsl:key name="elements-by-staff-and-start-event" match="*"
+            use="concat(ancestor::musx:staff[1]/generate-id(),'$',g:start(.)/generate-id())"/>
    <xsl:template mode="get-start-event" match="*">
-      <xsl:apply-templates select="g:start(.)" mode="get-start-event"/>
+      <xsl:message>
+          find start event of <xsl:value-of select="local-name()"/> element <xsl:value-of select="@xml:id"/>
+      </xsl:message>
+      <xsl:variable name="potentialStartEvent" as="element()*">
+         <xsl:apply-templates select="g:start(.)" mode="get-start-event"/>
+      </xsl:variable>
+      <xsl:if test="generate-id($potentialStartEvent) != generate-id()">
+         <xsl:sequence select="$potentialStartEvent"/>
+      </xsl:if>
    </xsl:template>
    <xsl:template mode="get-start-event" match="musx:event">
+      <xsl:message>
+          found start event <xsl:value-of select="@xml:id"/>
+      </xsl:message>
       <xsl:sequence select="."/>
    </xsl:template>
    <xsl:function name="g:end" as="node()*">
@@ -2193,14 +2199,14 @@
    </xsl:template>
    <xsl:key name="get_y2_stem" use="substring(@y2,1,1)" match="musx:stem"/>
    <xsl:template mode="get_y2" match="musx:stem" priority="-2">
-      <xsl:copy-of select="(           if (..//@beam)           then g:beamY(.)           else g:y2(..)) + (           if (..//@beam)           then 0           else g:direction(.) * g:length(.) * g:staffSize(.))"/>
+      <xsl:copy-of select="(           if (..//@beam)           then g:beamY(g:beam(.),g:x(.),true())           else g:y2(..)) + (           if (..//@beam)           then 0           else g:direction(.) * g:length(.) * g:staffSize(.))"/>
    </xsl:template>
    <xsl:template mode="get_y2" match="musx:stem[@y2]" priority="-1">
       <xsl:copy-of select="number(@y2)"/>
    </xsl:template>
    <xsl:template mode="get_y2" match="key('get_y2_stem','p')">
       <xsl:variable name="page" select="ancestor-or-self::musx:page" as="node()"/>
-      <xsl:copy-of select="(           if (..//@beam)           then g:beamY(.)           else g:y2(..)) + g:size($page) * number(substring(@y2,2))"/>
+      <xsl:copy-of select="(           if (..//@beam)           then g:beamY(g:beam(.),g:x(.),true())           else g:y2(..)) + g:size($page) * number(substring(@y2,2))"/>
    </xsl:template>
    <xsl:template mode="get_y2" match="key('get_y2_stem','P')">
       <xsl:variable name="page" select="ancestor-or-self::musx:page" as="node()"/>
@@ -2208,7 +2214,7 @@
    </xsl:template>
    <xsl:template mode="get_y2" match="key('get_y2_stem','s')">
       <xsl:variable name="staff" select="ancestor::musx:staff[last()]" as="node()"/>
-      <xsl:copy-of select="(           if (..//@beam)           then g:beamY(.)           else g:y2(..)) + (g:size($staff) * number(substring(@y2,2)))"/>
+      <xsl:copy-of select="(           if (..//@beam)           then g:beamY(g:beam(.),g:x(.),true())           else g:y2(..)) + (g:size($staff) * number(substring(@y2,2)))"/>
    </xsl:template>
    <xsl:template mode="get_y2" match="key('get_y2_stem','S')">
       <xsl:variable name="staff" select="ancestor::musx:staff[last()]" as="node()"/>
@@ -2241,7 +2247,7 @@
       </xsl:choose>
    </xsl:template>
    <xsl:template mode="get_length" match="musx:stem" priority="-1">
-      <xsl:copy-of select="       max((         for $direction in g:direction(.),             $stemOutletStep in   (: QUESTION: Find a better name? '$stemOutletStep' is where the stem 'leaves' a chord :)                 if (not(parent::musx:chord))               then g:step(..)               else if ($direction = 1)               then g:step(g:bottomNote(..))               else g:step(g:topNote(..)),             $distanceFromCenter in g:direction(.) * (g:lines(ancestor::musx:staff[last()]) - 1 - $stemOutletStep)          return           if ($distanceFromCenter &gt; 7)             then $distanceFromCenter           else if ($distanceFromCenter &gt;= 0)             then 7           else if ($distanceFromCenter &gt; -5)             then .4 * $distanceFromCenter + 7           else 5         ,         if (musx:flags)  (: if there are flags, the stem must be at least as long as the flags symbol :)          then for $symbolBB in g:svgSymbolBoundingBox(g:symbol(musx:flags)) return              max((abs($symbolBB//@top),abs($symbolBB//@bottom)))               + (if (g:direction(.) = 1) then 1 else 0)              (: For downstemmed notes, we need to make the stem at least one step longer than the flag               because otherwise the flag runs into the head :)         else ()       ))"/>
+      <xsl:copy-of select="g:defaultStemLength(.)"/>
    </xsl:template>
    <xsl:template mode="get_length" match="musx:stem[@length]">
       <xsl:copy-of select="@length cast as xs:double"/>
@@ -2522,16 +2528,32 @@
    <xsl:template mode="get_direction" match="musx:beam[@direction]">
       <xsl:copy-of select="@direction cast as xs:integer"/>
    </xsl:template>
+   <xsl:template mode="get_beam" match="musx:subbeam" priority="-1">
+      <xsl:sequence select=".."/>
+   </xsl:template>
+   <xsl:template mode="get_beam" match="musx:subbeam[@beam]">
+      <xsl:variable name="referencedElement" select="id(@beam)" as="element()?"/>
+      <xsl:choose>
+         <xsl:when test="$referencedElement">
+            <xsl:sequence select="$referencedElement"/>
+         </xsl:when>
+         <xsl:otherwise>
+            <xsl:message terminate="yes">
+               <xsl:value-of select="local-name()"/> element <xsl:value-of select="@xml:id"/> references non-existent element <xsl:value-of select="@beam"/>
+            </xsl:message>
+         </xsl:otherwise>
+      </xsl:choose>
+   </xsl:template>
    <xsl:key name="get_y1_subbeam" use="substring(@y1,1,1)" match="musx:subbeam"/>
    <xsl:template mode="get_y1" match="musx:subbeam" priority="-2">
-      <xsl:copy-of select="(g:y1(..)) + (- g:distance(..) * g:direction(..) * g:number(..))"/>
+      <xsl:copy-of select="(g:beamY(..,g:x1(.),false())) + (- g:distance(..) * g:direction(..) * g:number(..))"/>
    </xsl:template>
    <xsl:template mode="get_y1" match="musx:subbeam[@y1]" priority="-1">
       <xsl:copy-of select="number(@y1)"/>
    </xsl:template>
    <xsl:template mode="get_y1" match="key('get_y1_subbeam','p')">
       <xsl:variable name="page" select="ancestor-or-self::musx:page" as="node()"/>
-      <xsl:copy-of select="(g:y1(..)) + g:size($page) * number(substring(@y1,2))"/>
+      <xsl:copy-of select="(g:beamY(..,g:x1(.),false())) + g:size($page) * number(substring(@y1,2))"/>
    </xsl:template>
    <xsl:template mode="get_y1" match="key('get_y1_subbeam','P')">
       <xsl:variable name="page" select="ancestor-or-self::musx:page" as="node()"/>
@@ -2539,7 +2561,7 @@
    </xsl:template>
    <xsl:template mode="get_y1" match="key('get_y1_subbeam','s')">
       <xsl:variable name="staff" select="ancestor::musx:staff[last()]" as="node()"/>
-      <xsl:copy-of select="(g:y1(..)) + (g:size($staff) * number(substring(@y1,2)))"/>
+      <xsl:copy-of select="(g:beamY(..,g:x1(.),false())) + (g:size($staff) * number(substring(@y1,2)))"/>
    </xsl:template>
    <xsl:template mode="get_y1" match="key('get_y1_subbeam','S')">
       <xsl:variable name="staff" select="ancestor::musx:staff[last()]" as="node()"/>
@@ -2551,14 +2573,14 @@
    </xsl:template>
    <xsl:key name="get_y2_subbeam" use="substring(@y2,1,1)" match="musx:subbeam"/>
    <xsl:template mode="get_y2" match="musx:subbeam" priority="-2">
-      <xsl:copy-of select="(g:y2(..)) + (- g:distance(..) * g:direction(..) * g:number(..))"/>
+      <xsl:copy-of select="(g:beamY(..,g:x2(.),false())) + (- g:distance(..) * g:direction(..) * g:number(..))"/>
    </xsl:template>
    <xsl:template mode="get_y2" match="musx:subbeam[@y2]" priority="-1">
       <xsl:copy-of select="number(@y2)"/>
    </xsl:template>
    <xsl:template mode="get_y2" match="key('get_y2_subbeam','p')">
       <xsl:variable name="page" select="ancestor-or-self::musx:page" as="node()"/>
-      <xsl:copy-of select="(g:y2(..)) + g:size($page) * number(substring(@y2,2))"/>
+      <xsl:copy-of select="(g:beamY(..,g:x2(.),false())) + g:size($page) * number(substring(@y2,2))"/>
    </xsl:template>
    <xsl:template mode="get_y2" match="key('get_y2_subbeam','P')">
       <xsl:variable name="page" select="ancestor-or-self::musx:page" as="node()"/>
@@ -2566,7 +2588,7 @@
    </xsl:template>
    <xsl:template mode="get_y2" match="key('get_y2_subbeam','s')">
       <xsl:variable name="staff" select="ancestor::musx:staff[last()]" as="node()"/>
-      <xsl:copy-of select="(g:y2(..)) + (g:size($staff) * number(substring(@y2,2)))"/>
+      <xsl:copy-of select="(g:beamY(..,g:x2(.),false())) + (g:size($staff) * number(substring(@y2,2)))"/>
    </xsl:template>
    <xsl:template mode="get_y2" match="key('get_y2_subbeam','S')">
       <xsl:variable name="staff" select="ancestor::musx:staff[last()]" as="node()"/>
@@ -3345,20 +3367,30 @@
          </xsl:call-template>
       </xsl:if>
   </xsl:template>
+   <xsl:key xmlns="NS:DEF" name="topNote"
+            match="musx:note[g:step(.) = min(g:step(key('beamNotes',ancestor-or-self::*/musx:stem/@beam)))]"
+            use="generate-id(id(ancestor-or-self::*/musx:stem/@beam))"/>
+   <xsl:key xmlns="NS:DEF" name="bottomNote"
+            match="musx:note[g:step(.) = max(g:step(key('beamNotes',ancestor-or-self::*/musx:stem/@beam)))]"
+            use="generate-id(id(ancestor-or-self::*/musx:stem/@beam))"/>
+   <xsl:key xmlns="NS:DEF" name="topNote"
+            match="musx:note[g:step(.) = min(g:step(parent::musx:chord/musx:note))]"
+            use="generate-id(parent::musx:chord)"/>
+   <xsl:key xmlns="NS:DEF" name="bottomNote"
+            match="musx:note[g:step(.) = max(g:step(parent::musx:chord/musx:note))]"
+            use="generate-id(parent::musx:chord)"/>
    <xsl:function xmlns="NS:DEF" name="g:calculateDirection" as="xs:integer">
-      <xsl:param name="element" as="node()*"/>
+      <xsl:param name="element" as="node()"/>
+
       <xsl:variable name="notes"
                     select="$element/(self::musx:note, self::musx:chord/musx:note, key('beamNotes',@xml:id))"/>
-      <xsl:variable name="sortedSteps" as="xs:double*">
-         <xsl:for-each select="g:step($notes)">
-            <xsl:sort select="."/>
-            <xsl:sequence select="."/>
-         </xsl:for-each>
-      </xsl:variable>
+      <xsl:variable name="genID" select="generate-id($element)" as="xs:string"/>
       <xsl:variable name="staffCenter" select="g:lines($notes[1]/ancestor::musx:staff[last()]) - 1"
                     as="xs:integer"/>
-      <!-- If there are no $notes, expression in if(..) will be false and 1 will be returned -->
-    <xsl:sequence select="         if (.5*($sortedSteps[last()] + $sortedSteps[1]) &gt; $staffCenter)         then -1         else 1"/>
+
+      <!-- if average of top and bottom note is above staff center, stem goes down, otherwise up
+         (if $element is a note, avg(...) returns the note's own step) -->
+    <xsl:sequence select="         if (avg(               for $note in (key('topNote',$genID,$element),key('bottomNote',$genID,$element),$element/self::musx:note)                return g:step($note)            ) gt $staffCenter)         then -1         else 1"/>
   </xsl:function>
    <xsl:template match="musx:note" mode="get_OwnBoundingBox" priority="1">
       <xsl:if xmlns="NS:DEF" test="g:ledgerLines.draw(.)">
@@ -3403,6 +3435,13 @@
          <xsl:apply-templates mode="draw"/>
       </svg:g>
    </xsl:template>
+   <xsl:function xmlns="NS:DEF" name="g:defaultStemLength" as="xs:double">
+      <xsl:param name="stem" as="element()"/>
+      <xsl:for-each select="$stem">
+         <xsl:sequence select="           max((             for $direction in g:direction(.),                 $stemOutletStep in   (: QUESTION: Find a better name? '$stemOutletStep' is where the stem 'leaves' a chord :)                     if (not(parent::musx:chord))                   then g:step(..)                   else if ($direction = 1)                        then g:step(g:bottomNote(..))                        else g:step(g:topNote(..)),                 $distanceFromCenter in g:direction(.) * (g:lines(ancestor::musx:staff[last()]) - 1 - $stemOutletStep)              return               if ($distanceFromCenter &gt; 7)                 then $distanceFromCenter               else if ($distanceFromCenter &gt;= 0)                 then 7               else if ($distanceFromCenter &gt; -5)                 then .4 * $distanceFromCenter + 7               else 5             ,             if (musx:flags)  (: if there are flags, the stem must be at least as long as the flags symbol :)              then for $symbolBB in g:svgSymbolBoundingBox(g:symbol(musx:flags)) return                  max((abs($symbolBB//@top),abs($symbolBB//@bottom)))                   + (if (g:direction(.) = 1) then 1 else 0)                  (: For downstemmed notes, we need to make the stem at least one step longer than the flag                   because otherwise the flag runs into the head :)             else ()           ))"/>
+      </xsl:for-each>
+
+  </xsl:function>
    <xsl:template match="musx:stem" mode="get_OwnBoundingBox" priority="1">
       <BoundingBox xmlns="NS:DEF" left="{g:x(.)}" right="{g:x(.)}" top="{min((g:y1(.),g:y2(.)))}"
                    bottom="{max((g:y1(.),g:y2(.)))}"/>
@@ -3463,11 +3502,12 @@
    </xsl:template>
    <xsl:key xmlns="NS:DEF" name="beamNotes" match="musx:note"
             use="ancestor-or-self::*/musx:stem/@beam"/>
+   <xsl:key xmlns="NS:DEF" name="beamStems" match="musx:stem" use="@beam"/>
    <xsl:function xmlns="NS:DEF" name="g:beamYLacuna">
       <xsl:param name="beam" as="node()"/>
       <xsl:variable name="direction" select="g:direction($beam)" as="xs:double"/>
       <xsl:variable name="steps"
-                    select="g:step(key('beamNotes',$beam/@xml:id,$beam/ancestor::musx:musx))"
+                    select="g:step(key('beamNotes',$beam/@xml:id,$beam/ancestor::document-node()))"
                     as="xs:double*"/>
       <xsl:variable name="centerStep" select="g:lines($beam/ancestor::musx:staff[last()]) - 1"
                     as="xs:double"/>
@@ -3501,8 +3541,9 @@
       </xsl:for-each>
   </xsl:function>
    <xsl:function xmlns="NS:DEF" name="g:beamY">
-      <xsl:param name="stem" as="node()"/>
-      <xsl:variable name="beam" select="g:beam($stem)"/>
+      <xsl:param name="beam" as="node()"/>
+      <xsl:param name="x" as="xs:double"/>
+      <xsl:param name="centerPosition" as="xs:boolean"/>
       <!-- Use basic line equation 
       y = mx + n 
       to calculate y at point x.  We move x1 of the beam to the origin, therefore we have
@@ -3514,17 +3555,7 @@
       We must be careful not to divide by zero (if x2-x1=0)
     -->
     <xsl:variable name="dx" select="g:x2($beam) - g:x1($beam)"/>
-      <xsl:choose>
-         <xsl:when test="$dx = 0">
-            <xsl:sequence select="g:y1($beam)"/>
-         </xsl:when>
-         <xsl:otherwise>
-            <xsl:variable name="m" select="(g:y2($beam) - g:y1($beam)) div $dx"/>
-            <xsl:sequence select="$m * (g:x($stem) - g:x1($beam)) + g:y1($beam) - .5*g:direction($beam)*g:width($beam)"/>
-                                                                       <!-- - .5*g:direction($beam)*g:width($beam) makes sure
-                                                                            that stem doesn't protrude over beam -->
-      </xsl:otherwise>
-      </xsl:choose>
+      <xsl:sequence select="sum(         if($dx = 0)         then g:y1($beam)         else for $m in (g:y2($beam) - g:y1($beam)) div $dx              return $m * ($x - g:x1($beam)) + g:y1($beam)         ,         if($centerPosition)         then -.5*g:direction($beam)*g:width($beam)         else 0       )"/>
   </xsl:function>
    <xsl:template xmlns="NS:DEF" name="drawBeam">
       <xsl:param name="number" select="g:number(.)"/>
@@ -3630,7 +3661,7 @@
                     as="element()*"/>
    
       <xsl:variable name="relevantStemDirection" as="xs:integer"
-                    select="         if ($slurNotes)         then if (count(distinct-values($stemDirections))=1 or $slurNotesWithConcurrentLayer)              then (g:direction($slurNotesWithConcurrentLayer[1]),$stemDirections)[1]              else g:calculateDirection($slurNotes)         else 1"/>
+                    select="         (:(           g:direction($slurNotesWithConcurrentLayer[1]),                    )[1]:)         if ($slurNotes)         then if (count(distinct-values($stemDirections))=1 or $slurNotesWithConcurrentLayer)              then (g:direction($slurNotesWithConcurrentLayer[1]),$stemDirections)[1]              else g:calculateDirection($slurNotes)         else 1"/>
       <xsl:sequence select="if ($slurNotesWithConcurrentLayer)                           then  $relevantStemDirection                           else -$relevantStemDirection"/>
       <xsl:message>
       slurNotesWithConcurrentLayer: <xsl:value-of select="$slurNotesWithConcurrentLayer/@xml:id"/>
@@ -3646,7 +3677,7 @@
          <xsl:apply-templates select="$startElement" mode="get-start-event"/>
       </xsl:variable>
       <xsl:variable name="endEvent" as="element()?">
-         <xsl:apply-templates select="$startElement" mode="get-start-event"/>
+         <xsl:apply-templates select="$endElement" mode="get-start-event"/>
       </xsl:variable>
     
       <xsl:choose>
@@ -3661,10 +3692,25 @@
         <xsl:variable name="staffID" select="$slurElement/ancestor::musx:staff[1]/generate-id()"/>
             <xsl:message>calculate slur notes for slur <xsl:value-of select="$slurElement/@xml:id"/>
             </xsl:message>
-            <xsl:for-each select="($startEvent,                                $startEvent/following::musx:event intersect $endEvent/preceding::musx:event,                                $endEvent)">
-               <xsl:sequence select="key('elements-by-staff-and-start-event',concat($staffID,'$',generate-id()))[self::musx:note]"/>
-            </xsl:for-each>
+            <xsl:variable name="slurNotes">
+               <xsl:for-each select="($startEvent,             $startEvent/following::musx:event intersect $endEvent/preceding::musx:event,             $endEvent)">
+                  <xsl:message>test</xsl:message>
+                  <xsl:sequence select="key('elements-by-staff-and-start-event',concat($staffID,'$',generate-id()))[self::musx:note]"/>
+                  <!-- TODO: Restrict to one staff -->
+          </xsl:for-each>
+            </xsl:variable>
+            <xsl:message>
+               <xsl:copy-of select="$slurNotes"/>
+            </xsl:message>
+            <xsl:sequence select="$slurNotes"/>
          </xsl:when>
+         <xsl:otherwise>
+            <xsl:message>
+          found no slur notes
+          $startEvent = <xsl:copy-of select="$startEvent"/>
+          $endEvent   = <xsl:copy-of select="$endEvent"/>
+            </xsl:message>
+         </xsl:otherwise>
       </xsl:choose>
   </xsl:function>
    <xsl:function xmlns="NS:DEF" xmlns:v="NS:VECTOR" name="v:sub">
@@ -3861,7 +3907,7 @@
       </xsl:attribute>
    </xsl:template>
    <xsl:template match="@*" mode="copy-svg-and-id-attributes"/>
-   <xsl:template match="*" mode="draw" priority="-5"/>
+   <xsl:template match="node()" mode="draw" priority="-5"/>
    <xsl:template match="musx:musxHead" mode="generate-defs">
       <svg:defs>
          <xsl:apply-templates mode="generate-defs"/>
