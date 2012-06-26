@@ -32,6 +32,8 @@
   </properties>
 
   <xsl:key name="beamNotes" match="musx:note" use="ancestor-or-self::*/musx:stem/@beam"/>
+  <xsl:key name="beamStems" match="musx:stem" use="@beam"/>
+  
   <!-- QUESTION: What to do if both note and chord have @beam? Something like this doesn't seem to work:
   <xsl:key name="beamNotes" match="musx:note" use="(ancestor-or-self::*musx:stem/@beam)[1]"/>
   <xsl:key name="beamNotes" match="musx:note" use="(ancestor-or-self::*[musx:stem/@beam][1]/musx:stem/@beam"/> -->
@@ -39,7 +41,7 @@
   <xsl:function name="g:beamYLacuna">
     <xsl:param name="beam" as="node()"/>
     <xsl:variable name="direction" select="g:direction($beam)" as="xs:double"/>
-    <xsl:variable name="steps" select="g:step(key('beamNotes',$beam/@xml:id,$beam/ancestor::musx:musx))" as="xs:double*"/>
+    <xsl:variable name="steps" select="g:step(key('beamNotes',$beam/@xml:id,$beam/ancestor::document-node()))" as="xs:double*"/>
     <xsl:variable name="centerStep" select="g:lines($beam/ancestor::musx:staff[last()]) - 1" as="xs:double"/>
     <xsl:variable name="staffSize" select="g:staffSize($beam)" as="xs:double"/>
     <xsl:variable name="stepsSortedInBeamDirection" as="xs:double*">
@@ -70,8 +72,9 @@
   </xsl:function>
 
   <xsl:function name="g:beamY">
-    <xsl:param name="stem" as="node()"/>
-    <xsl:variable name="beam" select="g:beam($stem)"/>
+    <xsl:param name="beam" as="node()"/>
+    <xsl:param name="x" as="xs:double"/>
+    <xsl:param name="centerPosition" as="xs:boolean"/>
     <!-- Use basic line equation 
       y = mx + n 
       to calculate y at point x.  We move x1 of the beam to the origin, therefore we have
@@ -83,17 +86,16 @@
       We must be careful not to divide by zero (if x2-x1=0)
     -->
     <xsl:variable name="dx" select="g:x2($beam) - g:x1($beam)"/>
-    <xsl:choose>
-      <xsl:when test="$dx = 0">
-        <xsl:sequence select="g:y1($beam)"/>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:variable name="m" select="(g:y2($beam) - g:y1($beam)) div $dx"/>
-        <xsl:sequence select="$m * (g:x($stem) - g:x1($beam)) + g:y1($beam) - .5*g:direction($beam)*g:width($beam)"/>
-                                                                       <!-- - .5*g:direction($beam)*g:width($beam) makes sure
-                                                                            that stem doesn't protrude over beam -->
-      </xsl:otherwise>
-    </xsl:choose>
+    <xsl:sequence select="sum(
+        if($dx = 0)
+        then g:y1($beam)
+        else for $m in (g:y2($beam) - g:y1($beam)) div $dx
+             return $m * ($x - g:x1($beam)) + g:y1($beam)
+        ,
+        if($centerPosition)
+        then -.5*g:direction($beam)*g:width($beam)
+        else 0
+      )"/>
   </xsl:function>
   
   <xsl:template name="drawBeam">
@@ -152,12 +154,13 @@
   <properties>
     <elementReference name="start" lacuna="g:start(..)"/>
     <elementReference name="end" lacuna="g:end(..)"/>
+    <elementReference name="beam" lacuna=".."/>
     
     <!-- Select first stem of start element; if there is none, simply pick the start element -->
     <coordinate name="x1" orientation="x" anchor="g:x((g:start(.)//musx:stem, g:start(.))[1])" lacuna="0"/>
     <coordinate name="x2" orientation="x" anchor="g:x((g:end(.)//musx:stem, g:end(.))[1])" lacuna="0"/>
-    <coordinate name="y1" orientation="y" anchor="g:y1(..)" lacuna="- g:distance(..) * g:direction(..) * g:number(..)"/>
-    <coordinate name="y2" orientation="y" anchor="g:y2(..)" lacuna="- g:distance(..) * g:direction(..) * g:number(..)"/>
+    <coordinate name="y1" orientation="y" anchor="g:beamY(..,g:x1(.),false())" lacuna="- g:distance(..) * g:direction(..) * g:number(..)"/>
+    <coordinate name="y2" orientation="y" anchor="g:beamY(..,g:x2(.),false())" lacuna="- g:distance(..) * g:direction(..) * g:number(..)"/>
     
     <coordinate name="x" orientation="x" anchor="g:x1(.)" lacuna="0"/>
     <coordinate name="y" orientation="y" anchor="g:y1(.)" lacuna="0"/>
@@ -179,4 +182,4 @@
   </OwnBoundingBox>
 </element>
 
-</elementDefinition> 
+</elementDefinition>
