@@ -25,9 +25,6 @@
                       return     $start/ancestor::mei:staff/@n[1] = $end/ancestor::mei:staff/@n[1]
                              and $start/ancestor::mei:layer/@n[1] = $end/ancestor::mei:layer/@n[1]
                     ]" mode="add-plists">
-    <message>
-      processing <value-of select="local-name()"/> element <value-of select="@xml:id"/>
-    </message>
     <variable name="startNote" select="id(@startid)" as="element()"/>
     <variable name="endNote"   select="id(@endid)"    as="element()"/>
     <variable name="innerNotes" select="key('notes-by-staff-and-layer',concat(
@@ -36,19 +33,6 @@
         (ancestor::mei:layer/@n,@layer)[last()]
         )) intersect $startNote/following::* intersect $endNote/preceding::*"/>
     <!-- QUESTION: Why doesn't [preceding::*=$startNote][following::*=$endNote] work instead of the intersections?-->
-    <message>
-      key = <value-of select="concat(
-      (ancestor::mei:staff/@n,@staff)[last()],
-      '$',
-      (ancestor::mei:layer/@n,@layer)[last()]
-      )"/>
-      notes by staff and layer:
-      <value-of select="for $note in key('notes-by-staff-and-layer',concat(
-        (ancestor::mei:staff/@n,@staff)[last()],
-        '$',
-        (ancestor::mei:layer/@n,@layer)[last()]
-        )) return $note/@xml:id"/>
-    </message>
     <copy>
       <attribute name="plist">
         <value-of select="($startNote,$innerNotes,$endNote)/@xml:id"/>

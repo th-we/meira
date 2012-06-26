@@ -5,6 +5,9 @@
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:g="NS:GET">
   
+  <!-- TODO: - Take into account number of beams (more (sub)beams require longer stems) 
+             - Angle of subbeams and beamlets must be fixed -->
+  
   <import href="../musx2svg/musx2svg.xsl"/>
   
   <param name="forceFormattingBeams" select="false()" as="xs:boolean"/>

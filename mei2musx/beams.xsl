@@ -33,7 +33,8 @@
     </xsl:param>
     
     <xsl:variable name="minimumDur" select="min($beamedEvents/@dur) cast as xs:integer" as="xs:integer"/>
-    <beam start="{$beamedEvents[1]/@xml:id}" end="{$beamedEvents[last()]/@xml:id}" number="{musx:getNumberOfBeams($minimumDur,0)}">
+    <beam start="{$beamedEvents[1]/@xml:id}" end="{$beamedEvents[last()]/@xml:id}" 
+        number="{musx:getNumberOfBeams($minimumDur,0)}">
       <!-- $minimumDur is the numerically smallest @dur attribut, i.e. the *biggest* time value;
            if there are durations 8, 16, 32, 32, then 8 is the minimum dur -->
       <xsl:apply-templates select="@xml:id" mode="mei2musx"/>
@@ -48,9 +49,13 @@
     <xsl:param name="events" as="element()*"/>
     <xsl:param name="alreadyDrawnDur" as="xs:integer"/>
 
-    <!-- QUESTION: Is there a simpler way??? -->
+    <!-- QUESTION: Is there a simpler/less obfuscated way??? -->
     <xsl:variable name="eventIndexesWithoutSubbeam" select="$events[./@dur  = $alreadyDrawnDur]/index-of($events/@xml:id,./@xml:id)" as="xs:integer*"/>
     <xsl:variable name="eventIndexesWithSubbeam"    select="$events[./@dur != $alreadyDrawnDur]/index-of($events/@xml:id,./@xml:id)" as="xs:integer*"/>
+<!-- QUESTION: Why doesn't this work? 
+    <xsl:variable name="eventIndexesWithoutSubbeam" select="for $i in $events[./@dur =$alreadyDrawnDur]/index-of($events,.) return $i" as="xs:integer*"/>
+    <xsl:variable name="eventIndexesWithSubbeam"    select="for $i in $events[./@dur!=$alreadyDrawnDur]/index-of($events,.) return $i" as="xs:integer*"/>-->
+    
     
     <!-- Indexes that point to events in $events that are the potential start of a subbeam.
          The first event in $events is a potential start, 
