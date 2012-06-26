@@ -16,6 +16,7 @@
   <import href="formatter/createSubevents.xsl"/>
   <import href="formatter/accidentalFormatter.xsl"/>
   <import href="formatter/spacing.xsl"/>
+  <import href="formatter/beams.xsl"/>
   <import href="musx2svg/musx2svg.xsl"/>
   <import href="postprocessor/svgCleaner.xsl"/>
   
@@ -37,13 +38,19 @@
   
   <output exclude-result-prefixes="svg"/>
   
-  <variable name="steps" select="('reducedMEI','MEIwithIDs','canonicalizedMEI',
-      'MEIwithDurations','MEIwithSynch','MEIwithIDREFs','MEIwithPlists','musx',
-      'musxWithSubevents','musxAccidentalsFormatted','spacedMusx','svg','cleanedSvg')" as="xs:string+"/>
+  <param name="omitSteps" select="''" as="xs:string"/>
+
+  <variable name="stepList" select="('reducedMEI','MEIwithIDs','canonicalizedMEI',
+    'MEIwithDurations','MEIwithSynch','MEIwithIDREFs','MEIwithPlists','musx','musxWithSubevents',
+    'musxAccidentalsFormatted','spacedMusx','musxWithFormattedBeams','svg','cleanedSvg')" as="xs:string+"/>
+  <variable name="steps" select="for $stepName in $stepList
+                                 return if(not($stepName = tokenize($omitSteps,'\s+'))) 
+                                        then $stepName 
+                                        else ()" as="xs:string+"/>
   
   <param name="firstStep" select="$steps[1]" as="xs:string"/>
   <param name="outputStep" select="$steps[last()]" as="xs:string"/>
-
+  
   <template match="/" priority="10">
     <param name="currentStep" select="$firstStep" as="xs:string"/>
     
@@ -84,6 +91,9 @@
           </when>
           <when test="$currentStep = 'spacedMusx'">
             <apply-templates select="." mode="spacing"/>
+          </when>
+          <when test="$currentStep = 'musxWithFormattedBeams'">
+            <apply-templates select="." mode="format-beams"/>
           </when>
           <when test="$currentStep = 'svg'">
             <apply-templates select="." mode="musx2svg"/>
