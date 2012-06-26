@@ -195,20 +195,56 @@
     
   </properties>
   
-  <!-- This function is also used by beams. The 'beamNotes' key is defined there. --> 
+  
+<!--  <xsl:key name="stemOfNote" match="musx:stem" use="generate-id(parent::*//musx:note)"/>
+  <xsl:key name="notesOnStem" match="musx:note" use="generate-id((.|parent::musx:chord)/musx:stem)"/>
+  <xsl:key name="topNoteOnStem" match="musx:note" use="for $step in g:step(.),
+                                                           $stemID in generate-id(key('stemOfNote',generate-id())),
+                                                           $topStepOnStem in min(g:step(key('notesOnStem',$stemID))) 
+                                                       return $stemID[$step = $topStepOnStem]"/>
+  <xsl:key name="bottomNoteOnStem" match="musx:note" use="for $step in g:step(.),
+                                                              $stemID in generate-id(key('stemOfNote',generate-id())),
+                                                              $topStepOnStem in min(g:step(key('notesOnStem',$stemID))) 
+                                                          return $stemID[$step = $topStepOnStem]"/>
+  <xsl:key name="stemsOfBeam" match="stem" use="@beam"/>
+  
+  <xsl:key name="beamByDirection" match="musx:beam" use="g:direction(.)"/>-->
+  
+<!--  <xsl:key name="stemNotesClosestToBeam" 
+      match="(: Selects (top|bottom) notes of all stems that belong to (upwards|downwards) beams :)
+              key('topNote'   ,key('stemsOfBeam',key('beamByDirection',-1)/@xml:id))|
+              key('bottomNote',key('stemsOfBeam',key('beamByDirection', 1)/@xml:id))" 
+      use="(.|parent::musx:chord)/musx:stem/@beam"/>-->
+  
+  <xsl:key name="topNote"    match="musx:note[g:step(.) = min(g:step(key('beamNotes',ancestor-or-self::*/musx:stem/@beam)))]" use="generate-id(id(ancestor-or-self::*/musx:stem/@beam))"/>
+  <xsl:key name="bottomNote" match="musx:note[g:step(.) = max(g:step(key('beamNotes',ancestor-or-self::*/musx:stem/@beam)))]" use="generate-id(id(ancestor-or-self::*/musx:stem/@beam))"/>
+  <xsl:key name="topNote"    match="musx:note[g:step(.) = min(g:step(parent::musx:chord/musx:note))]"                         use="generate-id(parent::musx:chord)"/>
+  <xsl:key name="bottomNote" match="musx:note[g:step(.) = max(g:step(parent::musx:chord/musx:note))]"                         use="generate-id(parent::musx:chord)"/>
+  
+  
+  
+  <!-- What about chords under beams? We need the "furthest chord", i.e. the chord with the 
+       "furthest closest note" (makes sense?) -->
+<!--  <xsl:key name="chordNoteFurthestFromBeam" 
+      match="key('topNote'   ,key('beamByDirection', 1)/@xml:id)|
+             key('bottomNote',key('beamByDirection',-1)/@xml:id)" 
+      use="(.|parent::musx:chord)/musx:stem/@beam"/>-->
+  
+  <!-- This function is used by single notes, chords and beams. The 'beamNotes' key is defined there. --> 
   <xsl:function name="g:calculateDirection" as="xs:integer">
-    <xsl:param name="element" as="node()*"/>
+    <xsl:param name="element" as="node()"/>
+
     <xsl:variable name="notes" select="$element/(self::musx:note, self::musx:chord/musx:note, key('beamNotes',@xml:id))"/>
-    <xsl:variable name="sortedSteps" as="xs:double*">
-      <xsl:for-each select="g:step($notes)">
-        <xsl:sort select="."/>
-        <xsl:sequence select="."/>
-      </xsl:for-each>
-    </xsl:variable>
+    <xsl:variable name="genID" select="generate-id($element)" as="xs:string"/>
     <xsl:variable name="staffCenter" select="g:lines($notes[1]/ancestor::musx:staff[last()]) - 1" as="xs:integer"/>
-    <!-- If there are no $notes, expression in if(..) will be false and 1 will be returned -->
+
+    <!-- if average of top and bottom note is above staff center, stem goes down, otherwise up
+         (if $element is a note, avg(...) returns the note's own step) -->
     <xsl:sequence select="
-        if (.5*($sortedSteps[last()] + $sortedSteps[1]) &gt; $staffCenter)
+        if (avg(
+              for $note in (key('topNote',$genID,$element),key('bottomNote',$genID,$element),$element/self::musx:note) 
+              return g:step($note)
+           ) gt $staffCenter)
         then -1
         else 1"/>
   </xsl:function>
