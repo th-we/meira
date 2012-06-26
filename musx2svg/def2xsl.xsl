@@ -39,17 +39,24 @@
     	<param name="symbolFile" select="'symbols.svg'" as="xs:string"/>
       
       <key name="class" match="*" use="tokenize(@class,'\s+')"/>
-      <key name="elements-by-staff-and-event" match="*">
-        <variable name="startEvent">
-          <apply-templates mode="get-start-event" select="."/>
-        </variable>
-        <variable name="staff" select="ancestor::musx:staff[1]"/>
-        <value-of select="concat($staff/generate-id(),'$',$startEvent/generate-id())"/>
-      </key>
+      <key name="elements-by-staff-and-start-event" match="*" 
+          use="concat(ancestor::musx:staff[1]/generate-id(),'$',g:start(.)/generate-id())"/>
+
       <template mode="get-start-event" match="*">
-        <apply-templates select="g:start(.)" mode="get-start-event"/>
+        <message>
+          find start event of <value-of select="local-name()"/> element <value-of select="@xml:id"/>
+        </message>
+        <variable name="potentialStartEvent" as="element()*">
+          <apply-templates select="g:start(.)" mode="get-start-event"/>
+        </variable>
+        <if test="generate-id($potentialStartEvent) != generate-id()">
+          <sequence select="$potentialStartEvent"/>
+        </if>
       </template>
       <template mode="get-start-event" match="musx:event">
+        <message>
+          found start event <value-of select="@xml:id"/>
+        </message>
         <sequence select="."/>
       </template>
       
@@ -85,7 +92,7 @@
       <template match="@*" mode="copy-svg-and-id-attributes"/>
       
       <!-- Default draw template: Ignore unknown content -->
-      <template match="*" mode="draw" priority="-5"/>
+      <template match="node()" mode="draw" priority="-5"/>
       
       <!-- Templates that transform <musx:musxHead> to <svg:defs> -->
       <template match="musx:musxHead" mode="generate-defs">
