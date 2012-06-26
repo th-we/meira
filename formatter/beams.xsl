@@ -11,6 +11,9 @@
   <param name="upperBoundForSlope" select=".5" as="xs:double"/>
   <param name="closestDistanceToNotehead" select="4" as="xs:double"/>
   <param name="distanceTolerance" select="1" as="xs:double"/>
+  <!-- Just one go with no recursion seems to give quite acceptable results.
+       For more recursions, at some places there are crazy things happening
+       TODO: Debug those cases! -->
   <param name="maxBeamOptimizationRecursions" select="0" as="xs:integer"/>
   
   <template match="/">
@@ -36,20 +39,25 @@
   
   <template match="musx:beam" mode="get-optimized-beam-y-values">
     <param name="recursion" select="0" as="xs:integer"/>
-    <!-- TODO: We actuall should iterate over "beamStems" because there might be more notes at the same x position (they call them chords, you know) -->
-    <param name="beamNotes" select="key('beamNotes',@xml:id)" as="node()*"/>
     <param name="direction" select="g:direction(.)" as="xs:integer"/>
+    <param name="beamStems" select="key('beamStems',@xml:id)" as="node()+"/>
     <param name="staffSize" select="g:staffSize(.)" as="xs:double"/>
-    <param name="x" select="g:x($beamNotes/musx:stem)" as="xs:double*"/>
-    <param name="indexList" select="for $xi in $x
-                                    return index-of($x,$xi)" as="xs:integer*"/>
+    <param name="x" select="g:x($beamStems)" as="xs:double+"/>
+    <param name="indexList" as="xs:integer+">
+      <variable name="stemIDs" select="for $stem in $beamStems return generate-id($stem)" as="xs:string*"/>
+      <sequence select="for $id in $stemIDs return index-of($stemIDs,$id)"/>
+    </param> 
     <!-- To make things simpler, we're "mirroring" beams that are pointing up so that we always 
          handle beams that are pointing down (direction=1). The mirrored y values may be outside the page, 
          which doesn't matter as eventually, we'll be mirroring back. -->
-    <param name="noteY" select="for $note in $beamNotes
-                                return $direction * g:y($note)" as="xs:double*"/>
+    <!-- For each stem, find the noteY value that's closest to the beam -->
+    <param name="noteY" select="for $stem in $beamStems
+                                return max(
+                                  for $note in $stem/../descendant-or-self::musx:note
+                                  return $direction * g:y($note)
+                                )" as="xs:double+" />
     <param name="idealY" select="for $i in $indexList
-                                 return $noteY[$i] + $staffSize * g:defaultStemLength($beamNotes[$i]/musx:stem)" as="xs:double*"/>
+                                 return $noteY[$i] + $staffSize * g:defaultStemLength($beamStems[$i])" as="xs:double+"/>
     <param name="s" select="0" as="xs:double"/>
     <param name="t" select="max($idealY)" as="xs:double"/>
     <!-- QUESTION: Is calcualtion of closestD correct like this? -->
@@ -60,10 +68,10 @@
     <!-- As in the first iteration, we know that there are no negative values in $d, we can simplify the penalty calculation. 
          This value is only calculated in the first iteration and passed on to subsequent iterations. -->
     <param name="maxPenalty" select="sum(
-        for $i in $indexList
-        return $d[$i] * $d[$i] 
+        for $di in $d
+        return $di*$di 
       )" as="xs:double"/>
-        <param name="slopePenaltyCoefficient" select="2*$maxPenalty div ($upperBoundForSlope * $upperBoundForSlope)" as="xs:double"/>
+    <param name="slopePenaltyCoefficient" select="2*$maxPenalty div ($upperBoundForSlope * $upperBoundForSlope)" as="xs:double"/>
     <!--<param name="slopePenaltyCoefficient" select="0" as="xs:double"/>-->
     <param name="a" select="for $Tolerance in $distanceTolerance*$staffSize,
                                 $i in $indexList,
@@ -131,7 +139,7 @@
     <choose>
       <!-- TODO: Find good stop criterion other than a fixed number of recursions.
                  It should be based on the penalty or the quotient ration of $s and $nextS -->
-      <when test="$recursion gt $maxBeamOptimizationRecursions">
+      <when test="$recursion ge $maxBeamOptimizationRecursions">
       <message>
         finalS = <value-of select="$nextS"/>
         finalT = <value-of select="$nextT"/>
