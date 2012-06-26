@@ -49,36 +49,44 @@
          stem lengths of notes that are 0 and "-5" steps away from center 
        If the height of the flag symbol is greater than the so determined length, the flag height determines
        the stem length -->
-    <number name="length" lacuna="
-      max((
-        for $direction in g:direction(.),
-            $stemOutletStep in   (: QUESTION: Find a better name? '$stemOutletStep' is where the stem 'leaves' a chord :)  
-              if (not(parent::musx:chord))
-              then g:step(..)
-              else if ($direction = 1)
-              then g:step(g:bottomNote(..))
-              else g:step(g:topNote(..)),
-            $distanceFromCenter in g:direction(.) * (g:lines(ancestor::musx:staff[last()]) - 1 - $stemOutletStep) 
-        return
-          if ($distanceFromCenter &gt; 7)
-            then $distanceFromCenter
-          else if ($distanceFromCenter &gt;= 0)
-            then 7
-          else if ($distanceFromCenter &gt; -5)
-            then .4 * $distanceFromCenter + 7
-          else 5
-        ,
-        if (musx:flags)  (: if there are flags, the stem must be at least as long as the flags symbol :) 
-        then for $symbolBB in g:svgSymbolBoundingBox(g:symbol(musx:flags)) return
-             max((abs($symbolBB//@top),abs($symbolBB//@bottom))) 
-             + (if (g:direction(.) = 1) then 1 else 0)
-             (: For downstemmed notes, we need to make the stem at least one step longer than the flag 
-             because otherwise the flag runs into the head :)
-        else ()
-      ))"/>
+    <number name="length" lacuna="g:defaultStemLength(.)"/>
     
     <scaleFactor name="size" anchor="g:size(..)" lacuna="1"/>
   </properties>
+  
+  <xsl:function name="g:defaultStemLength" as="xs:double">
+    <xsl:param name="stem" as="element()"/>
+    <xsl:for-each select="$stem">
+      <xsl:sequence select="
+          max((
+            for $direction in g:direction(.),
+                $stemOutletStep in   (: QUESTION: Find a better name? '$stemOutletStep' is where the stem 'leaves' a chord :)  
+                  if (not(parent::musx:chord))
+                  then g:step(..)
+                  else if ($direction = 1)
+                       then g:step(g:bottomNote(..))
+                       else g:step(g:topNote(..)),
+                $distanceFromCenter in g:direction(.) * (g:lines(ancestor::musx:staff[last()]) - 1 - $stemOutletStep) 
+            return
+              if ($distanceFromCenter &gt; 7)
+                then $distanceFromCenter
+              else if ($distanceFromCenter &gt;= 0)
+                then 7
+              else if ($distanceFromCenter &gt; -5)
+                then .4 * $distanceFromCenter + 7
+              else 5
+            ,
+            if (musx:flags)  (: if there are flags, the stem must be at least as long as the flags symbol :) 
+            then for $symbolBB in g:svgSymbolBoundingBox(g:symbol(musx:flags)) return
+                 max((abs($symbolBB//@top),abs($symbolBB//@bottom))) 
+                 + (if (g:direction(.) = 1) then 1 else 0)
+                 (: For downstemmed notes, we need to make the stem at least one step longer than the flag 
+                 because otherwise the flag runs into the head :)
+            else ()
+          ))"/>
+    </xsl:for-each>
+
+  </xsl:function>
   
   <draw>
     <svg:line x1="{g:x1(.)}" x2="{g:x2(.)}" y1="{g:y1(.)}" y2="{g:y2(.)}" stroke="currentColor"/>
