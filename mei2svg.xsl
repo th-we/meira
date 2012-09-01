@@ -38,7 +38,28 @@
   
   <output exclude-result-prefixes="svg"/>
   
-  <param name="omitSteps" select="''" as="xs:string"/>
+  <!-- Mainly for debugging purposes we allow a to-be-processed file to contain a processing instruction of the form
+         <?mei2svg firstStep="foo" outputStep="bar" omitSteps="baz"?> 
+       where foo and bar are names of steps, baz being a list of steps. They have the very same effect 
+       a specifying them as parameters to the stylesheet. This way we can create test files that themselves
+       tell the stylesheet what specific step(s) it's meant to test. -->
+  <function name="mei2svg:extractPIattribute" as="xs:string?">
+    <param name="attributeName" as="xs:string"/>
+    <param name="piString" as="xs:string?"/>
+    <analyze-string select="($piString,'')[1] (: In case $piString is an empty sequence, supply an empty string :)" 
+        regex="{$attributeName}=&quot;([^&quot;]*)&quot;">
+      <matching-substring>
+        <value-of select="regex-group(1)"/>
+      </matching-substring>
+    </analyze-string>
+  </function>
+  
+  <variable name="mei2svgProcessingInstruction" select="//processing-instruction()[local-name()='mei2svg']" as="xs:string?"/>
+  <variable name="firstStepInPI" select="mei2svg:extractPIattribute('firstStep',$mei2svgProcessingInstruction)" as="xs:string?"/>
+  <variable name="outputStepInPI" select="mei2svg:extractPIattribute('outputStep',$mei2svgProcessingInstruction)" as="xs:string?"/>
+  <variable name="omitStepsInPI" select="mei2svg:extractPIattribute('omitSteps',$mei2svgProcessingInstruction)" as="xs:string?"/>
+  
+  <param name="omitSteps" select="($omitStepsInPI,'')[1]" as="xs:string"/>
 
   <variable name="stepList" select="('reducedMEI','MEIwithIDs','canonicalizedMEI',
     'MEIwithDurations','MEIwithSynch','MEIwithIDREFs','MEIwithPlists','musx','musxWithSubevents',
@@ -47,9 +68,8 @@
                                  return if(not($stepName = tokenize($omitSteps,'\s+'))) 
                                         then $stepName 
                                         else ()" as="xs:string+"/>
-  
-  <param name="firstStep" select="$steps[1]" as="xs:string"/>
-  <param name="outputStep" select="$steps[last()]" as="xs:string"/>
+  <param name="firstStep" select="($firstStepInPI,$steps[1])[1]" as="xs:string"/>
+  <param name="outputStep" select="($outputStepInPI,$steps[last()])[1]" as="xs:string"/>
   
   <template match="/" priority="10">
     <param name="currentStep" select="$firstStep" as="xs:string"/>
