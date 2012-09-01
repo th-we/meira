@@ -16,7 +16,9 @@
 <param name="referenceNote.space" select="40" as="xs:double"/>
 <param name="padding" select="4" as="xs:double"/>
 
-<key name="spacingRelevantElementsAtEvent" use="@start" match="musx:note|musx:rest|musx:barline|musx:clef|musx:timeSignature|musx:keySignature|musx:symbolText"/>
+<!-- We have to exclude rests with set @end because they move around flexibly. 
+     They will otherwise irritate the spacing algorithm because they signal needing an amount of space that changes later anyway. -->
+<key name="spacingRelevantElementsAtEvent" use="@start" match="musx:note|musx:rest[not(@end)]|musx:barline|musx:clef|musx:timeSignature|musx:keySignature|musx:symbolText"/>
 
 <function name="musx:space" as="xs:double">
 	<param name="duration" as="xs:double"/>
@@ -101,7 +103,10 @@
   <if test="$nextEvent">
     <!-- This must be in an "if" because otherwise processor complains about parameter x being an empty sequence,
 		     even though the template is not called -->
-    <variable name="nextSuggestedX" select="$chosenX + musx:space($nextEvent/ancestor-or-self::*/@synchTime - ancestor-or-self::*/@synchTime)" as="xs:double"/>
+    <variable name="timeDifferenceToNextEvent" select="$nextEvent/ancestor-or-self::*/@synchTime - ancestor-or-self::*/@synchTime" as="xs:double"/>
+    <variable name="nextSuggestedX" select="$chosenX + (if($timeDifferenceToNextEvent gt 0) 
+                                                        then musx:space($timeDifferenceToNextEvent)
+                                                        else 0)" as="xs:double"/>
     <variable name="nextAvailableSpaceToLeft" select="$nextSuggestedX - ($chosenX + $spaceToRight) - $padding" as="xs:double"/>
     
 		<apply-templates mode="spacing" select="$nextEvent">
