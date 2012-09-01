@@ -115,9 +115,11 @@
           
         )[1]:)
         if ($slurNotes)
-        then if (count(distinct-values($stemDirections))=1 or $slurNotesWithConcurrentLayer)
-             then (g:direction($slurNotesWithConcurrentLayer[1]),$stemDirections)[1]
-             else g:calculateDirection($slurNotes)
+        then (if (count(distinct-values($stemDirections))=1)
+              then $stemDirections[1]
+              else (if ($slurNotesWithConcurrentLayer)
+                    then (g:direction($slurNotesWithConcurrentLayer[1]))[1]
+                    else g:calculateDirection($slurNotes)))
         else 1"/>
     <xsl:sequence select="if ($slurNotesWithConcurrentLayer)
                           then  $relevantStemDirection
@@ -154,19 +156,20 @@
         <!-- TODO: Only select notes of relevant voice => Transfer layer information from MEI. -->
         <xsl:variable name="staffID" select="$slurElement/ancestor::musx:staff[1]/generate-id()"/>
         <xsl:message>calculate slur notes for slur <xsl:value-of select="$slurElement/@xml:id"/></xsl:message>
-        <xsl:variable name="slurNotes">
+        <!-- QUESTION: Why do we get a result of type document-node if we store in variable $slurNote and return
+                       like <xsl:sequence select="$slurNotes"/> below? --> 
+<!--        <xsl:variable name="slurNotes">-->
           <xsl:for-each select="($startEvent,
             $startEvent/following::musx:event intersect $endEvent/preceding::musx:event,
             $endEvent)">
-            <xsl:message>test</xsl:message>
             <xsl:sequence select="key('elements-by-staff-and-start-event',concat($staffID,'$',generate-id()))[self::musx:note]"/>
             <!-- TODO: Restrict to one staff -->
           </xsl:for-each>
-        </xsl:variable>
+<!--        </xsl:variable>
         <xsl:message>
           <xsl:copy-of select="$slurNotes"/>
         </xsl:message>
-        <xsl:sequence select="$slurNotes"/>
+        <xsl:sequence select="$slurNotes"/>-->
       </xsl:when>
       <xsl:otherwise>
         <xsl:message>
@@ -224,6 +227,10 @@
     
     <xsl:variable name="t" select="g:tilt(.)" as="xs:double"/>
     <xsl:variable name="h" select="g:height(.)*g:direction(.)" as="xs:double"/>
+    <xsl:message>
+      height=<xsl:value-of select="g:height(.)"/>
+      direction=<xsl:value-of select="g:direction(.)"/>
+    </xsl:message>
     <xsl:variable name="s" select="g:shoulder(.)" as="xs:double"/>
     
     <xsl:variable name="v" select="($t*$d[2],$d[1])" as="xs:double+"/>
