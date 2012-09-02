@@ -22,9 +22,19 @@
     </note>
   </xsl:template>  
   
+  <xsl:template mode="count-consecutive-grace-notes" match="mei:note[@grace]">
+    <xsl:variable name="graceNotesAfterFollowingGraceNote" as="xs:integer?">
+      <xsl:apply-templates mode="count-consecutive-grace-notes" select="following-sibling::*[1]"/>
+    </xsl:variable>
+    <xsl:sequence select="sum((1,$graceNotesAfterFollowingGraceNote))"/>
+  </xsl:template>
+  
   <xsl:template match="@grace" mode="mei2musx">
+    <xsl:variable name="numberOfConsecutiveGraceNotes" as="xs:integer">
+      <xsl:apply-templates mode="count-consecutive-grace-notes" select="parent::mei:note"/>
+    </xsl:variable>
     <xsl:attribute name="x">
-      <xsl:value-of select="'s-3'"/>
+      <xsl:value-of select="concat('s',-3*($numberOfConsecutiveGraceNotes))"/>
     </xsl:attribute>
     <!-- TODO: This has funny effects -->
     <xsl:attribute name="size">
