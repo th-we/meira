@@ -334,21 +334,17 @@
     </hairpin>
   </xsl:template>
   
-  <xsl:template mode="mei2musx" match="mei:slur">
+  <xsl:template mode="mei2musx" match="mei:slur|mei:tie">
     <!--<xsl:variable name="y" select="if(@curvedir='below') then '14' else '-5'"/>-->
     <!-- TODO: - Proper height and y positioning (as well for mei:dynam, see below) 
+               - accept @tstamp instead of @startid
                - @direction="-1" if there are lyrics on this staff -->
     <slur start="{(@startid,@synch:id)[1]}" end="{(@endid,@synch:end.id)[1]}">
-      <xsl:apply-templates select="@xml:id|@curvedir" mode="mei2musx"/>
-    </slur>
-  </xsl:template>
-  
-  <xsl:template mode="mei2musx" match="mei:tie">
-    <!-- TODO: 
-      - Proper height
-      - accept @tstamp instead of @startid
-      - proper y positioning (as well for mei:dynam, see below) -->
-    <slur class="tie" start="{(@startid,@synch:id)[1]}" end="{(@endid,@synch:end.id)[1]}">
+      <xsl:if test="self::mei:tie">
+        <xsl:attribute name="class">
+          <xsl:value-of select="'tie'"/>
+        </xsl:attribute>
+      </xsl:if>
       <xsl:apply-templates select="@xml:id|@curvedir" mode="mei2musx"/>
     </slur>
   </xsl:template>
