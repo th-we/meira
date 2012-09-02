@@ -1,5 +1,10 @@
 <?xml version="1.0"?>
-<stylesheet xmlns="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:update="NS:UPDATE" xmlns:musx="NS:MUSX" version="2.0">
+<stylesheet version="2.0"
+    xmlns="http://www.w3.org/1999/XSL/Transform" 
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+    xmlns:update="NS:UPDATE" 
+    xmlns:musx="NS:MUSX"
+    xmlns:g="NS:GET">
   <!--<import href="update.xsl"/>-->
 
   <!-- TODO: - Arrange accidentals in "C-Shape" (see Gieseking)
@@ -18,9 +23,9 @@
       <document>
         <for-each select="//musx:staff">
           <!-- Find all accidentals on this staff that happen at the same point of time
-               TODO: Handle grace notes correctly -->
-          <for-each-group select=".//musx:note[musx:accidental]" group-by="(ancestor-or-self::*/@start)[last()]">
-            <call-template name="arrange-accidentals">
+               TODO: - Hanlde chords with seconds correctly -->
+          <for-each-group select=".//musx:note[musx:accidental]" group-by="g:x(.)">
+              <call-template name="arrange-accidentals">
               <with-param name="notes" as="element()*">
                 <perform-sort select="current-group()">
                   <!-- @y is expected to be of the form "S-4", "S3" etc. (i.e. leading S unit) -->
