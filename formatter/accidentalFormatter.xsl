@@ -17,7 +17,9 @@
     <variable name="updateTree">
       <document>
         <for-each select="//musx:staff">
-          <for-each-group select=".//musx:note[musx:accidental]" group-by="ancestor-or-self::*/@start">
+          <!-- Find all accidentals on this staff that happen at the same point of time
+               TODO: Handle grace notes correctly -->
+          <for-each-group select=".//musx:note[musx:accidental]" group-by="(ancestor-or-self::*/@start)[last()]">
             <call-template name="arrange-accidentals">
               <with-param name="notes" as="element()*">
                 <perform-sort select="current-group()">
