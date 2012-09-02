@@ -15,6 +15,7 @@
 <param name="referenceNote.duration" select=".25" as="xs:double"/>
 <param name="referenceNote.space" select="40" as="xs:double"/>
 <param name="padding" select="4" as="xs:double"/>
+<param name="firstX" select="100"/>
 
 <!-- We have to exclude rests with set @end because they move around flexibly. 
      They will otherwise irritate the spacing algorithm because they signal needing an amount of space that changes later anyway. -->
@@ -46,7 +47,7 @@
 </template>
 	
 <template mode="spacing" match="musx:event">
-	<param name="suggestedX" select="0" as="xs:double"/>
+	<param name="suggestedX" select="$firstX" as="xs:double"/>
   <param name="availableSpaceToLeft" select="0" as="xs:double"/>
 
   <variable name="oldX" select="g:x(.)" as="xs:double"/>
