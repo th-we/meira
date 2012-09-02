@@ -112,7 +112,9 @@
           <!-- Display staff label -->
           <svg y="S6" x="s-2">
             <svg:text font-size="4" text-anchor="end">
-              <xsl:value-of select="current()"/>
+              <!-- Display instrument label (if available as @label) or as fallback the staff number (=current()) 
+                   TODO: Label could be defined inside label child element --> 
+              <xsl:value-of select="($initialStaffDef/@label,current())[1]"/>
             </svg:text>
           </svg>
           <!-- In theory, the clef information can be found inside a scoreDef, but as we're only handling 
