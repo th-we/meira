@@ -40,7 +40,10 @@
       
       <key name="class" match="*" use="tokenize(@class,'\s+')"/>
       <key name="elements-by-staff-and-start-event" match="*" 
-          use="concat(ancestor::musx:staff[1]/generate-id(),'$',g:start(.)/generate-id())"/>
+          use="concat(ancestor::musx:staff[1]/generate-id(),'$',g:start(.)[1]/generate-id())"/>
+                                          <!-- QUESTION: For some reason, g:start() sometimes returns more than
+                                               one element. Why is this so? We fix this by using only the first
+                                               returned element. -->
 
       <template mode="get-start-event" match="*">
         <message>
@@ -54,9 +57,9 @@
         </if>
       </template>
       <template mode="get-start-event" match="musx:event">
-        <message>
+<!--        <message>
           found start event <value-of select="@xml:id"/>
-        </message>
+        </message>-->
         <sequence select="."/>
       </template>
       
