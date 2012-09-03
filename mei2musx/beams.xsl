@@ -32,16 +32,26 @@
       </xsl:for-each>
     </xsl:param>
     
-    <xsl:variable name="minimumDur" select="min($beamedEvents/@dur) cast as xs:integer" as="xs:integer"/>
-    <beam start="{$beamedEvents[1]/@xml:id}" end="{$beamedEvents[last()]/@xml:id}" 
-        number="{musx:getNumberOfBeams($minimumDur,0)}">
-      <!-- $minimumDur is the numerically smallest @dur attribut, i.e. the *biggest* time value;
+    <xsl:choose>
+      <xsl:when test="$beamedEvents[1]/@xml:id and $beamedEvents[last()]/@xml:id">
+        <!-- If there is no @dur attribute, use 8 as fallback value -->
+        <xsl:variable name="minimumDur" select="(min($beamedEvents/@dur),8)[1] cast as xs:integer" as="xs:integer"/>
+        <beam start="{$beamedEvents[1]/@xml:id}" end="{$beamedEvents[last()]/@xml:id}" 
+          number="{musx:getNumberOfBeams($minimumDur,0)}">
+          <!-- $minimumDur is the numerically smallest @dur attribut, i.e. the *biggest* time value;
            if there are durations 8, 16, 32, 32, then 8 is the minimum dur -->
-      <xsl:apply-templates select="@xml:id" mode="mei2musx"/>
-      <!-- add-direction template is in notes.xsl -->
-      <xsl:apply-templates select="$beamedEvents/@stem.dir[1]" mode="add-direction"/>
-      <xsl:sequence select="musx:addSubbeams($beamedEvents,$minimumDur)"/>
-    </beam>
+          <xsl:apply-templates select="@xml:id" mode="mei2musx"/>
+          <!-- add-direction template is in notes.xsl -->
+          <xsl:apply-templates select="$beamedEvents/@stem.dir[1]" mode="add-direction"/>
+          <xsl:sequence select="musx:addSubbeams($beamedEvents,$minimumDur)"/>
+        </beam>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:message>
+          WARNING: Did not find beamed events for beam <xsl:value-of select="concat(local-name(),' ',@xml:id)"/>. Beam will be omitted.
+        </xsl:message>
+      </xsl:otherwise>
+    </xsl:choose>
     <xsl:apply-templates mode="mei2musx"/>
   </xsl:template>
    
