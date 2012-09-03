@@ -5,8 +5,7 @@
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
     xmlns:g="NS:GET">
   
-  <!-- TODO: - Take into account number of beams (more (sub)beams require longer stems) 
-             - Angle of subbeams and beamlets must be fixed -->
+  <!-- TODO: - Take into account number of beams (more (sub)beams require longer stems) -->
   
   <import href="../musx2svg/musx2svg.xsl"/>
   
@@ -115,10 +114,12 @@
     <variable name="Htt" select="sum($h)" as="xs:double"/>
     
     <variable name="hesseDeterminant" select="$Hss*$Htt - $Hst*$Hst" as="xs:double"/>
-    <variable name="nextS" select="$s - ($Htt*$Js - $Hst*$Jt) div $hesseDeterminant" as="xs:double"/>
-    <variable name="nextT" select="$t - ($Hss*$Jt - $Hst*$Js) div $hesseDeterminant" as="xs:double"/>
+    <variable name="nextS" select="$s - (if($hesseDeterminant = 0) then 0
+                                         else ($Htt*$Js - $Hst*$Jt) div $hesseDeterminant)" as="xs:double"/>
+    <variable name="nextT" select="$t - (if($hesseDeterminant = 0) then 0
+                                         else ($Hss*$Jt - $Hst*$Js) div $hesseDeterminant)" as="xs:double"/>
     
-    <message terminate="no">
+<!--    <message terminate="no">
       s = <value-of select="$s"/>
       t = <value-of select="$t"/>
       <if test="$recursion=0">
@@ -137,16 +138,16 @@
       $Hst = <value-of select="$Hst"/>
       $Htt = <value-of select="$Htt"/>
       </if>
-    </message>
+    </message>-->
     
     <choose>
       <!-- TODO: Find good stop criterion other than a fixed number of recursions.
-                 It should be based on the penalty or the quotient ration of $s and $nextS -->
+                 It should be based on the penalty or the quotient ratio of $s and $nextS -->
       <when test="$recursion ge $maxBeamOptimizationRecursions">
-      <message>
+<!--      <message>
         finalS = <value-of select="$nextS"/>
         finalT = <value-of select="$nextT"/>
-      </message>
+      </message>-->
         <variable name="staffY" select="g:y(ancestor::musx:staff[1])" as="xs:double"/>
         <sequence select="for $x in ($x[1],$x[last()])
                           return ($direction*($nextS * $x + $nextT) - $staffY) div $staffSize"/>
@@ -168,9 +169,6 @@
         </apply-templates>
       </otherwise>
     </choose>
-<!--    <variable name="staffY" select="g:y(ancestor::musx:staff[1])" as="xs:double"/>
-    <sequence select="for $x in ($x[1],$x[last()])
-      return $direction*($s * $x + $t)"/>-->
   </template>
   
 </stylesheet>
