@@ -61,10 +61,10 @@
   
   <param name="omitSteps" select="($omitStepsInPI,'')[1]" as="xs:string"/>
 
-  <variable name="stepList" select="('reducedMEI','MEIwithIDs','canonicalizedMEI',
+  <variable name="fullStepList" select="('reducedMEI','MEIwithIDs','canonicalizedMEI',
     'MEIwithDurations','MEIwithSynch','MEIwithIDREFs','MEIwithPlists','musx','musxWithSubevents',
     'musxAccidentalsFormatted','spacedMusx','musxWithFormattedBeams','svg','cleanedSvg')" as="xs:string+"/>
-  <variable name="steps" select="for $stepName in $stepList
+  <variable name="steps" select="for $stepName in $fullStepList
                                  return if(not($stepName = tokenize($omitSteps,'\s+'))) 
                                         then $stepName 
                                         else ()" as="xs:string+"/>
@@ -79,6 +79,13 @@
     <variable name="intermediateDocument" as="document-node()">
       <document>
         <choose>
+          <when test="not($currentStep = $steps)">
+            <message terminate="yes">ERROR: Invalid step "<value-of select="$outputStep"/>"
+              <if test="$currentStep = $fullStepList">This step has been suppressed using the omitSteps parameter or processing instruction.</if>
+              Possible values for parameters firstStep and outputStep are:
+              <value-of select="$steps" separator=", "/>
+            </message>
+          </when>
           <when test="$currentStep = 'reducedMEI'">
             <apply-templates select="." mode="reduceToMdiv"/>
           </when>
@@ -121,12 +128,6 @@
           <when test="$currentStep = 'cleanedSvg'">
             <apply-templates select="." mode="clean-svg"/>
           </when>
-          <otherwise>
-            <message terminate="yes"> ERROR: Invalid parameter outputStep = <value-of select="$outputStep"/>
-              Possible values are:
-              <value-of select="$steps" separator="', '"/>
-            </message>
-          </otherwise>
         </choose>
       </document>
     </variable>
@@ -137,7 +138,7 @@
         <message>Done.</message>
       </when>
       <otherwise>
-        <variable name="nextStepIndex" select="index-of($steps,$currentStep)+1"/>
+        <variable name="nextStepIndex" select="index-of($steps,$currentStep)+1" as="xs:integer"/>
         <apply-templates select="$intermediateDocument">
           <with-param name="currentStep" select="$steps[$nextStepIndex]" as="xs:string"/>
         </apply-templates>
