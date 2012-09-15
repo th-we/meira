@@ -133,6 +133,11 @@
   <template mode="addDurations" match="mei:*[(self::mei:mRest or self::mei:mSpace) and not(@dur)]" priority="3">
 		<variable name="staffN" select="ancestor::mei:staff/@n"/>
 		<variable name="timeSignatureDef" select="    preceding::mei:*[      (        (          local-name() = 'staffDef' and @n = $staffN        )         or         (          local-name() = 'scoreDef' and .//mei:staffDef[@n = $staffN]        )      )       and       @meter.count and @meter.unit    ][1]"/>
+    <if test="not($timeSignatureDef)">
+      <message terminate="yes">
+        ERROR: <value-of select="local-name()"/> element <value-of select="@xml:id"/> requires either a @dur attribute or a valid time signature
+      </message>
+    </if>
 		<copy>
 		  <apply-templates select="@*|node()" mode="addDurations"/>
 			<call-template name="write-duration">
