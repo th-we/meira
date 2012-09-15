@@ -39,8 +39,6 @@
     
     -->
     
-    
-    
     <xsl:template match="/" priority="-10">
         <xsl:apply-templates select="." mode="reduceToMdiv"/>
     </xsl:template>
@@ -49,51 +47,28 @@
             <xsl:apply-templates mode="reduceToMdiv" select="* | text() | @*"/>
         </xsl:copy>
     </xsl:template>
+
     
-    <xsl:template mode="reduceToMdiv" match="staffDef | staff">
-        <xsl:variable name="n" select="@n"/>
-        <xsl:choose>
-            <xsl:when test="$showStaff eq $n">
-                <xsl:copy>
-                    <xsl:apply-templates mode="reduceToMdiv" select="* | text() | @*"/>
-                </xsl:copy>
-            </xsl:when>
-            <xsl:when test="$showStaff eq ''">
-                <xsl:if test="empty(index-of($staves2strip,$n))">
-                    <xsl:copy>
-                        <xsl:apply-templates mode="reduceToMdiv" select="* | text() | @*"/>
-                    </xsl:copy>
-                </xsl:if>
-            </xsl:when>
-        </xsl:choose>
+    <!-- If $showStaff is specified, don't copy staffs (or staff associated elements) with other staff numbers. -->
+    <xsl:template mode="reduceToMdiv" match="*[self::staffDef or self::staff or @staff]
+                                              [$showStaff != '' and $showStaff != (@staff, @n)[1]]" priority="1"/>
+    <!-- Don't copy staffs (or staff associated elements) whose staff number is listed in $staves2strip -->
+    <xsl:template mode="reduceToMdiv" match="*[self::staffDef or self::staff or @staff]
+                                              [(@staff, @n)[1] = $staves2strip]" priority="1"/>
+    <!-- Copy all other staffs (and staff associated elements) -->
+    <xsl:template mode="reduceToMdiv" match="staffDef | staff | *[@staff]">
+      <xsl:copy>
+          <xsl:apply-templates mode="reduceToMdiv" select="* | text() | @*"/>
+      </xsl:copy>
     </xsl:template>
-    
-    <xsl:template mode="reduceToMdiv" match="*[@staff]">
-        <xsl:variable name="staff" select="@staff"/>
-        <xsl:choose>
-            <xsl:when test="$showStaff eq $staff">
-                <xsl:copy>
-                    <xsl:apply-templates mode="reduceToMdiv" select="* | text() | @*"/>
-                </xsl:copy>
-            </xsl:when>
-            <xsl:when test="$showStaff eq ''">
-                <xsl:if test="empty(index-of($staves2strip,$staff))">
-                    <xsl:copy>
-                        <xsl:apply-templates mode="reduceToMdiv" select="* | text() | @*"/>
-                    </xsl:copy>
-                </xsl:if>
-            </xsl:when>
-        </xsl:choose>
-    </xsl:template>
-    
+
+
+    <xsl:template mode="reduceToMdiv" match="measure[following::measure[@xml:id = $firstMeasure]]"/>
+    <xsl:template mode="reduceToMdiv" match="measure[preceding::measure[@xml:id = $lastMeasure]]"/>
     <xsl:template mode="reduceToMdiv" match="measure">
-        
-        <xsl:if test="($firstMeasure eq '' or preceding::measure[@xml:id eq $firstMeasure] or @xml:id eq $firstMeasure) and
-            ($lastMeasure eq '' or following::measure[@xml:id eq $lastMeasure] or @xml:id eq $lastMeasure)">
-            <xsl:copy>
-                <xsl:apply-templates mode="reduceToMdiv" select="* | text() | @*"/>
-            </xsl:copy>
-        </xsl:if>
+        <xsl:copy>
+            <xsl:apply-templates mode="reduceToMdiv" select="* | text() | @*"/>
+        </xsl:copy>
     </xsl:template>
     
     
@@ -101,7 +76,12 @@
     <!-- If the parameter $mdiv2show is specified, ignore mdivs that don't have the specified ID -->
     <xsl:template mode="reduceToMdiv" match="mdiv[$mdiv2show and @xml:id != $mdiv2show]"/>
     <xsl:template mode="reduceToMdiv" match="meiHead">
-        <meiHead>
+      <xsl:message>
+        $firstMeasure = <xsl:value-of select="$firstMeasure"/>
+        $lastMeasure = <xsl:value-of select="$lastMeasure"/>
+      </xsl:message>
+      
+      <meiHead>
             <fileDesc>
                 <titleStmt>
                     <title/>
