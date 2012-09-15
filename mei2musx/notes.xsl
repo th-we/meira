@@ -36,7 +36,7 @@
     <xsl:attribute name="x">
       <xsl:value-of select="concat('s',-3*($numberOfConsecutiveGraceNotes))"/>
     </xsl:attribute>
-    <!-- TODO: This has funny effects -->
+    <!-- TODO: This has funny effects; adjust stem lengh etc. -->
     <xsl:attribute name="size">
       <xsl:value-of select="'s.7'"/>
     </xsl:attribute>
@@ -72,6 +72,11 @@
     	<xsl:apply-templates mode="get-numeric-clef-pitch" select="$clefCarryingElement"/>
     </xsl:variable>
     <xsl:variable name="oct" select="(preceding-sibling::mei:note/@oct|@oct)[last()]" as="xs:integer"/>
+    <xsl:if test="not($oct)">
+      <xsl:message terminate="yes">
+        ERROR: Need @oct attribute on note <xsl:value-of select="@xml:id"/>
+      </xsl:message>
+    </xsl:if>
     <xsl:variable name="pname" select="(preceding-sibling::mei:note/@pname|@pname)[last()]" as="xs:string"/>
     <xsl:attribute name="y">
       <!-- string-length(substring-before('cdefgab',$pname)) returns 0 for $pname='c', 1 for 'd' etc. -->
