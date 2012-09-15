@@ -100,7 +100,7 @@
     <beam start="{$tremoloNotesAndChords[1     ]/@xml:id}" 
             end="{$tremoloNotesAndChords[last()]/@xml:id}" number="{$numberOfBeams}" class="fTrem">
       <xsl:apply-templates select="@xml:id" mode="mei2musx"/>
-      <subbeam x1="s2" x2="s-2" number="{@slash - $numberOfBeams}"/>
+      <subbeam x1="s2" x2="s-2" number="{@measperf - $numberOfBeams}"/>
     </beam>
     <xsl:apply-templates mode="mei2musx"/>
   </xsl:template>
