@@ -109,11 +109,10 @@
               the same as  $firstStaffN/preceding::mei:staffDef[@n=current()][1]  ? -->
         <xsl:variable name="initialStaffDef" select="($firstStaffN/preceding::mei:staffDef[@n=current()])[last()]"/>
         <staff y="p{$staffDistance * position()}" start="{$section/@synch:id}">
-          <!-- Display staff label -->
+          <!-- Display instrument label (if available as @label) or as fallback the staff number (=current()) 
+               TODO: Handel labels that are defined inside label child element --> 
           <svg y="S6" x="s-2">
             <svg:text font-size="4" text-anchor="end">
-              <!-- Display instrument label (if available as @label) or as fallback the staff number (=current()) 
-                   TODO: Label could be defined inside label child element --> 
               <xsl:value-of select="($initialStaffDef/@label,current())[1]"/>
             </svg:text>
           </svg>
@@ -321,10 +320,10 @@
                             (: If this staff is carrying lyrics, then place dynamics above the staff. :)
                           else if($dynamElement/ancestor::mei:section//mei:staff[@n=$staffN]//mei:syl)
                                then $positionAbove
-                               else $positionBelow"></xsl:sequence>
+                               else $positionBelow"/>
   </xsl:function>
   
-  <xsl:template mode="mei2musx" match="mei:hairpin">
+  <xsl:template mode="mei2musx" match="mei:hairpin[(@synch:id or @starid) and (@synch:end.id or @endid)]">
     <!-- TODO: Proper y positioning (as well for mei:dynam, see below) -->
     <!-- QUESTION: Should @startid/@endid be used preferably? -->
     <hairpin start="{(@synch:id|@startid)[1]}" end="{(@synch:end.id|@endid)[1]}" y="S{musx:getDynamPosition(.)}">
@@ -335,7 +334,13 @@
       </xsl:attribute>
     </hairpin>
   </xsl:template>
-  
+  <!-- TODO: Ensure this during preprocessing -->
+  <xsl:template mode="mei2musx" match="mei:hairpin">
+    <xsl:message>
+      WARNING: Could not find start and/or end events of hairpin <xsl:value-of select="@xml:id"/>. Hairpin will be omitted.
+    </xsl:message>
+  </xsl:template>
+    
   <xsl:template mode="mei2musx" match="mei:slur|mei:tie">
     <!--<xsl:variable name="y" select="if(@curvedir='below') then '14' else '-5'"/>-->
     <!-- TODO: - Proper height and y positioning (as well for mei:dynam, see below) 
@@ -365,7 +370,7 @@
     <symbolText class="dynam" y="S{musx:getDynamPosition(.)}">
       <xsl:apply-templates select="." mode="add-start-attribute"/>
       <xsl:apply-templates select="@xml:id" mode="mei2musx"/>
-      <xsl:value-of select="."/>
+      <xsl:value-of select="normalize-space()"/>
     </symbolText>
   </xsl:template>
   
@@ -438,6 +443,9 @@
   </xsl:template>
   <!-- TODO: - draw box for @rend=("box","circle");
              - handle @rend=("quote","bslash","fslash") -->
+  
+  <!-- We currently don't display titles -->
+  <xsl:template match="mei:title" mode="mei2musx"/>
   
   <xsl:template match="mei:dir|mei:tempo" mode="mei2musx">
     <svg>
