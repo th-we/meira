@@ -198,7 +198,7 @@
   <xsl:template mode="create-tie-element" match="@*"/> 
   <xsl:template mode="create-tie-element" 
       match="@tie[
-        string()='i' and not(
+        string()=('i','m') and not(
           (: only create new tie element if there isn't already one :)
           for $noteId in ../@xml:id
           return key('tieByStartid',$noteId)
@@ -210,7 +210,7 @@
     <mei:tie startid="{../@xml:id}" 
       endid="{following::mei:note[@tie='t'][.=key('notes-by-staff-and-layer',concat($staffN,'$',$layerN))][1]/@xml:id}"/>-->
     <mei:tie startid="{../@xml:id}" 
-      endid="{following::mei:note[@tie='t' and ancestor::mei:staff/@n=$staffN and ancestor::mei:layer/@n=$layerN][1]/@xml:id}"/>
+      endid="{following::mei:note[@tie=('t','m') and ancestor::mei:staff/@n=$staffN and ancestor::mei:layer/@n=$layerN][1]/@xml:id}"/>
   </xsl:template> 
 
   <!-- QUESTION: Is there an attribute version of <dynam> that we need to canonicalize? -->
