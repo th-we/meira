@@ -22,7 +22,8 @@
     <xsl:param name="firstMeasure" select="''"/>
     <xsl:param name="lastMeasure" select="''"/>
     
-    <xsl:variable name="staves2strip" select="tokenize($stripStaves,' ')"/>
+    <xsl:variable name="staves2strip" select="tokenize($stripStaves,'\s+')"/>
+    <xsl:variable name="staves2show" select="tokenize($showStaff,'\s+')"/>
         
     <!-- 
     
@@ -51,7 +52,7 @@
     
     <!-- If $showStaff is specified, don't copy staffs (or staff associated elements) with other staff numbers. -->
     <xsl:template mode="reduceToMdiv" match="*[self::staffDef or self::staff or @staff]
-                                              [$showStaff != '' and $showStaff != (@staff, @n)[1]]" priority="1"/>
+                                              [$showStaff != '' and not($staves2show = (@staff, @n)[1])]" priority="1"/>
     <!-- Don't copy staffs (or staff associated elements) whose staff number is listed in $staves2strip -->
     <xsl:template mode="reduceToMdiv" match="*[self::staffDef or self::staff or @staff]
                                               [(@staff, @n)[1] = $staves2strip]" priority="1"/>
